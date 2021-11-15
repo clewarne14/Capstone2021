@@ -4,7 +4,7 @@ import Editor from "./Editor";
 const App: React.FC = () => {
   return (
     <>
-      <div className="App">This is a test</div>
+      <div className="App">This is a tst</div>
       <Editor />
     </>
   );
