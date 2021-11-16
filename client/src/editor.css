@@ -1,0 +1,10 @@
+.CodeMirror {
+  height: 100rem;
+  font-size: 1.25rem;
+  width: 75%;
+}
+
+.code-mirror-wrapper {
+  width: 100%;
+  height: 100%;
+}

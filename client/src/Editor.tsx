@@ -7,6 +7,7 @@ import "codemirror/mode/javascript/javascript";
 import "codemirror/mode/clike/clike";
 import "codemirror/mode/python/python";
 import "codemirror/mode/css/css";
+import "./editor.css";
 
 const Editor: React.FC = () => {
   const [code, setCode] = useState<string>("");
@@ -17,7 +18,6 @@ const Editor: React.FC = () => {
       <select
         name="languages"
         onChange={(e) => {
-          console.log("here");
           setLanguage(e.target.value);
           setCode("");
         }}
@@ -26,12 +26,13 @@ const Editor: React.FC = () => {
         <option value="javascript">javascript</option>
         <option value="text/x-java">java</option>
       </select>
+
       <CodeMirror
         onBeforeChange={(editor, data, value) => {
           setCode(value);
         }}
         value={code}
-        className="code-mirror=wrapper"
+        className="code-mirror-wrapper"
         options={{
           lineWrapping: true,
           mode: language,
