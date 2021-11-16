@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 const port = 4000;
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {});
 
@@ -9,7 +11,7 @@ app.get("/code", (req, res) => {
 });
 
 app.post("/sendCode", (req, res) => {
-  console.log(req.body);
+  console.log(req.body.Body);
   const newCode = res;
 });
 

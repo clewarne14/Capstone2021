@@ -1,13 +1,16 @@
 import React from "react";
-import Editor from "./Editor";
+import Footer from "./components/Footer/Footer";
+import Navbar from "./components/Navbar/Navbar";
+import Editor from "./components/Editor/Editor";
 
-const App: React.FC = () => {
+function App() {
   return (
     <>
-      <div className="App">This is a tst</div>
+      <Navbar />
       <Editor />
+      <Footer />
     </>
   );
-};
+}
 
 export default App;

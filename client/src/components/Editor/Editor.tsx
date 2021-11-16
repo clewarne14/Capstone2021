@@ -7,7 +7,7 @@ import "codemirror/mode/javascript/javascript";
 import "codemirror/mode/clike/clike";
 import "codemirror/mode/python/python";
 import "codemirror/mode/css/css";
-import "./editor.css";
+import "./styles.scss";
 
 const Editor: React.FC = () => {
   const [code, setCode] = useState<string>("");
