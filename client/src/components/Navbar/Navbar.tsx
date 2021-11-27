@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import Button from "../Button/Button";
 import "./styles.scss";
 
 const Navbar: FC = () => {
@@ -6,8 +7,8 @@ const Navbar: FC = () => {
     <div className="navbar">
       <div className="navbar--logo">CodeCreate</div>
       <div className="navbar--buttons">
-        <button className="navbar--buttons__button">Code</button>
-        <button className="navbar--buttons__button">Create</button>
+        <Button onClick={() => alert("Clicked")}>Code</Button>
+        <Button onClick={() => alert("Clicked")}>Create</Button>
       </div>
     </div>
   );
