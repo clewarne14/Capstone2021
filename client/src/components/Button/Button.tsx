@@ -8,9 +8,9 @@ type Props = {
 
 const Button: FC<Props> = ({ onClick, children }: Props) => {
   return (
-    <button className="button" onClick={onClick}>
+    <Button className="button" onClick={onClick}>
       {children}
-    </button>
+    </Button>
   );
 };
 
