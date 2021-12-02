@@ -1,24 +1,28 @@
 import React, { FC } from "react";
-import { Button as MUIButton, Typography } from "@mui/material";
-import "./styles.scss";
+import { Button as MUIButton, Theme } from "@mui/material";
+import { SxProps } from "@mui/system";
 
 type Props = {
   children: any;
   onClick: () => void;
-  className?: string;
+  sx?: SxProps<Theme>;
 };
 
-const Button: FC<Props> = ({ onClick, children, className }: Props) => {
+const Button: FC<Props> = ({ onClick, children, sx }: Props) => {
   return (
     <MUIButton
       variant="contained"
       color="primary"
-      className={`button ${className}`}
+      sx={{
+        backgroundColor: "white",
+        color: "black",
+        width: "100%",
+        height: "100%",
+        ...sx,
+      }}
       onClick={onClick}
     >
-      <Typography variant="h4" fontWeight="500">
-        {children}
-      </Typography>
+      {children}
     </MUIButton>
   );
 };

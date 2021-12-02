@@ -1,13 +1,14 @@
 import React, { FC, useState } from "react";
-import { Menu, MenuItem, Tooltip, Typography } from "@mui/material";
+import { Menu, MenuItem, Theme, Tooltip, Typography } from "@mui/material";
+import { SxProps } from "@mui/system";
 
 type Props = {
   options: { text: string; onClick: () => void }[];
-  className?: string;
   children: any;
+  sx?: SxProps<Theme>;
 };
 
-const ClickSelect: FC<Props> = ({ children, options, className }: Props) => {
+const ClickSelect: FC<Props> = ({ children, options, sx }: Props) => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
@@ -28,8 +29,7 @@ const ClickSelect: FC<Props> = ({ children, options, className }: Props) => {
   return (
     <>
       <Tooltip
-        className={className}
-        sx={{ width: "100%", height: "100%", cursor: "pointer" }}
+        sx={{ width: "100%", height: "100%", cursor: "pointer", ...sx }}
         title="Open settings"
         onClick={handleOpenUserMenu}
       >
