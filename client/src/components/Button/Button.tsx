@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import { Button as MUIButton, Typography } from "@mui/material";
 import "./styles.scss";
 
 type Props = {
@@ -8,9 +9,16 @@ type Props = {
 
 const Button: FC<Props> = ({ onClick, children }: Props) => {
   return (
-    <Button className="button" onClick={onClick}>
-      {children}
-    </Button>
+    <MUIButton
+      variant="contained"
+      color="primary"
+      className="button"
+      onClick={onClick}
+    >
+      <Typography variant="h4" fontWeight="500">
+        {children}
+      </Typography>
+    </MUIButton>
   );
 };
 
