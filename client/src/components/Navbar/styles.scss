@@ -1,9 +1,18 @@
 @import "styles/colors";
+@import "styles/breakpoints";
 
 .navbar {
   padding: 1rem;
 
   &--avatar {
-    cursor: pointer;
+    width: 5rem;
+    color: green;
+  }
+
+  &--button {
+    color: green;
+    @include breakpoint("sm") {
+      font-size: 2rem;
+    }
   }
 }
