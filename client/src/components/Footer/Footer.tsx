@@ -1,9 +1,11 @@
 import React, { FC } from "react";
 import { Box } from "@mui/system";
+import { useSmallScreen } from "../../contexts/SmallScreenContext";
 import PhoneNavigation from "../PhoneNavigation";
 import colors from "../../colors";
 
 const Footer: FC = () => {
+  const isSmallScreen = useSmallScreen();
   return (
     <Box
       sx={{
@@ -16,7 +18,7 @@ const Footer: FC = () => {
         textAlign: "center",
       }}
     >
-      <PhoneNavigation />
+      {isSmallScreen && <PhoneNavigation />}
     </Box>
   );
 };

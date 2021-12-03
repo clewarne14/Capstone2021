@@ -1,11 +1,10 @@
 import React, { FC } from "react";
 import { SxProps } from "@mui/system";
 import { AppBar, Typography, Grid, Avatar, Theme } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
-import useMediaQuery from "@mui/material/useMediaQuery";
 import colors from "../../colors";
 import Button from "../Button";
 import ClickSelect from "../ClickSelect";
+import { useSmallScreen } from "../../contexts/SmallScreenContext";
 
 const settings = [
   { onClick: () => alert("hi"), text: "Profile" },
@@ -21,8 +20,7 @@ const buttonSx: SxProps<Theme> = {
 };
 
 const Navbar: FC = () => {
-  const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const isSmallScreen = useSmallScreen();
 
   return (
     <AppBar sx={{ padding: "1rem", height: "5rem" }} color="secondary">
