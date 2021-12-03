@@ -14,37 +14,34 @@ const settings = [
   { onClick: () => alert("hi"), text: "Logout" },
 ];
 
-const buttonSx: SxProps<Theme> = { color: colors.black, fontSize: "1.5rem" };
+const buttonSx: SxProps<Theme> = {
+  color: colors.black,
+  fontSize: { xs: "1rem", md: "1rem", lg: "1.5rem" },
+};
 
 const Navbar: FC = () => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-    <AppBar sx={{ padding: "1rem" }} color="secondary" position="static">
-      <Grid container justifyContent="space-around">
-        <Grid item md={8}>
+    <AppBar sx={{ padding: "1rem", height: "5rem" }} color="secondary">
+      <Grid container justifyContent="space-evenly">
+        <Grid item md={6}>
           <Typography variant="h3">CodeCreate</Typography>
         </Grid>
-        <Grid container columnSpacing={5} md={4}>
-          <Grid item container columnSpacing={2} md={10}>
+        <Grid container item md={6} columnSpacing={2}>
+          <Grid item container columnSpacing={2} md={11}>
             <Grid item md={4}>
-              <Button sx={buttonSx} onClick={() => alert("hi")}>
-                Lists
-              </Button>
+              <Button onClick={() => alert("hello")}>Lists</Button>
             </Grid>
             <Grid item md={4}>
-              <Button sx={buttonSx} onClick={() => alert("hi")}>
-                Code
-              </Button>
+              <Button onClick={() => alert("hello")}>Code</Button>
             </Grid>
             <Grid item md={4}>
-              <Button sx={buttonSx} onClick={() => alert("hi")}>
-                Create
-              </Button>
+              <Button onClick={() => alert("hello")}>Create</Button>
             </Grid>
           </Grid>
-          <Grid item md={2}>
+          <Grid item md={1}>
             <ClickSelect options={settings}>
               <Avatar
                 variant="square"
