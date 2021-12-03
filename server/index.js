@@ -1,6 +1,9 @@
 const express = require("express");
+const cors = require("cors");
 const app = express();
 const port = 4000;
+
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -11,7 +14,7 @@ app.get("/code", (req, res) => {
 });
 
 app.post("/sendCode", (req, res) => {
-  const language = req.body.Language;
+  const language = req.body;
   const code = req.body.Code;
   console.log(code);
   console.log(language);

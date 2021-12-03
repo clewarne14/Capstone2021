@@ -8,13 +8,15 @@ import "codemirror/mode/clike/clike";
 import "codemirror/mode/python/python";
 import "codemirror/mode/css/css";
 import styles from "./styles";
+import { Box } from "@mui/system";
+import { Button } from "@mui/material";
 
 const Editor: React.FC = () => {
   const [code, setCode] = useState<string>("");
   const [language, setLanguage] = useState<string>("python");
 
   return (
-    <div>
+    <Box sx={{ margin: "20rem auto", fontSize: "5rem" }}>
       <select
         name="languages"
         onChange={(e) => {
@@ -39,7 +41,21 @@ const Editor: React.FC = () => {
           lineNumbers: true,
         }}
       ></CodeMirror>
-    </div>
+      <Button
+        onClick={async () => {
+          const body = { Language: language, Code: code };
+          const data = await fetch("http://localhost:4000/sendCode", {
+            method: "POST",
+            body: JSON.stringify(body),
+            headers: { "Content-Type": "application/json" },
+          });
+          alert(data);
+        }}
+        sx={{ fontSize: "20rem", color: "black" }}
+      >
+        Click me
+      </Button>
+    </Box>
   );
 };
 

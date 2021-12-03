@@ -12,9 +12,10 @@ function App() {
       <ThemeProvider theme={theme}>
         <SmallScreenProvider>
           <Navbar />
+          <Editor />
           <Footer />
         </SmallScreenProvider>
-      </ThemeProvider>
+      </ThemeProvider> 
     </>
   );
 }
