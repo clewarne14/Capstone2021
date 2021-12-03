@@ -16,7 +16,8 @@ const settings = [
 
 const buttonSx: SxProps<Theme> = {
   color: colors.black,
-  fontSize: { xs: "1rem", md: "1rem", lg: "1.5rem" },
+  fontSize: { xs: "1rem", md: "1rem", lg: "2rem", padding: 0 },
+  maxWidth: "25rem",
 };
 
 const Navbar: FC = () => {
@@ -25,23 +26,31 @@ const Navbar: FC = () => {
 
   return (
     <AppBar sx={{ padding: "1rem", height: "5rem" }} color="secondary">
-      <Grid container justifyContent="space-evenly">
-        <Grid item md={6}>
+      <Grid container justifyContent="space-between">
+        <Grid item xs={10} sm={6}>
           <Typography variant="h3">CodeCreate</Typography>
         </Grid>
-        <Grid container item md={6} columnSpacing={2}>
-          <Grid item container columnSpacing={2} md={11}>
-            <Grid item md={4}>
-              <Button onClick={() => alert("hello")}>Lists</Button>
+        <Grid container item xs={2} sm={6} columnSpacing={2}>
+          {!isSmallScreen && (
+            <Grid item container columnSpacing={2} sm={10} lg={11}>
+              <Grid item sm={4}>
+                <Button sx={buttonSx} onClick={() => alert("hello")}>
+                  Lists
+                </Button>
+              </Grid>
+              <Grid item sm={4}>
+                <Button sx={buttonSx} onClick={() => alert("hello")}>
+                  Code
+                </Button>
+              </Grid>
+              <Grid item sm={4}>
+                <Button sx={buttonSx} onClick={() => alert("hello")}>
+                  Create
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item md={4}>
-              <Button onClick={() => alert("hello")}>Code</Button>
-            </Grid>
-            <Grid item md={4}>
-              <Button onClick={() => alert("hello")}>Create</Button>
-            </Grid>
-          </Grid>
-          <Grid item md={1}>
+          )}
+          <Grid item xs={10} sm={2} lg={1}>
             <ClickSelect options={settings}>
               <Avatar
                 variant="square"

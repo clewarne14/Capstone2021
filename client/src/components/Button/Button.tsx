@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import { Button as MUIButton, Theme } from "@mui/material";
 import { SxProps } from "@mui/system";
+import colors from "../../colors";
 
 type Props = {
   children: any;
@@ -14,8 +15,8 @@ const Button: FC<Props> = ({ onClick, children, sx }: Props) => {
       variant="contained"
       color="primary"
       sx={{
-        backgroundColor: "white",
-        color: "black",
+        backgroundColor: colors.white,
+        color: colors.black,
         width: "100%",
         height: "100%",
         ...sx,
