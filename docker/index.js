@@ -11,9 +11,10 @@ app.use(express.urlencoded({ extended: true }));
 // console.log("Hello World!");
 // var input = [];
 
-app.get("/codeToDockerTemp", (req, res) => {
+app.post("/codeToDockerTemp", (req, res) => {
   res.json();
-  console.log(req.body.input);
+  console.log(req.body);
+  console.log(req.body.Code);
 });
 
 app.listen(port, () => {
