@@ -11,8 +11,10 @@ app.get("/code", (req, res) => {
 });
 
 app.post("/sendCode", (req, res) => {
-  console.log(req.body.Body);
-  const newCode = res;
+  const language = req.body.Language;
+  const code = req.body.Code;
+  console.log(code);
+  console.log(language);
 });
 
 app.listen(port, () => {
