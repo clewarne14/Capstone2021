@@ -7,14 +7,14 @@ import "codemirror/mode/javascript/javascript";
 import "codemirror/mode/clike/clike";
 import "codemirror/mode/python/python";
 import "codemirror/mode/css/css";
-import "./styles.scss";
+import styles from "./styles";
 
 const Editor: React.FC = () => {
   const [code, setCode] = useState<string>("");
   const [language, setLanguage] = useState<string>("python");
 
   return (
-    <div className="editor-container">
+    <div>
       <select
         name="languages"
         onChange={(e) => {
@@ -32,7 +32,6 @@ const Editor: React.FC = () => {
           setCode(value);
         }}
         value={code}
-        className="code-mirror-wrapper"
         options={{
           lineWrapping: true,
           mode: language,
