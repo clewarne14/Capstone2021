@@ -49,11 +49,24 @@ const Editor: React.FC = () => {
             body: JSON.stringify(body),
             headers: { "Content-Type": "application/json" },
           });
-          alert(data);
         }}
-        sx={{ fontSize: "20rem", color: "black" }}
+        sx={{
+          fontSize: "5rem",
+          color: "black",
+          border: "1px solid black",
+          margin: "5rem",
+        }}
       >
-        Click me
+        Create entries
+      </Button>
+      <Button
+        onClick={async () => {
+          const data = await fetch("http://localhost:4000/code");
+          console.log(await data.json());
+        }}
+        sx={{ fontSize: "5rem", color: "black", border: "1px solid black" }}
+      >
+        Get entries
       </Button>
     </Box>
   );
