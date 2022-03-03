@@ -5,6 +5,9 @@ import Footer from "./components/Footer/Footer";
 import Navbar from "./components/Navbar/Navbar";
 import Editor from "./components/Editor/Editor";
 import theme from "./theme";
+import Question from "./sections/Questions/Question";
+import { Box } from "@mui/system";
+import ProblemBox from "./ProblemBox/ProblemBox";
 
 function App() {
   return (
@@ -12,10 +15,13 @@ function App() {
       <ThemeProvider theme={theme}>
         <SmallScreenProvider>
           <Navbar />
-          <Editor />
+          <ProblemBox
+            startcode="public static void main(String[] args)"
+            problemtext="Sample Problem"
+          />
           <Footer />
         </SmallScreenProvider>
-      </ThemeProvider> 
+      </ThemeProvider>
     </>
   );
 }
