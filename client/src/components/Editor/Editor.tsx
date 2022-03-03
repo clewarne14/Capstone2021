@@ -14,22 +14,22 @@ import "./codemirror.css";
 
 type Props = { scode: string };
 
-const Editor: React.FC<Props> = (scode) => {
-  const [code, setCode] = useState<string>("");
-  const [language, setLanguage] = useState<string>("python");
+const Editor: React.FC<Props> = ({ scode }: Props) => {
+  const [code, setCode] = useState<string>(scode);
+  const [language, setLanguage] = useState<string>("text/x-java");
 
   return (
-    <Box sx={{ fontSize: "5rem", width: "50%" }}>
+    <Box sx={{ fontSize: "1.0001rem", width: "75%" }}>
       <select
         name="languages"
         onChange={(e) => {
           setLanguage(e.target.value);
-          setCode("");
+          setCode(scode);
         }}
       >
+        <option value="text/x-java">java</option>
         <option value="python">python</option>
         <option value="javascript">javascript</option>
-        <option value="text/x-java">java</option>
       </select>
 
       <CodeMirror
@@ -56,7 +56,7 @@ const Editor: React.FC<Props> = (scode) => {
         }}
         sx={{ fontSize: "2rem", color: "black" }}
       >
-        Click me
+        Send Code
       </Button> */}
     </Box>
   );

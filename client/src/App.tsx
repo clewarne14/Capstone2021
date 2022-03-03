@@ -17,7 +17,7 @@ function App() {
           <Navbar />
           <ProblemBox
             startcode="public static void main(String[] args)"
-            problemtext="Sample Problem"
+            problemtext="Write a program that prints out the first 10 fibonacci numbers"
           />
           <Footer />
         </SmallScreenProvider>

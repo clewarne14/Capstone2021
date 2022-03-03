@@ -7,7 +7,15 @@ type Props = { startcode: string; problemtext: string };
 
 const ProblemBox: FC<Props> = ({ problemtext, startcode }: Props) => {
   return (
-    <Box sx={{ display: "flex", width: "100vw", marginTop: "5rem" }}>
+    <Box
+      sx={{
+        display: "flex",
+        width: "100vw",
+        height: "20rem",
+        marginTop: "10rem",
+        fontSize: "1.5rem",
+      }}
+    >
       <Editor scode={startcode} />
       <Question ptext={problemtext} />
     </Box>
