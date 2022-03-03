@@ -11,10 +11,9 @@ import Footer from "../../components/Footer";
 import { Box } from "@mui/material";
 import PhoneNavigation from "../../components/PhoneNavigation";
 
-type Props = { problemtext: string };
+type Props = { ptext: string };
 
-const Question: FC<Props> = ({ problemtext }) => {
-  //return <header>as;dlfkjas;klf</header>;
+const Question: FC<Props> = ({ ptext }) => {
   const isSmallScreen = useSmallScreen();
   return (
     <Box
@@ -25,6 +24,7 @@ const Question: FC<Props> = ({ problemtext }) => {
         marginTop: "5rem",
       }}
     >
+      {ptext}
       {isSmallScreen && <PhoneNavigation />}
     </Box>
   );

@@ -12,9 +12,9 @@ import { Box } from "@mui/system";
 import { Button } from "@mui/material";
 import "./codemirror.css";
 
-type Props = { startcode: string };
+type Props = { scode: string };
 
-const Editor: React.FC<Props> = (startcode) => {
+const Editor: React.FC<Props> = (scode) => {
   const [code, setCode] = useState<string>("");
   const [language, setLanguage] = useState<string>("python");
 

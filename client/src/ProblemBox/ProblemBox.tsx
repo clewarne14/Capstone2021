@@ -8,8 +8,8 @@ type Props = { startcode: string; problemtext: string };
 const ProblemBox: FC<Props> = ({ problemtext, startcode }: Props) => {
   return (
     <Box sx={{ display: "flex", width: "100vw", marginTop: "5rem" }}>
-      <Editor startcode={startcode} />
-      <Question problemtext={problemtext} />
+      <Editor scode={startcode} />
+      <Question ptext={problemtext} />
     </Box>
   );
 };
