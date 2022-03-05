@@ -30,12 +30,11 @@ app.post("/sendCode", (req, res) => {
 
   db.serialize(() => {
     const stmt = db.prepare("INSERT INTO adrian VALUES (?)");
-    for (let i = 0; i < 10; i++) {
-      stmt.run(code + i);
-    }
+
+    stmt.run(code);
 
     stmt.finalize();
-    res.send("sucess");
+    res.send("success");
   });
 });
 
