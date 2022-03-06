@@ -1,9 +1,8 @@
 import React, { FC, useState } from "react";
+import { Link as RouterLink } from "react-router-dom";
 import { BottomNavigation, BottomNavigationAction } from "@mui/material";
-import ComputerIcon from "@mui/icons-material/Computer";
-import ListIcon from "@mui/icons-material/List";
-import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
 import colors from "../../colors";
+import { routes } from "../../Routes";
 
 const PhoneNavigation: FC = () => {
   const [value, setValue] = useState(0);
@@ -20,21 +19,15 @@ const PhoneNavigation: FC = () => {
       onChange={(e, newValue) => setValue(newValue)}
       sx={{ backgroundColor: colors.black, color: colors.blue }}
     >
-      <BottomNavigationAction
-        sx={navigationSx}
-        label="Lists"
-        icon={<ListIcon />}
-      />
-      <BottomNavigationAction
-        sx={navigationSx}
-        label="Code"
-        icon={<ComputerIcon />}
-      />
-      <BottomNavigationAction
-        sx={navigationSx}
-        label="Create"
-        icon={<AddToPhotosIcon />}
-      />
+      {routes.map((route) => (
+        <BottomNavigationAction
+          sx={navigationSx}
+          label={route.text}
+          icon={route.icon}
+          component={RouterLink}
+          to={route.url}
+        />
+      ))}
     </BottomNavigation>
   );
 };

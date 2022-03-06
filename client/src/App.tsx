@@ -12,7 +12,6 @@ const App = () => (
     <ThemeProvider theme={theme}>
       <SmallScreenProvider>
         <Navbar />
-        fewar
         <Routes />
         <Footer />
       </SmallScreenProvider>

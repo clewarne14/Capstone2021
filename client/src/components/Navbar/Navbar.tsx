@@ -1,17 +1,12 @@
 import React, { FC } from "react";
+import { Link } from "react-router-dom";
 import { SxProps } from "@mui/system";
 import { AppBar, Typography, Grid, Avatar, Theme } from "@mui/material";
 import colors from "../../colors";
+import { routes } from "../../Routes";
 import { useSmallScreen } from "../../contexts/SmallScreenContext";
 import Button from "../Button";
 import ClickSelect from "../ClickSelect";
-import { Link } from "react-router-dom";
-
-const routes = [
-  { text: "Lists", url: "/lists" },
-  { text: "Code", url: "/code" },
-  { text: "Create", url: "/create-problem/type" },
-];
 
 const settings = [
   { onClick: () => alert("hi"), text: "Profile" },
@@ -41,11 +36,9 @@ const Navbar: FC = () => {
             <Grid item container columnSpacing={2} sm={10} lg={11}>
               {routes.map((route) => (
                 <Grid key={route.text} item sm={4}>
-                  <Button sx={buttonSx}>
-                    <Link style={{ textDecoration: "none" }} to={route.url}>
-                      {route.text}
-                    </Link>
-                  </Button>
+                  <Link style={{ textDecoration: "none" }} to={route.url}>
+                    <Button sx={buttonSx}>{route.text}</Button>
+                  </Link>
                 </Grid>
               ))}
             </Grid>
