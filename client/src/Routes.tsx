@@ -4,6 +4,7 @@ import ComputerIcon from "@mui/icons-material/Computer";
 import ListIcon from "@mui/icons-material/List";
 import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
 import ChooseProblemType from "./sections/ChooseProblemType/ChooseProblemType";
+import MultipleChoiceCreation from "./sections/MultipleChoiceCreation/MultipleChoiceCreation";
 
 /**
  * This file contains all of the routes for our single page application.
@@ -19,6 +20,10 @@ export const routes = [
 const Routes: FC = () => (
   <DOMRoutes>
     <Route path="create-problem/type" element={<ChooseProblemType />} />
+    <Route
+      path="create-problem/multiple-choice"
+      element={<MultipleChoiceCreation />}
+    />
   </DOMRoutes>
 );
 

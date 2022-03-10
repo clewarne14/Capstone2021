@@ -1,20 +1,19 @@
 import React, { FC } from "react";
 import { Grid, Typography } from "@mui/material";
-import { Box } from "@mui/system";
-import { useSmallScreen } from "../../contexts/SmallScreenContext";
 import IconButton from "../../components/IconButton";
+import { useSmallScreen } from "../../contexts/SmallScreenContext";
 
 const options = [
-  { text: "Debugging", icon: "build", url: "create-problem/debugging" },
+  { text: "Debugging", icon: "build", url: "/create-problem/debugging" },
   {
     text: "Algorithmic",
     icon: "computer",
-    url: "create-problem/algorithmic",
+    url: "/create-problem/algorithmic",
   },
   {
     text: "Multiple Choice",
     icon: "view_list",
-    url: "create-problem/multiple-choice",
+    url: "/create-problem/multiple-choice",
   },
 ];
 
