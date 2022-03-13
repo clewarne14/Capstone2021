@@ -1,2 +1,2 @@
-console.log("Hello World!");
+while (1) console.log("Hello World!");
 var input = [];

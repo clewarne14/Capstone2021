@@ -13,6 +13,7 @@ const Footer: FC = () => {
         height: "4rem",
         backgroundColor: colors.black,
         position: "fixed",
+        clear: "both",
         left: "0",
         bottom: "0",
         textAlign: "center",
