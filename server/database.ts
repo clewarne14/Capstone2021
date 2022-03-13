@@ -1,7 +1,13 @@
-import { Database, sqlite3 as Sqlite } from "sqlite3";
-const sqlite3: Sqlite = require("sqlite3");
+import mariadb from "mariadb";
 
-const verbose = sqlite3.verbose();
-const db = new verbose.Database(":memory:");
+const getDb = (user: string, password: string, database: string) => {
+  const pool = mariadb.createPool({
+    user,
+    password,
+    database,
+  });
 
-export default db;
+  return pool;
+};
+
+export { getDb };

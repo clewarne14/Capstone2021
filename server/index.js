@@ -1,11 +1,12 @@
 const express = require("express");
 const cors = require("cors");
-const sqlite = require("./database");
-const app = express();
-const port = 4000;
+const { getDb } = require("./build/database");
 
-const db = sqlite.default;
-db.run("CREATE TABLE adrian (info TEXT)");
+require("dotenv").config();
+
+const app = express();
+const port = process.env.PORT;
+const db = getDb(process.env.USER, process.env.PASSWORD, process.env.DATABASE);
 
 app.use(cors());
 app.use(express.json());
@@ -13,29 +14,17 @@ app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {});
 
-app.get("/code", (req, res) => {
-  console.log("in here");
-  const records = [];
-  const x = db.all("SELECT rowid AS id, info FROM adrian", (err, row) => {
-    res.send(row);
-    return row;
-  });
-});
+app.get("/code", (req, res) => {});
 
-app.post("/sendCode", (req, res) => {
-  const language = req.body;
-  const code = req.body.Code;
-  console.log(code);
-  console.log(language);
+app.post("/sendCode", async (req, res) => {
+  const { title, description, choices } = req.body;
+  await db.query(
+    `insert into test (choices, description, title) values ('${choices}', '${description}', '${title}')`
+  );
 
-  db.serialize(() => {
-    const stmt = db.prepare("INSERT INTO adrian VALUES (?)");
+  console.log(await db.query("select * from test"));
 
-    stmt.run(code);
-
-    stmt.finalize();
-    res.send("success");
-  });
+  console.log(title, description, choices);
 });
 
 app.listen(port, () => {
