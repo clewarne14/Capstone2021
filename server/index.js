@@ -5,8 +5,17 @@ const { getDb } = require("./build/database");
 require("dotenv").config();
 
 const app = express();
-const port = process.env.PORT;
-const db = getDb(process.env.USER, process.env.PASSWORD, process.env.DATABASE);
+const {
+  SERVER_PORT,
+  USER,
+  PASSWORD,
+  DATABASE,
+  CERT_LOCATION,
+  HOST,
+  DATABASE_PORT,
+} = process.env;
+
+const db = getDb(USER, PASSWORD, DATABASE, HOST, DATABASE_PORT);
 
 app.use(cors());
 app.use(express.json());
@@ -23,10 +32,8 @@ app.post("/sendCode", async (req, res) => {
   );
 
   console.log(await db.query("select * from test"));
-
-  console.log(title, description, choices);
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+app.listen(SERVER_PORT, () => {
+  console.log(`Connected at http://localhost:${SERVER_PORT}`);
 });
