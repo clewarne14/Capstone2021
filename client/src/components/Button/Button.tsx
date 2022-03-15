@@ -5,7 +5,7 @@ import colors from "../../colors";
 
 type Props = {
   children: any;
-  onClick: () => void;
+  onClick?: () => void;
   sx?: SxProps<Theme>;
 };
 
