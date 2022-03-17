@@ -75,11 +75,13 @@ const Editor: React.FC<Props> = ({ scode }: Props) => {
           <Button
             onClick={async () => {
               const body = { Language: language, Code: code };
-              await fetch("http://localhost:4000/sendCode", {
+              console.log("clicked");
+              await fetch("http://localhost:4000/testCode", {
                 method: "POST",
                 body: JSON.stringify(body),
                 headers: { "Content-Type": "application/json" },
               });
+              console.log("again");
 
               const data: { info: string }[] = await (
                 await fetch("http://localhost:4000/code")

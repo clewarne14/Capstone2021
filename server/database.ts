@@ -17,6 +17,7 @@ const getDb = (
     host,
     port,
     ssl: { ca: serverCert },
+    acquireTimeout: 2000,
   });
 
   return pool;
