@@ -7,17 +7,10 @@ const fs = require("fs");
 require("dotenv").config();
 
 const app = express();
-const {
-  SERVER_PORT,
-  USER,
-  PASSWORD,
-  DATABASE,
-  CERT_LOCATION,
-  HOST,
-  DATABASE_PORT,
-} = process.env;
+const { SERVER_PORT, USERNAME, PASSWORD, DATABASE, HOST, DATABASE_PORT } =
+  process.env;
 
-const db = getDb(USER, PASSWORD, DATABASE, HOST, DATABASE_PORT);
+const db = getDb(USERNAME, PASSWORD, DATABASE, HOST, DATABASE_PORT);
 
 app.use(cors());
 app.use(express.json());
@@ -38,10 +31,7 @@ app.post("/sendCode", async (req, res) => {
 app.post("/testCode", async (req, res) => {
   const { Language, Code } = req.body;
   console.log(Code);
-  // var f = new File(
-  //   [code],
-  //   "/Users/clewarne/Capstone2021/docker/docker/Test2.txt"
-  // );
+  //Create new file with code as text
   fs.writeFile(
     "/Users/clewarne/Capstone2021/server/docker/docker/Test2.txt",
     Code,
@@ -51,6 +41,7 @@ app.post("/testCode", async (req, res) => {
       }
     }
   );
+  //Execute docker container and run code
   exec(
     "docker run -e VERSION=1.1 -i --rm -p 9000:5000 code-create python /docker/Create.py < docker/docker/Test2.txt > docker/docker/output.txt"
   );
