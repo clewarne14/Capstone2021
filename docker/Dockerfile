@@ -14,7 +14,7 @@ FROM python:3
 WORKDIR /docker
 #RUN echo "print(\"Hello World\")" > Test.py
 COPY /docker/Create.py ./
-COPY /docker/Test.txt ./
+#COPY /docker/Test.txt ./
 # RUN pip install --no-cache-dir -r requirements.txt
 
 # COPY . .
