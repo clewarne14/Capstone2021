@@ -11,7 +11,11 @@ import styles from "./styles";
 import { Box } from "@mui/system";
 import { Button, Grid, Typography } from "@mui/material";
 
-const Editor: React.FC = () => {
+type Props = {
+  scode: string;
+};
+
+const Editor: React.FC<Props> = ({ scode }: Props) => {
   const [code, setCode] = useState<string>("");
   const [language, setLanguage] = useState<string>("python");
   const [dbCode, setDbCode] = useState<string[]>([]);
@@ -45,9 +49,10 @@ const Editor: React.FC = () => {
         name="languages"
         onChange={(e) => {
           setLanguage(e.target.value);
-          setCode("");
+          setCode(scode);
         }}
       >
+        <option value="text/x-java">java</option>
         <option value="python">python</option>
         <option value="javascript">javascript</option>
         <option value="text/x-java">java</option>
@@ -70,11 +75,13 @@ const Editor: React.FC = () => {
           <Button
             onClick={async () => {
               const body = { Language: language, Code: code };
-              await fetch("http://localhost:4000/sendCode", {
+              console.log("clicked");
+              await fetch("http://localhost:4000/testCode", {
                 method: "POST",
                 body: JSON.stringify(body),
                 headers: { "Content-Type": "application/json" },
               });
+              console.log("again");
 
               const data: { info: string }[] = await (
                 await fetch("http://localhost:4000/code")

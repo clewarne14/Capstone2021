@@ -5,6 +5,8 @@ import ListIcon from "@mui/icons-material/List";
 import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
 import ChooseProblemType from "./sections/ChooseProblemType/ChooseProblemType";
 import MultipleChoiceCreation from "./sections/MultipleChoiceCreation/MultipleChoiceCreation";
+import Question from "./sections/Questions/Question";
+import ProblemBox from "./ProblemBox/ProblemBox";
 
 /**
  * This file contains all of the routes for our single page application.
@@ -23,6 +25,15 @@ const Routes: FC = () => (
     <Route
       path="create-problem/multiple-choice"
       element={<MultipleChoiceCreation />}
+    />
+    <Route
+      path="/code"
+      element={
+        <ProblemBox
+          startcode={"Public static void main()"}
+          problemtext={"Print out the first 5 fibonacci numbers"}
+        />
+      }
     />
   </DOMRoutes>
 );
