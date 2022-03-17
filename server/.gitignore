@@ -24,3 +24,4 @@ yarn-debug.log*
 yarn-error.log*
 
 skysql_chain.pem
+aws_skysql_chain.pem

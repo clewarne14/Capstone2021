@@ -11,7 +11,11 @@ import styles from "./styles";
 import { Box } from "@mui/system";
 import { Button, Grid, Typography } from "@mui/material";
 
-const Editor: React.FC = () => {
+type Props = {
+  scode: string;
+};
+
+const Editor: React.FC<Props> = ({ scode }: Props) => {
   const [code, setCode] = useState<string>("");
   const [language, setLanguage] = useState<string>("python");
   const [dbCode, setDbCode] = useState<string[]>([]);

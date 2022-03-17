@@ -12,9 +12,10 @@
 FROM python:3
 
 WORKDIR /docker
-RUN echo "print(\"Hello World\")" > Test.py
-# COPY requirements.txt ./
+#RUN echo "print(\"Hello World\")" > Test.py
+COPY /docker/Create.py ./
+COPY /docker/Test.txt ./
 # RUN pip install --no-cache-dir -r requirements.txt
 
 # COPY . .
-CMD ["python", "Test.py" ]
+#CMD ["python", "Create.py", "Test.txt" ]

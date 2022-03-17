@@ -1,7 +1,7 @@
 import fs from "fs";
 import mariadb from "mariadb";
 
-const serverCert = [fs.readFileSync("skysql_chain.pem")];
+const serverCert = [fs.readFileSync("aws_skysql_chain.pem")];
 
 const getDb = (
   user: string,
