@@ -32,6 +32,11 @@ app.get("/", (req, res) => {});
 
 app.get("/code", (req, res) => {});
 
+app.get("/tags", async (req, res) => {
+  const tags = await db.query("select * from tags");
+  res.send(tags);
+});
+
 app.post("/sendCode", async (req, res) => {
   const { title, description, choices } = req.body;
   await db.query(

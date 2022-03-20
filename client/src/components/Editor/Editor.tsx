@@ -40,7 +40,7 @@ const Editor: React.FC<Props> = ({ scode }: Props) => {
     <Box
       sx={{
         margin: "10rem auto",
-        fontSize: "2.5rem",
+        fontSize: "1rem",
         height: "50vh",
         width: "50vw",
       }}

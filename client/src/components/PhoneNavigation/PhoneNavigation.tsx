@@ -26,6 +26,7 @@ const PhoneNavigation: FC = () => {
           icon={route.icon}
           component={RouterLink}
           to={route.url}
+          key={route.text}
         />
       ))}
     </BottomNavigation>

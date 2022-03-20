@@ -4,7 +4,6 @@ import IconButton from "../../components/IconButton";
 import { useSmallScreen } from "../../contexts/SmallScreenContext";
 
 const options = [
-  { text: "Debugging", icon: "build", url: "/create-problem/debugging" },
   {
     text: "Algorithmic",
     icon: "computer",
@@ -28,7 +27,7 @@ const ChooseProblemType: FC = () => {
       </Typography>
       <Grid container spacing={isSmallScreen ? 3 : 6} width="100%">
         {options.map((option) => (
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={12 / options.length}>
             <IconButton key={option.text} {...option} />
           </Grid>
         ))}
