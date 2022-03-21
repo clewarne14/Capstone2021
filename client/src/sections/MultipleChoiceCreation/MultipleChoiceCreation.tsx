@@ -13,21 +13,24 @@ const MultipleChoiceCreation: FC = () => {
   const [description, setDescription] = useState("");
   const [dbTags, setDbTags] = useState<Array<string>>([]);
   const [choices, setChoices] = useState<Array<Choice>>([
-    { active: true, text: "Double click to edit!", id: 1, disabled: true },
-    { active: false, text: "I'm an incorrect answer!", id: 2, disabled: true },
+    {
+      active: true,
+      text: "",
+      id: 1,
+    },
+    { active: false, text: "", id: 2 },
   ]);
   const [tags, setTags] = useState([]);
 
   const handleSubmit = async () => {
-    const data = await fetch("http://localhost:4000/sendCode", {
+    const data = await fetch("http://localhost:4000/multiple-choice", {
       method: "POST",
-      body: JSON.stringify({ title, description, choices }),
+      body: JSON.stringify({ title, description, choices, tags }),
       headers: { "Content-Type": "application/json" },
     });
     console.log(data);
   };
 
-  console.log(choices);
   // Use effect to grab tags from the database
   useEffect(() => {
     (async () => {
@@ -90,7 +93,10 @@ const MultipleChoiceCreation: FC = () => {
 
       <Grid container justifyContent="flex-end" item xs={12}>
         <Grid xs={2} item>
-          <Button sx={{ backgroundColor: colors.maroon, color: colors.white }}>
+          <Button
+            onClick={handleSubmit}
+            sx={{ backgroundColor: colors.maroon, color: colors.white }}
+          >
             Submit
           </Button>
         </Grid>

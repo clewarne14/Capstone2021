@@ -10,15 +10,20 @@ const getDb = (
   host: string,
   port: number
 ) => {
-  const pool = mariadb.createPool({
-    user,
-    password,
-    database,
-    host,
-    port,
-    acquireTimeout: 3000,
-    ssl: { ca: serverCert },
-  });
+  let pool;
+  try {
+    pool = mariadb.createPool({
+      user,
+      password,
+      database,
+      host,
+      port,
+      acquireTimeout: 3000,
+      ssl: { ca: serverCert },
+    });
+  } catch (e) {
+    throw e;
+  }
 
   return pool;
 };
