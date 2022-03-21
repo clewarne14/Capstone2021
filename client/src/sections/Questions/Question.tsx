@@ -7,7 +7,6 @@ import {
 import Navbar from "../../components/Navbar";
 import Editor from "../../components/Editor";
 import theme from "../../theme";
-import Footer from "../../components/Footer";
 import { Box, TextField } from "@mui/material";
 import PhoneNavigation from "../../components/PhoneNavigation";
 import Button from "../../components/Button/Button";

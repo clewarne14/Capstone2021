@@ -5,7 +5,6 @@ import ListIcon from "@mui/icons-material/List";
 import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
 import ChooseProblemType from "./sections/ChooseProblemType/ChooseProblemType";
 import MultipleChoiceCreation from "./sections/MultipleChoiceCreation/MultipleChoiceCreation";
-import Question from "./sections/Questions/Question";
 import ProblemBox from "./ProblemBox/ProblemBox";
 
 /**
