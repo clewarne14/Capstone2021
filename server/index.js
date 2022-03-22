@@ -61,7 +61,6 @@ app.post('/multiple-choice', async (req, res) => {
 
 app.post('/testCode', async (req, res) => {
   const { Language, Code } = req.body;
-  console.log(Code);
   //Create new file with code as text
   fs.writeFile(
     '/Users/clewarne/Capstone2021/server/docker/docker/Test2.txt',
@@ -74,7 +73,7 @@ app.post('/testCode', async (req, res) => {
   );
   //Execute docker container and run code
   exec(
-    'docker run -e VERSION=1.1 -i --rm -p 9000:5000 code-create python /docker/Create.py < docker/docker/Test2.txt > docker/docker/output.txt'
+    'docker run -e VERSION=1.1 -i --rm -p 9000:5000 code-create python /docker/Create.py < docker/docker/Test2.txt docker/docker/Test3.txt> docker/docker/output.txt'
   );
   return 'Done';
 });
