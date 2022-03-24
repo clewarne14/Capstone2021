@@ -61,16 +61,7 @@ app.post('/multiple-choice', async (req, res) => {
 
 app.post('/testCode', async (req, res) => {
   const { Language, Code } = req.body;
-  //Create new file with code as text
-  // fs.writeFile(
-  //   '/Users/clewarne/Capstone2021/server/docker/docker/Code.txt',
-  //   Code,
-  //   (err) => {
-  //     if (err) {
-  //       console.log(err);
-  //     }
-  //   }
-  // );
+
   let Test = `
 import execFile
 
@@ -90,34 +81,14 @@ if __name__ == "__main__":
         print("TRUE")
     else:
         print("FALSE")`;
-  // fs.writeFile(
-  //   '/Users/clewarne/Capstone2021/server/docker/docker/Tests.txt',
-  //   Test,
-  //   (err) => {
-  //     if (err) {
-  //       console.log(err);
-  //     }
-  //   }
-  // );
   const command =
     "docker run -e VERSION=1.1 -i --rm -p 9000:5000 code-create python '" +
     Code +
     "' '" +
     Test +
     "' > output.txt";
-  // console.log(command);
-  //python /docker/Create.py /docker/*.txt
   //Execute docker container and run code
-  exec(
-    command
-    // 'docker run -e VERSION=1.1 -i --rm -p 9000:5000 code-create ' +
-    //   Code +
-    //   ' ' +
-    //   Test +
-    //   ' > output.txt'
-    // ' > docker/docker/output.txt' python /docker/Create.py /docker/*.txt
-  );
-  console.log('DONE');
+  exec(command);
   return 'Done';
 });
 
