@@ -16,7 +16,7 @@ const ProblemBox: FC<Props> = ({ problemtext, startcode }: Props) => {
         fontSize: "1.5rem",
       }}
     >
-      <Editor scode={startcode} />
+      {/* <Editor code={startcode} /> */}
       <Question ptext={problemtext} />
     </Box>
   );

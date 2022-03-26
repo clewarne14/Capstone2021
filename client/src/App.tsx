@@ -7,6 +7,8 @@ import Routes from "./Routes";
 import "./App.css";
 import PhoneNavigation from "./components/PhoneNavigation";
 
+const languages = ['python', 'javascript']
+
 const App = () => (
   <div className="page-container">
     <ThemeProvider theme={theme}>
