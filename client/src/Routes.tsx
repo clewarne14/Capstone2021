@@ -6,6 +6,7 @@ import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
 import ChooseProblemType from "./sections/ChooseProblemType/ChooseProblemType";
 import MultipleChoiceCreation from "./sections/MultipleChoiceCreation/MultipleChoiceCreation";
 import ProblemBox from "./ProblemBox/ProblemBox";
+import AlgorithmicCreation from "./sections/AlgorithmicCreation/AlgorithmicCreation";
 
 /**
  * This file contains all of the routes for our single page application.
@@ -24,6 +25,10 @@ const Routes: FC = () => (
     <Route
       path="create-problem/multiple-choice"
       element={<MultipleChoiceCreation />}
+    />
+    <Route
+      path="create-problem/algorithmic"
+      element={<AlgorithmicCreation />}
     />
     <Route
       path="/code"

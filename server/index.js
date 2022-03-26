@@ -55,6 +55,7 @@ app.post('/multiple-choice', async (req, res) => {
       `insert into multipleChoice (choices, problemDescription, title, tags, dateCreated, answer) values ('${parsedChoices}', '${description}', '${title}', '${parsedTags}', '${formattedDate}', '${answer.text}')`
     );
   } catch (e) {
+    console.log('failed');
     throw e;
   }
 });

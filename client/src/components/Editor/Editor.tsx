@@ -45,19 +45,6 @@ const Editor: React.FC<Props> = ({ scode }: Props) => {
         width: "50vw",
       }}
     >
-      {/* <select
-        name="languages"
-        onChange={(e) => {
-          setLanguage(e.target.value);
-          setCode(scode);
-        }}
-      >
-        <option value="text/x-java">java</option>
-        <option value="python">python</option>
-        <option value="javascript">javascript</option>
-        <option value="text/x-java">java</option>
-      </select> */}
-
       <CodeMirror
         onBeforeChange={(editor, data, value) => {
           setCode(value);
