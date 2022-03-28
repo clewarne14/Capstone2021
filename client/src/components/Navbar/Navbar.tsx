@@ -17,7 +17,7 @@ const settings = [
 
 const buttonSx: SxProps<Theme> = {
   color: colors.black,
-  fontSize: { xs: "1rem", md: "1rem", lg: "2rem", padding: 0 },
+  fontSize: { xs: "1rem", md: "1rem", lg: "1.5rem", padding: 0 },
   maxWidth: "25rem",
 };
 

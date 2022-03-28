@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
 import { Button as MUIButton, Theme } from "@mui/material";
 import { SxProps } from "@mui/system";
 import colors from "../../colors";
@@ -7,11 +7,18 @@ type Props = {
   children: any;
   onClick?: () => void;
   sx?: SxProps<Theme>;
+  endIcon?: ReactNode;
 };
 
-const Button: FC<Props> = ({ onClick, children, sx }: Props) => {
+const Button: FC<Props> = ({
+  onClick,
+  children,
+  sx,
+  endIcon = <></>,
+}: Props) => {
   return (
     <MUIButton
+      endIcon={endIcon}
       variant="contained"
       color="primary"
       sx={{

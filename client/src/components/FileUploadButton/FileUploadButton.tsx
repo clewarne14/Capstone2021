@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
 import { Grid, InputLabel } from "@mui/material";
 import Button from "../Button";
 
@@ -6,19 +6,19 @@ type Props = {
   file: File | undefined;
   setFile: (e: File | undefined) => void;
   gridItem?: boolean;
+  endIcon?: ReactNode;
 };
-
-const getFileName = async (file: File) => await file.text();
 
 const FileUploadButton: FC<Props> = ({
   file,
   setFile,
   gridItem = false,
+  endIcon = <></>,
 }: Props) => {
   return (
     <Grid spacing={2} alignItems="center" container item={gridItem}>
       <Grid item sm={4}>
-        <Button sx={{ position: "relative" }}>
+        <Button endIcon={endIcon} sx={{ position: "relative" }}>
           Upload file
           <input
             type="file"

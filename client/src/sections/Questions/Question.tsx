@@ -1,11 +1,5 @@
 import React, { FC } from "react";
-import { ThemeProvider } from "@emotion/react";
-import {
-  SmallScreenProvider,
-  useSmallScreen,
-} from "../../contexts/SmallScreenContext";
-import Navbar from "../../components/Navbar";
-import Editor from "../../components/Editor";
+import { useSmallScreen } from "../../contexts/SmallScreenContext";
 import theme from "../../theme";
 import { Box, TextField } from "@mui/material";
 import PhoneNavigation from "../../components/PhoneNavigation";

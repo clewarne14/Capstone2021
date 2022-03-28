@@ -6,7 +6,7 @@ const theme = createTheme({
     error: { main: "#750D37" },
     secondary: { main: "#210124" },
     info: { main: "#DBF9F0" },
-    success: { main: "#B3DEC1" },
+    success: { main: "#259c25" },
   },
   typography: {
     fontFamily: "montserrat",
