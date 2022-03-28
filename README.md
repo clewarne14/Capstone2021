@@ -18,6 +18,6 @@ To develop with CodeCreate, a few things need to be done.
    SASS_PATH=./node_modules;./src # This is if you're using Windows
    SASS_PATH=node_modules:src # This is if you're using MacOS
    ```
- 3. Paste the _skysql_chain.pem_ file in the root directory of server. This is to ensure we have the correct permissions for our database connection.
+ 3. Paste the aws_skysql_chain.pem_ file in the root directory of server. This is to ensure we have the correct permissions for our database connection.
 
 ## You're good to go!!!
