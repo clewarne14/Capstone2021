@@ -62,21 +62,34 @@ app.post('/multiple-choice', async (req, res) => {
 
 app.post('/testCode', async (req, res) => {
   const { Language, Code } = req.body;
-  console.log(Code);
-  //Create new file with code as text
-  fs.writeFile(
-    '/Users/clewarne/Capstone2021/server/docker/docker/Test2.txt',
-    Code,
-    (err) => {
-      if (err) {
-        console.log(err);
-      }
-    }
-  );
+
+  let Test = `
+import execFile
+
+def test1():
+    if execFile.fib(3)== "0 1 1":
+        return True
+    else:
+        return False
+def test2():
+    if execFile.fib(4)=="0 1 1 2":
+        return True
+    else:
+        return False
+
+if __name__ == "__main__":
+    if test1() and test2():
+        print("TRUE")
+    else:
+        print("FALSE")`;
+  const command =
+    "docker run -e VERSION=1.1 -i --rm -p 9000:5000 code-create python '" +
+    Code +
+    "' '" +
+    Test +
+    "' > output.txt";
   //Execute docker container and run code
-  exec(
-    'docker run -e VERSION=1.1 -i --rm -p 9000:5000 code-create python /docker/Create.py < docker/docker/Test2.txt > docker/docker/output.txt'
-  );
+  exec(command);
   return 'Done';
 });
 
