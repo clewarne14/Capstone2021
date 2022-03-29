@@ -7,34 +7,39 @@ import React, {
   SetStateAction,
   Dispatch,
 } from "react";
-import { Alert, Collapse, IconButton, Snackbar } from "@mui/material";
+import { Alert, IconButton, Snackbar } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
-type Alert = {
+type AlertType = {
   text: string;
   variant: "success" | "warning" | "error" | "none" | "info";
 };
 
-const AlertContext = createContext<Dispatch<SetStateAction<Alert>> | null>(
+const AlertContext = createContext<Dispatch<SetStateAction<AlertType>> | null>(
   null
 );
 
 const AlertContextProvider = AlertContext.Provider;
 
-const useAlert = () => useContext(AlertContext);
+const useAlert = () => {
+  const context = useContext(AlertContext);
+  if (context) return context;
+  else throw new Error("Error building alert context");
+};
 
 type Props = {
   children: ReactNode;
 };
 
 const AlertContextWrapper: FC<Props> = ({ children }: Props) => {
-  const [alert, setAlert] = useState<Alert>({ variant: "none", text: "" });
+  const [alert, setAlert] = useState<AlertType>({ variant: "none", text: "" });
 
-  const onClose = () => setAlert({ variant: "none", text: "" });
+  const onClose = () => setAlert({ variant: "none", text: alert.text });
 
   return (
     <AlertContextProvider value={setAlert}>
       <Snackbar
+        sx={{ opacity: alert.variant === "none" ? 0 : "100%" }}
         open={alert.variant !== "none"}
         anchorOrigin={{ horizontal: "center", vertical: "top" }}
         autoHideDuration={5000}
@@ -54,7 +59,7 @@ const AlertContextWrapper: FC<Props> = ({ children }: Props) => {
           }
           sx={{ fontSize: "1.2rem", textAlign: "center" }}
         >
-          {alert.text}
+          {`${alert.variant.toUpperCase()}: ${alert.text}`}
         </Alert>
       </Snackbar>
       {children}

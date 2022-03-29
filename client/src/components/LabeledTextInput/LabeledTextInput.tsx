@@ -19,7 +19,7 @@ const LabeledTextInput: FC<Props> = ({
 }: Props) => {
   return (
     <>
-      <InputLabel sx={{ fontSize: "1.5rem"}}>{ label}</InputLabel>
+      <InputLabel sx={{ fontSize: "1.5rem" }}>{label}</InputLabel>
       <TextField
         onChange={(e) => onChange(e.target.value)}
         value={value}
