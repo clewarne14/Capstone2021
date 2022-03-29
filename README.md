@@ -1,10 +1,14 @@
 # Capstone2021
+
 ---
+
 ## Getting started
+
 To develop with CodeCreate, a few things need to be done.
-1. Install all necessary dependencies in both the server and client directory using ```npm install```
+
+1. Install all necessary dependencies in both the server and client directory using `npm install`
 2. Create a .env file in both the server and client directory.
-   - Within the .env in the **server** directory, fill in these values: 
+   - Within the .env in the **server** directory, fill in these values:
    ```
    USER=
    PASSWORD=
@@ -17,7 +21,9 @@ To develop with CodeCreate, a few things need to be done.
    ```
    SASS_PATH=./node_modules;./src # This is if you're using Windows
    SASS_PATH=node_modules:src # This is if you're using MacOS
+   REACT_APP_AUTH0_DOMAIN=
+   REACT_APP_AUTH0_CLIENT_ID=
    ```
- 3. Paste the aws_skysql_chain.pem_ file in the root directory of server. This is to ensure we have the correct permissions for our database connection.
+3. Paste the aws*skysql_chain.pem* file in the root directory of server. This is to ensure we have the correct permissions for our database connection.
 
 ## You're good to go!!!

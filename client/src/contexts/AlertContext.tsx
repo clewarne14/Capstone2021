@@ -19,7 +19,7 @@ const AlertContext = createContext<Dispatch<SetStateAction<AlertType>> | null>(
   null
 );
 
-const AlertContextProvider = AlertContext.Provider;
+const AlertContextWrapper = AlertContext.Provider;
 
 const useAlert = () => {
   const context = useContext(AlertContext);
@@ -31,13 +31,13 @@ type Props = {
   children: ReactNode;
 };
 
-const AlertContextWrapper: FC<Props> = ({ children }: Props) => {
+const AlertContextProvider: FC<Props> = ({ children }: Props) => {
   const [alert, setAlert] = useState<AlertType>({ variant: "none", text: "" });
 
   const onClose = () => setAlert({ variant: "none", text: alert.text });
 
   return (
-    <AlertContextProvider value={setAlert}>
+    <AlertContextWrapper value={setAlert}>
       <Snackbar
         sx={{ opacity: alert.variant === "none" ? 0 : "100%" }}
         open={alert.variant !== "none"}
@@ -63,8 +63,8 @@ const AlertContextWrapper: FC<Props> = ({ children }: Props) => {
         </Alert>
       </Snackbar>
       {children}
-    </AlertContextProvider>
+    </AlertContextWrapper>
   );
 };
 
-export { AlertContextWrapper, useAlert };
+export { AlertContextProvider, useAlert };
