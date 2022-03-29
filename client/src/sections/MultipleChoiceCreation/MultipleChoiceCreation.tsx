@@ -7,6 +7,7 @@ import ChoiceSelect, {
 } from "../../components/ChoiceSelect/ChoiceSelect";
 import colors from "../../colors";
 import ProblemCreationHeader from "../../components/ProblemCreationHeader/ProblemCreationHeader";
+import HelpButton from "../../components/HelpButton";
 
 const MultipleChoiceCreation: FC = () => {
   const setAlert = useAlert();
@@ -22,6 +23,10 @@ const MultipleChoiceCreation: FC = () => {
     { active: false, text: "", id: 2 },
   ]);
 
+  /**
+   * Validates text fields (title, description, as well as the choices text inputs)
+   * @returns false if any of the validations go wrong, true otherwise
+   */
   const validate = () => {
     if (title.length === 0) {
       setAlert({ text: "Title must not be empty", variant: "warning" });
@@ -93,6 +98,11 @@ const MultipleChoiceCreation: FC = () => {
           choices={choices}
           minChoices={2}
           maxChoices={4}
+          helpButton={{
+            description:
+              "A multiple choice problem can have 2-4 choices. One of these choices will be the correct answer, while the rest are incorrect. The correct answer is indicated by the green checkmark at the very end of a choice. Click on a gray checkmark to indicate this choice is the correct choice.",
+            title: "Choices",
+          }}
         />
       </Grid>
 

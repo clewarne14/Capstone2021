@@ -29,6 +29,7 @@ const ProblemCreationHeader: FC<Props> = ({
     (async () => {
       const res = await fetch("http://localhost:4000/tags");
       const data = await res.json();
+      console.log("here");
       setDbTags(data.map((tag: { name: string }) => tag.name));
     })();
   }, []);
@@ -42,7 +43,12 @@ const ProblemCreationHeader: FC<Props> = ({
       </Grid>
       <Grid item spacing={10} container display="flex">
         <Grid item sm={6}>
-          <LabeledTextInput onChange={setTitle} label="Title" value={title} />
+          <LabeledTextInput
+            placeholder="Required"
+            onChange={setTitle}
+            label="Title"
+            value={title}
+          />
         </Grid>
         <Grid item sm={6}>
           <MultipleSelect
@@ -55,6 +61,7 @@ const ProblemCreationHeader: FC<Props> = ({
       </Grid>
       <Grid item sm={12}>
         <LabeledTextInput
+          placeholder="Required"
           label="Description"
           onChange={setDescription}
           value={description}

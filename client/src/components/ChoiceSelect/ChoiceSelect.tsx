@@ -1,9 +1,11 @@
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
 import { Grid, InputAdornment, InputLabel, TextField } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import { useAlert } from "../../contexts/AlertContext";
 import Button from "../Button";
 import colors from "../../colors";
+import HelpButton from "../HelpButton";
 
 // TODO: Add validation
 
@@ -16,6 +18,7 @@ export type Choice = {
 type Props = {
   label: string;
   choices: Array<Choice>;
+  helpButton?: { description: string; title: string };
   setChoices: (updatedChoices: Array<Choice>) => void;
   minChoices: number;
   maxChoices: number;
@@ -27,10 +30,20 @@ const ChoiceSelect: FC<Props> = ({
   maxChoices,
   minChoices,
   setChoices,
+  helpButton,
 }: Props) => {
+  const setAlert = useAlert();
   return (
     <Grid container>
-      <InputLabel sx={{ fontSize: "1.5rem" }}>{label}</InputLabel>
+      <InputLabel sx={{ fontSize: "1.5rem" }}>
+        {label}
+        {helpButton && (
+          <HelpButton
+            description={helpButton.description}
+            title={helpButton.title}
+          />
+        )}
+      </InputLabel>
       <Grid item justifyContent="center" container spacing={5}>
         {choices.map((choice) => (
           <Grid key={choice.id} sm={6} item>
@@ -48,6 +61,7 @@ const ChoiceSelect: FC<Props> = ({
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
+                    {/* Correct answer icon */}
                     <CheckCircleIcon
                       onClick={() =>
                         setChoices(
@@ -65,16 +79,22 @@ const ChoiceSelect: FC<Props> = ({
                       }}
                     />
 
+                    {/* Delete icon */}
                     <HighlightOffIcon
                       sx={{ color: colors.maroon, cursor: "pointer" }}
                       onClick={(e) => {
                         e.stopPropagation();
-                        choices.length > minChoices &&
+                        if (choices.length > minChoices)
                           setChoices(
                             choices.filter(
                               (oldChoice) => oldChoice.id !== choice.id
                             )
                           );
+                        else
+                          setAlert({
+                            text: `The minimum number of choices required is at least ${minChoices}.`,
+                            variant: "warning",
+                          });
                       }}
                     />
                   </InputAdornment>

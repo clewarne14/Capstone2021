@@ -22,6 +22,24 @@ const AlgorithmicCreation = () => {
   const [testSuiteCodeFile, setTestSuiteCodeFile] = useState<File>();
   const setAlert = useAlert();
 
+  /**
+   * Validates text fields (title, description, as well as the choices text inputs)
+   * @returns false if any of the validations go wrong, true otherwise
+   */
+  const validate = () => {
+    if (title.length === 0) {
+      setAlert({ text: "Title must not be empty", variant: "warning" });
+      return false;
+    }
+
+    if (description.length === 0) {
+      setAlert({ text: "Description must not be empty", variant: "warning" });
+      return false;
+    }
+
+    return true;
+  };
+
   return (
     <Grid
       container

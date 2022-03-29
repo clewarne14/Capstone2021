@@ -8,6 +8,7 @@ type Props = {
   value: string;
   multiline?: boolean;
   sx?: SxProps<Theme>;
+  placeholder?: string;
 };
 
 const LabeledTextInput: FC<Props> = ({
@@ -16,11 +17,13 @@ const LabeledTextInput: FC<Props> = ({
   value,
   sx,
   multiline = false,
+  placeholder = "",
 }: Props) => {
   return (
     <>
       <InputLabel sx={{ fontSize: "1.5rem" }}>{label}</InputLabel>
       <TextField
+        placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
         value={value}
         type="text"
