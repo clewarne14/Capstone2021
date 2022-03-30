@@ -8,6 +8,7 @@ import FileUploadButton from "../../components/FileUploadButton";
 import colors from "../../colors";
 import { useAlert } from "../../contexts/AlertContext";
 import NewFileOrUploadButton from "./components/NewFileOrUploadButton/NewFileOrUploadButton";
+import TightWrapper from "../../components/TightWrapper";
 
 const languages = ["python", "javascript", "java", "c++"];
 
@@ -41,15 +42,7 @@ const AlgorithmicCreation = () => {
   };
 
   return (
-    <Grid
-      container
-      margin="auto"
-      display="flex"
-      justifyContent="center"
-      width="60%"
-      rowSpacing={5}
-      marginBottom="2rem"
-    >
+    <TightWrapper>
       <ProblemCreationHeader
         problemCreationTitle="Algorithmic"
         description={description}
@@ -95,7 +88,7 @@ const AlgorithmicCreation = () => {
           </Button>
         </Grid>
       </Grid>
-    </Grid>
+    </TightWrapper>
   );
 };
 

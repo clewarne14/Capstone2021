@@ -7,6 +7,7 @@ import ChooseProblemType from "./sections/ChooseProblemType/ChooseProblemType";
 import MultipleChoiceCreation from "./sections/MultipleChoiceCreation/MultipleChoiceCreation";
 import ProblemBox from "./ProblemBox/ProblemBox";
 import AlgorithmicCreation from "./sections/AlgorithmicCreation/AlgorithmicCreation";
+import UserProfile from "./sections/UserProfile/UserProfile";
 
 /**
  * This file contains all of the routes for our single page application.
@@ -30,6 +31,7 @@ const Routes: FC = () => (
       path="create-problem/algorithmic"
       element={<AlgorithmicCreation />}
     />
+    <Route path="profile/:username" element={<UserProfile />} />
     <Route
       path="/code"
       element={

@@ -1,13 +1,13 @@
-import React, { FC, useCallback, useState } from "react";
+import React, { FC, useState } from "react";
 import { Grid } from "@mui/material";
 import { useAlert } from "../../contexts/AlertContext";
 import Button from "../../components/Button";
 import ChoiceSelect, {
   Choice,
 } from "../../components/ChoiceSelect/ChoiceSelect";
-import colors from "../../colors";
 import ProblemCreationHeader from "../../components/ProblemCreationHeader/ProblemCreationHeader";
-import HelpButton from "../../components/HelpButton";
+import TightWrapper from "../../components/TightWrapper";
+import colors from "../../colors";
 
 const MultipleChoiceCreation: FC = () => {
   const setAlert = useAlert();
@@ -71,15 +71,7 @@ const MultipleChoiceCreation: FC = () => {
   };
 
   return (
-    <Grid
-      container
-      margin="auto"
-      display="flex"
-      justifyContent="center"
-      width="60%"
-      rowSpacing={5}
-      marginBottom="2rem"
-    >
+    <TightWrapper>
       <ProblemCreationHeader
         problemCreationTitle="Multiple Choice"
         description={description}
@@ -116,7 +108,7 @@ const MultipleChoiceCreation: FC = () => {
           </Button>
         </Grid>
       </Grid>
-    </Grid>
+    </TightWrapper>
   );
 };
 

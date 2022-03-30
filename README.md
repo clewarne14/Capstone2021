@@ -23,6 +23,8 @@ To develop with CodeCreate, a few things need to be done.
    SASS_PATH=node_modules:src # This is if you're using MacOS
    REACT_APP_AUTH0_DOMAIN=
    REACT_APP_AUTH0_CLIENT_ID=
+   REACT_APP_AUTH0_SCOPE=
+   REACT_APP_AUTH0_AUDIENCE=
    ```
 3. Paste the aws*skysql_chain.pem* file in the root directory of server. This is to ensure we have the correct permissions for our database connection.
 

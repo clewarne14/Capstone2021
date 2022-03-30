@@ -2,18 +2,12 @@ import React, { FC } from "react";
 import { Link } from "react-router-dom";
 import { SxProps } from "@mui/system";
 import { AppBar, Typography, Grid, Avatar, Theme } from "@mui/material";
+import { useSmallScreen } from "../../contexts/SmallScreenContext";
 import colors from "../../colors";
 import { routes } from "../../Routes";
-import { useSmallScreen } from "../../contexts/SmallScreenContext";
 import Button from "../Button";
 import ClickSelect from "../ClickSelect";
-
-const settings = [
-  { onClick: () => alert("hi"), text: "Profile" },
-  { onClick: () => alert("hi"), text: "Account" },
-  { onClick: () => alert("hi"), text: "Dashboard" },
-  { onClick: () => alert("hi"), text: "Logout" },
-];
+import { useAuth0 } from "@auth0/auth0-react";
 
 const buttonSx: SxProps<Theme> = {
   color: colors.black,
@@ -23,6 +17,21 @@ const buttonSx: SxProps<Theme> = {
 
 const Navbar: FC = () => {
   const isSmallScreen = useSmallScreen();
+  const {
+    loginWithRedirect,
+    logout,
+    user,
+    isAuthenticated,
+    getAccessTokenSilently,
+  } = useAuth0();
+
+  const settings = [
+    { onClick: () => alert("hi"), text: "Profile" },
+    {
+      onClick: () => logout({ returnTo: "http://localhost:3000" }),
+      text: "Logout",
+    },
+  ];
 
   return (
     <AppBar sx={{ padding: "1rem", position: "relative" }} color="secondary">
@@ -35,24 +44,33 @@ const Navbar: FC = () => {
             // Render the navbar buttons
             <Grid item container columnSpacing={2} sm={10} lg={11}>
               {routes.map((route) => (
-                <Grid key={route.text} item sm={4}>
+                <Grid key={route.text} item sm={user ? 4 : 3}>
                   <Link style={{ textDecoration: "none" }} to={route.url}>
                     <Button sx={buttonSx}>{route.text}</Button>
                   </Link>
                 </Grid>
               ))}
+              {!isAuthenticated && (
+                <Grid item sm={3}>
+                  <Button onClick={loginWithRedirect} sx={buttonSx}>
+                    Signin
+                  </Button>
+                </Grid>
+              )}
             </Grid>
           )}
-          <Grid item xs={10} sm={2} lg={1}>
-            <ClickSelect options={settings}>
-              <Avatar
-                variant="square"
-                alt="Avatar"
-                src="/static/images/avatar/2.jpg"
-                title="Open settings"
-              />
-            </ClickSelect>
-          </Grid>
+          {isAuthenticated && user && (
+            <Grid item xs={10} sm={2} lg={1}>
+              <ClickSelect options={settings}>
+                <Avatar
+                  variant="square"
+                  alt="Avatar"
+                  src={user.picture}
+                  title="Open settings"
+                />
+              </ClickSelect>
+            </Grid>
+          )}
         </Grid>
       </Grid>
     </AppBar>

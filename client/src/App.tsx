@@ -12,7 +12,9 @@ import "./App.css";
 const auth: Auth0ProviderOptions = {
   clientId: process.env.REACT_APP_AUTH0_CLIENT_ID ?? "",
   domain: process.env.REACT_APP_AUTH0_DOMAIN ?? "",
-  redirectUri: "https://localhost:3000",
+  scope: process.env.REACT_APP_AUTH0_SCOPE ?? "",
+  audience: process.env.REACT_APP_AUTH0_AUDIENCE ?? "",
+  redirectUri: "http://localhost:3000",
 };
 
 const App = () => (
