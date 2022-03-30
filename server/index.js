@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const { getDb } = require('./build/database');
-const { exec } = require('child_process');
+const { exec, ChildProcess, execSync } = require('child_process');
 const fs = require('fs');
 
 require('dotenv').config();
@@ -63,6 +63,12 @@ app.post('/multiple-choice', async (req, res) => {
 app.post('/testCode', async (req, res) => {
   const { Language, Code } = req.body;
 
+  let c = `def fib(inp):
+    if inp==3:
+      return "0 1 1"
+    if inp==4:
+      return "0 1 1 2"`;
+
   let Test = `
 import execFile
 
@@ -84,13 +90,40 @@ if __name__ == "__main__":
         print("FALSE")`;
   const command =
     "docker run -e VERSION=1.1 -i --rm -p 9000:5000 code-create python '" +
-    Code +
+    c +
     "' '" +
     Test +
-    "' > output.txt";
+    "'";
   //Execute docker container and run code
-  exec(command);
-  return 'Done';
+  var s = '';
+  const callDocker = async function () {
+    var output = execSync(command, (err, stdout, stderr) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      console.log(stdout);
+      s = stdout;
+      return s;
+    });
+    return output;
+  };
+  // const readFile = async function () {
+  //   fs.readFile('output.txt', 'utf-8', (output, err) => {
+  //     if (err) {
+  //       console.error(err);
+  //       return;
+  //     }
+  //     s = output;
+  //     console.log(output);
+  //   });
+  // };
+  //callDocker()
+  const ret = await callDocker();
+  console.log(ret);
+  res.send(ret);
+  // console.log(s);
+  // res.send(s);
 });
 
 app.listen(SERVER_PORT, async () => {
