@@ -65,9 +65,9 @@ app.post('/testCode', async (req, res) => {
 
   let c = `def fib(inp):
     if inp==3:
-      return "0 1 1"
+      return "0 1 2"
     if inp==4:
-      return "0 1 1 2"`;
+      return "0 1 1 3"`;
 
   let Test = `
 import execFile
@@ -124,8 +124,28 @@ if __name__ == "__main__":
   // };
   //callDocker()
   const ret = await callDocker();
-  console.log(ret);
-  //let output = JSON.parse(ret)
+  let output = JSON.parse(ret);
+  let failedTests = '';
+  for (let i = 0; i < output['TESTS'].length; i++) {
+    if (output['TESTS'][i]['pass'] != 'True') {
+      if (failedTests == '') {
+        failedTests +=
+          'Your code did not pass the tests!\nTest name: ' +
+          output['TESTS'][i]['name'] +
+          '\nMethod call: ' +
+          output['TESTS'][i]['methodCall'] +
+          '\nExpected: ' +
+          output['TESTS'][i]['expected'] +
+          '\nActual: ' +
+          output['TESTS'][i]['actual'];
+        if (output['TESTS'][i]['message'] != 'none') {
+          failedTests += '\n' + output['TESTS'][i]['message'];
+        }
+      }
+    }
+  }
+  console.log(failedTests);
+  console.log(output);
   res.send(ret);
   // console.log(s);
   // res.send(s);
