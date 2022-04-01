@@ -145,10 +145,7 @@ if __name__ == "__main__":
     }
   }
   console.log(failedTests);
-  console.log(output);
-  res.send(ret);
-  // console.log(s);
-  // res.send(s);
+  res.send(failedTests);
 });
 
 app.listen(SERVER_PORT, async () => {
