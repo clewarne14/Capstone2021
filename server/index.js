@@ -1,10 +1,11 @@
-const express = require('express');
-const cors = require('cors');
-const { getDb } = require('./build/database');
-const { exec } = require('child_process');
-const fs = require('fs');
+import express from 'express';
+import cors from 'cors';
+import { getDb } from '../server/build/database.js';
+import exec from 'child_process';
+import fetch from 'node-fetch';
+import dotenv from 'dotenv';
 
-require('dotenv').config();
+dotenv.config();
 
 const app = express();
 const {
@@ -14,6 +15,10 @@ const {
   DATABASE_NAME,
   DATABASE_HOST,
   DATABASE_PORT,
+  AUTH0_DOMAIN,
+  AUTH0_SCOPE,
+  AUTH0_CLIENT_ID,
+  AUTH0_AUDIENCE,
 } = process.env;
 
 const db = getDb(
@@ -58,6 +63,10 @@ app.post('/multiple-choice', async (req, res) => {
     console.log('failed');
     throw e;
   }
+});
+
+app.post('/createUser', (req, res) => {
+  console.log(req.body);
 });
 
 app.post('/testCode', async (req, res) => {
