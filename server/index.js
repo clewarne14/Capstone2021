@@ -88,11 +88,15 @@ if __name__ == "__main__":
         print("TRUE")
     else:
         print("FALSE")`;
+  let testJSON =
+    `{ "TESTS" : [` +
+    `{ "name": "Fibonacci 1", "pass": "false", "methodCall": "fib(3)", "expected": "0 1 1", "actual": "none", "message":"none" },` +
+    `{ "name": "Fibonacci 2", "pass": "false", "methodCall": "fib(4)", "expected": "0 1 1 2", "actual": "none", "message":"none" } ]}`;
   const command =
-    "docker run -e VERSION=1.1 -i --rm -p 9000:5000 code-create python '" +
+    "docker run -e VERSION=1.1 -i --rm -p 9000:5000 code-create -UserCode '" +
     c +
-    "' '" +
-    Test +
+    "' -TestJSON '" +
+    testJSON +
     "'";
   //Execute docker container and run code
   var s = '';
@@ -105,7 +109,7 @@ if __name__ == "__main__":
       console.log(stdout);
       s = stdout;
       return s;
-    });
+    }).toString();
     return output;
   };
   // const readFile = async function () {
@@ -121,6 +125,7 @@ if __name__ == "__main__":
   //callDocker()
   const ret = await callDocker();
   console.log(ret);
+  //let output = JSON.parse(ret)
   res.send(ret);
   // console.log(s);
   // res.send(s);
