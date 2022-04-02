@@ -1,5 +1,6 @@
 import React, { FC } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
 import { SxProps } from "@mui/system";
 import { AppBar, Typography, Grid, Avatar, Theme } from "@mui/material";
 import { useSmallScreen } from "../../contexts/SmallScreenContext";
@@ -7,7 +8,6 @@ import colors from "../../colors";
 import { routes } from "../../Routes";
 import Button from "../Button";
 import ClickSelect from "../ClickSelect";
-import { useAuth0 } from "@auth0/auth0-react";
 
 const buttonSx: SxProps<Theme> = {
   color: colors.black,
@@ -17,16 +17,14 @@ const buttonSx: SxProps<Theme> = {
 
 const Navbar: FC = () => {
   const isSmallScreen = useSmallScreen();
-  const {
-    loginWithRedirect,
-    logout,
-    user,
-    isAuthenticated,
-    getAccessTokenSilently,
-  } = useAuth0();
+  const navigate = useNavigate();
+  const { loginWithPopup, logout, user, isAuthenticated } = useAuth0();
 
   const settings = [
-    { onClick: () => alert("hi"), text: "Profile" },
+    {
+      onClick: () => navigate(`/localhost:3000/profile/${user?.nickname}`),
+      text: "Profile",
+    },
     {
       onClick: () => logout({ returnTo: "http://localhost:3000" }),
       text: "Logout",
@@ -52,7 +50,7 @@ const Navbar: FC = () => {
               ))}
               {!isAuthenticated && (
                 <Grid item sm={3}>
-                  <Button onClick={loginWithRedirect} sx={buttonSx}>
+                  <Button onClick={loginWithPopup} sx={buttonSx}>
                     Signin
                   </Button>
                 </Grid>
@@ -62,12 +60,7 @@ const Navbar: FC = () => {
           {isAuthenticated && user && (
             <Grid item xs={10} sm={2} lg={1}>
               <ClickSelect options={settings}>
-                <Avatar
-                  variant="square"
-                  alt="Avatar"
-                  src={user.picture}
-                  title="Open settings"
-                />
+                <Avatar variant="square" alt="Avatar" src={user.picture} />
               </ClickSelect>
             </Grid>
           )}

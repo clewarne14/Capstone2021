@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { Route, Routes as DOMRoutes } from "react-router-dom";
+import { Link, Route, Routes as DOMRoutes } from "react-router-dom";
 import ComputerIcon from "@mui/icons-material/Computer";
 import ListIcon from "@mui/icons-material/List";
 import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
