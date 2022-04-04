@@ -1,10 +1,10 @@
 import React, { FC } from "react";
-import { Grid, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { Grid, Typography, Card } from "@mui/material";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import Button from "../Button";
 import colors from "../../colors";
 import Tag from "../Tag";
-import { useNavigate } from "react-router-dom";
 
 type ProblemType = "multiple choice" | "algorithmic";
 
@@ -29,78 +29,79 @@ const ProblemCard: FC<Props> = ({
 }: Props) => {
   const navigation = useNavigate();
   return (
-    <Grid padding={2} container sx={{ backgroundColor: colors.gray }}>
-      <Grid sm={2} display="flex" flexDirection="column" container item>
-        <Typography variant="h4">{title}</Typography>
-        <Typography sx={{ color: colors.maroon }} variant="h6">
-          {problemType}
-        </Typography>
-      </Grid>
-      <Grid
-        display="flex"
-        flexDirection="column"
-        sm={2}
-        container
-        item
-        textAlign="center"
-      >
-        <Grid item>
-          <img width="50%" src={userPicture} alt={username} />
+    <Card sx={{ backgroundColor: colors.gray, width: "100%" }}>
+      <Grid padding={2} container>
+        <Grid sm={12 / 5} display="flex" flexDirection="column" container item>
+          <Typography sx={{ fontWeight: 700 }} variant="h5">
+            {title}
+          </Typography>
+          <Typography sx={{ color: colors.maroon }} variant="h6">
+            {problemType}
+          </Typography>
         </Grid>
-        <Typography>{username}</Typography>
-      </Grid>
-      <Grid
-        sm={3}
-        spacing={1}
-        display="flex"
-        flexDirection="column"
-        container
-        item
-        alignItems="center"
-      >
-        {tags.map((tag) => (
-          <Grid item key={tag}>
-            <Tag>{tag}</Tag>
-          </Grid>
-        ))}
-      </Grid>
-      <Grid
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        sm={2}
-        container
-        item
-      >
-        <Grid item>
-          {likes} <ThumbUpIcon />
-        </Grid>
-      </Grid>
-      <Grid
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        sm={2}
-        container
-        item
-      >
-        <Button
-          onClick={() => {
-            if (problemType === "multiple choice") {
-              navigation(`multiple-choice/${problemId}`);
-            } else {
-            }
-          }}
-          sx={{
-            backgroundColor: colors.maroon,
-            color: colors.white,
-            height: "3rem",
-          }}
+        <Grid
+          display="flex"
+          flexDirection="column"
+          sm={12 / 5}
+          container
+          item
+          textAlign="center"
         >
-          Solve
-        </Button>
+          <Grid item>
+            <img width="50%" src={userPicture} alt={username} />
+          </Grid>
+          <Typography>{username}</Typography>
+        </Grid>
+        <Grid
+          sm={12 / 5}
+          spacing={1}
+          display="flex"
+          flexDirection="column"
+          container
+          item
+          alignItems="center"
+        >
+          {tags.map((tag) => (
+            <Grid item key={tag}>
+              <Tag>{tag}</Tag>
+            </Grid>
+          ))}
+        </Grid>
+        <Grid
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          sm={12 / 5}
+          spacing={2}
+          container
+          item
+        >
+          <Grid item>
+            <Typography sx={{ fontWeight: 700 }}>{likes}</Typography>
+          </Grid>
+          <Grid item>
+            <ThumbUpIcon />
+          </Grid>
+        </Grid>
+        <Grid display="flex" alignItems="center" sm={12 / 5} container item>
+          <Button
+            onClick={() => {
+              if (problemType === "multiple choice") {
+                navigation(`multiple-choice/${problemId}`);
+              } else {
+              }
+            }}
+            sx={{
+              backgroundColor: colors.maroon,
+              color: colors.white,
+              height: "3rem",
+            }}
+          >
+            Solve
+          </Button>
+        </Grid>
       </Grid>
-    </Grid>
+    </Card>
   );
 };
 

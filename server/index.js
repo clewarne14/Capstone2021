@@ -61,7 +61,7 @@ app.post('/multiple-choice', async (req, res) => {
     );
     res.send({
       success: true,
-      message: `Problem ${title} successfully created`,
+      message: `${title} successfully created`,
     });
   } catch (e) {
     res.send({ success: false, message: e.text });

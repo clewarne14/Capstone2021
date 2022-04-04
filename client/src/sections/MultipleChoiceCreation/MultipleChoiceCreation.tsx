@@ -1,4 +1,4 @@
-import React, { FC, useImperativeHandle, useState } from "react";
+import React, { FC, useState } from "react";
 import { Grid } from "@mui/material";
 import { useAlert } from "../../contexts/AlertContext";
 import Button from "../../components/Button";
@@ -10,6 +10,7 @@ import TightWrapper from "../../components/TightWrapper";
 import colors from "../../colors";
 import { useAuth0 } from "@auth0/auth0-react";
 import { PostRequestResponse } from "../../Routes";
+import { useNavigate } from "react-router-dom";
 
 const MultipleChoiceCreation: FC = () => {
   const setAlert = useAlert();
@@ -25,6 +26,7 @@ const MultipleChoiceCreation: FC = () => {
     { active: false, text: "", id: 2 },
   ]);
   const { isAuthenticated, user } = useAuth0();
+  const navigation = useNavigate();
 
   /**
    * Validates text fields (title, description, as well as the choices text inputs)
@@ -83,7 +85,9 @@ const MultipleChoiceCreation: FC = () => {
       headers: { "Content-Type": "application/json" },
     });
     const response: PostRequestResponse = await data.json();
-    if (response.sucesss) {
+    console.log(response);
+    if (response.success) {
+      navigation("/code");
       setAlert({ text: response.message, variant: "success" });
     } else {
       setAlert({ text: response.message, variant: "error" });

@@ -11,7 +11,7 @@ import Lobby from "./sections/Lobby/Lobby";
 import ProblemBox from "./ProblemBox/ProblemBox";
 
 export type PostRequestResponse = {
-  sucesss: boolean;
+  success: boolean;
   message: string;
 };
 
