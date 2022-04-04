@@ -69,6 +69,20 @@ app.post('/multiple-choice', async (req, res) => {
   }
 });
 
+app.get('/multiple-choice', async (req, res) => {
+  try {
+    const data = await db.query('select * from multipleChoice');
+    const formattedData = data.map((item) => ({
+      ...item,
+      tags: item.tags.split(','),
+      choices: item.choices.split(','),
+    }));
+    res.send(formattedData);
+  } catch (e) {
+    throw e;
+  }
+});
+
 app.post('/createUser', (req, res) => {
   console.log(req.body);
 });

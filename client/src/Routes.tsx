@@ -1,17 +1,31 @@
 import React, { FC } from "react";
-import { Link, Route, Routes as DOMRoutes } from "react-router-dom";
+import { Route, Routes as DOMRoutes } from "react-router-dom";
 import ComputerIcon from "@mui/icons-material/Computer";
 import ListIcon from "@mui/icons-material/List";
 import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
 import ChooseProblemType from "./sections/ChooseProblemType/ChooseProblemType";
 import MultipleChoiceCreation from "./sections/MultipleChoiceCreation/MultipleChoiceCreation";
-import ProblemBox from "./ProblemBox/ProblemBox";
 import AlgorithmicCreation from "./sections/AlgorithmicCreation/AlgorithmicCreation";
 import UserProfile from "./sections/UserProfile/UserProfile";
+import Lobby from "./sections/Lobby/Lobby";
+import ProblemBox from "./ProblemBox/ProblemBox";
 
 export type PostRequestResponse = {
   sucesss: boolean;
   message: string;
+};
+
+export type MultipleChoiceProblemGetResponse = {
+  title: string;
+  dateCreated: string;
+  answer: string;
+  creatorName: string;
+  likes: number;
+  problemType: "multiple choice" | "algorithmic";
+  tags: Array<string>;
+  choices: Array<string>;
+  problemDescription: string;
+  problemId: number;
 };
 
 /**
@@ -37,16 +51,13 @@ const Routes: FC = () => (
       element={<AlgorithmicCreation />}
     />
     <Route path="profile/:username" element={<UserProfile />} />
-    <Route
-      path="/code"
-      element={
-        <ProblemBox
-          startcode={"Public static void main()"}
-          problemtext={"Print out the first 5 fibonacci numbers"}
-        />
-      }
-    />
+    <Route path="/code" element={<Lobby />} />
   </DOMRoutes>
 );
 
 export default Routes;
+
+//  <ProblemBox
+//    startcode={"Public static void main()"}
+//    problemtext={"Print out the first 5 fibonacci numbers"}
+//  />;
