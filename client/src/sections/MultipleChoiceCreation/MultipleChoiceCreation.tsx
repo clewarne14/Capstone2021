@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useImperativeHandle, useState } from "react";
 import { Grid } from "@mui/material";
 import { useAlert } from "../../contexts/AlertContext";
 import Button from "../../components/Button";
@@ -8,6 +8,8 @@ import ChoiceSelect, {
 import ProblemCreationHeader from "../../components/ProblemCreationHeader/ProblemCreationHeader";
 import TightWrapper from "../../components/TightWrapper";
 import colors from "../../colors";
+import { useAuth0 } from "@auth0/auth0-react";
+import { PostRequestResponse } from "../../Routes";
 
 const MultipleChoiceCreation: FC = () => {
   const setAlert = useAlert();
@@ -22,12 +24,18 @@ const MultipleChoiceCreation: FC = () => {
     },
     { active: false, text: "", id: 2 },
   ]);
+  const { isAuthenticated, user } = useAuth0();
 
   /**
    * Validates text fields (title, description, as well as the choices text inputs)
    * @returns false if any of the validations go wrong, true otherwise
    */
   const validate = () => {
+    if (!isAuthenticated) {
+      setAlert({ text: "Sign in to create this problem", variant: "error" });
+      return false;
+    }
+
     if (title.length === 0) {
       setAlert({ text: "Title must not be empty", variant: "warning" });
       return false;
@@ -65,9 +73,21 @@ const MultipleChoiceCreation: FC = () => {
     if (!validate()) return;
     const data = await fetch("http://localhost:4000/multiple-choice", {
       method: "POST",
-      body: JSON.stringify({ title, description, choices, tags }),
+      body: JSON.stringify({
+        title,
+        description,
+        choices,
+        tags,
+        user,
+      }),
       headers: { "Content-Type": "application/json" },
     });
+    const response: PostRequestResponse = await data.json();
+    if (response.sucesss) {
+      setAlert({ text: response.message, variant: "success" });
+    } else {
+      setAlert({ text: response.message, variant: "error" });
+    }
   };
 
   return (

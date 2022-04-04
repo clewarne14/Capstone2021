@@ -9,6 +9,11 @@ import ProblemBox from "./ProblemBox/ProblemBox";
 import AlgorithmicCreation from "./sections/AlgorithmicCreation/AlgorithmicCreation";
 import UserProfile from "./sections/UserProfile/UserProfile";
 
+export type PostRequestResponse = {
+  sucesss: boolean;
+  message: string;
+};
+
 /**
  * This file contains all of the routes for our single page application.
  */

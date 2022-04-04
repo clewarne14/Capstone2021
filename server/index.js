@@ -43,7 +43,7 @@ app.get('/tags', async (req, res) => {
 });
 
 app.post('/multiple-choice', async (req, res) => {
-  const { title, description, choices, tags } = req.body;
+  const { title, description, choices, tags, user } = req.body;
 
   const answer = choices.find((choice) => choice.active);
   const parsedChoices = choices.map((choice) => choice.text).join(', ');
@@ -57,10 +57,14 @@ app.post('/multiple-choice', async (req, res) => {
 
   try {
     await db.query(
-      `insert into multipleChoice (choices, problemDescription, title, tags, dateCreated, answer) values ('${parsedChoices}', '${description}', '${title}', '${parsedTags}', '${formattedDate}', '${answer.text}')`
+      `insert into multipleChoice (choices, problemDescription, title, tags, dateCreated, answer, creatorName, likes, problemType) values ('${parsedChoices}', '${description}', '${title}', '${parsedTags}', '${formattedDate}', '${answer.text}', '${user.nickname}', 0, 'multiple choice')`
     );
+    res.send({
+      success: true,
+      message: `Problem ${title} successfully created`,
+    });
   } catch (e) {
-    console.log('failed');
+    res.send({ success: false, message: e.text });
     throw e;
   }
 });
