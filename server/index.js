@@ -83,6 +83,23 @@ app.get('/multiple-choice', async (req, res) => {
   }
 });
 
+app.get('/multiple-choice/:problemId', async (req, res) => {
+  const { problemId } = req.params;
+  try {
+    const problem = await db.query(
+      `select * from multipleChoice where problemId=${problemId}`
+    );
+    const formattedProblem = problem.map((item) => ({
+      ...item,
+      tags: item.tags.split(','),
+      choices: item.choices.split(','),
+    }));
+    res.send(formattedProblem[0]);
+  } catch (e) {
+    res.send({ message: e.text, success: false });
+  }
+});
+
 app.post('/createUser', (req, res) => {
   console.log(req.body);
 });

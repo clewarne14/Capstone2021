@@ -23,8 +23,8 @@ const AlertContextWrapper = AlertContext.Provider;
 
 const useAlert = () => {
   const context = useContext(AlertContext);
-  if (context) return context;
-  else throw new Error("Error building alert context");
+  if (!context) throw new Error("Error building alert context");
+  return context;
 };
 
 type Props = {

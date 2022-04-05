@@ -9,6 +9,7 @@ import AlgorithmicCreation from "./sections/AlgorithmicCreation/AlgorithmicCreat
 import UserProfile from "./sections/UserProfile/UserProfile";
 import Lobby from "./sections/Lobby/Lobby";
 import ProblemBox from "./ProblemBox/ProblemBox";
+import MultipleChoiceProblem from "./sections/MultipleChoiceProblem/MultipleChoiceProblem";
 
 export type PostRequestResponse = {
   success: boolean;
@@ -41,17 +42,21 @@ export const routes = [
 
 const Routes: FC = () => (
   <DOMRoutes>
-    <Route path="create-problem/type" element={<ChooseProblemType />} />
+    <Route path="/create-problem/type" element={<ChooseProblemType />} />
     <Route
-      path="create-problem/multiple-choice"
+      path="/create-problem/multiple-choice"
       element={<MultipleChoiceCreation />}
     />
     <Route
-      path="create-problem/algorithmic"
+      path="/create-problem/algorithmic"
       element={<AlgorithmicCreation />}
     />
-    <Route path="profile/:username" element={<UserProfile />} />
+    <Route path="/profile/:username" element={<UserProfile />} />
     <Route path="/code" element={<Lobby />} />
+    <Route
+      path="/code/multiple-choice/:problemId"
+      element={<MultipleChoiceProblem />}
+    />
   </DOMRoutes>
 );
 

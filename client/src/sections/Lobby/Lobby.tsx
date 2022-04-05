@@ -3,16 +3,20 @@ import { Grid, Typography } from "@mui/material";
 import ProblemCard from "../../components/ProblemCard";
 import { MultipleChoiceProblemGetResponse } from "../../Routes";
 import LobbyHeader from "./components/LobbyHeader/LobbyHeader";
+import { useLoading } from "../../contexts/LoadingContext";
 
 const Lobby: FC = () => {
   const [problems, setProblems] = useState<
     Array<MultipleChoiceProblemGetResponse>
   >([]);
+  const setLoading = useLoading();
+
   useEffect(() => {
     (async () => {
       const data = await fetch("http://localhost:4000/multiple-choice");
       const response: Array<MultipleChoiceProblemGetResponse> =
         await data.json();
+
       console.log(response);
       setProblems(response);
     })();
@@ -38,10 +42,9 @@ const Lobby: FC = () => {
               problemId,
             } = problem;
             return (
-              <Grid item sm={12}>
+              <Grid key={`${title}-${creatorName}-${dateCreated}`} item sm={12}>
                 <ProblemCard
                   problemId={problemId}
-                  key={`${title}-${creatorName}-${dateCreated}`}
                   likes={likes}
                   problemType={problemType}
                   tags={tags}

@@ -8,6 +8,7 @@ import PhoneNavigation from "./components/PhoneNavigation";
 import theme from "./theme";
 import Routes from "./Routes";
 import "./App.css";
+import { LoadingContextProvider } from "./contexts/LoadingContext";
 
 const auth: Auth0ProviderOptions = {
   clientId: process.env.REACT_APP_AUTH0_CLIENT_ID ?? "",
@@ -22,11 +23,13 @@ const App = () => (
     <Auth0Provider {...auth}>
       <ThemeProvider theme={theme}>
         <AlertContextProvider>
-          <SmallScreenProvider>
-            <Navbar />
-            <Routes />
-            <PhoneNavigation />;
-          </SmallScreenProvider>
+          <LoadingContextProvider>
+            <SmallScreenProvider>
+              <Navbar />
+              <Routes />
+              <PhoneNavigation />;
+            </SmallScreenProvider>
+          </LoadingContextProvider>
         </AlertContextProvider>
       </ThemeProvider>
     </Auth0Provider>
