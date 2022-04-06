@@ -10,9 +10,14 @@ import React, {
 } from "react";
 import Loading from "../components/Loading";
 
-const LoadingContext = createContext<Dispatch<SetStateAction<boolean>> | null>(
-  null
-);
+type LoadingProps = {
+  active: boolean;
+  delay: number; // This is the delay before the loading finishes
+};
+
+const LoadingContext = createContext<Dispatch<
+  SetStateAction<LoadingProps>
+> | null>(null);
 
 const LoadingContextWrapper = LoadingContext.Provider;
 
@@ -27,17 +32,21 @@ type Props = {
 };
 
 const LoadingContextProvider: FC<Props> = ({ children }: Props) => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState({ active: false, delay: 1000 });
 
   useEffect(() => {
-    if (isLoading) {
+    if (isLoading.active) {
       document.body.style.overflow = "hidden";
+      setTimeout(() => {
+        document.body.style.overflow = "scroll";
+        setIsLoading({ active: false, delay: 1000 });
+      }, isLoading.delay);
     } else document.body.style.overflow = "scroll";
   }, [isLoading]);
 
   return (
     <LoadingContextWrapper value={setIsLoading}>
-      <Loading isLoading={isLoading} />
+      <Loading isLoading={isLoading.active} />
       {children}
     </LoadingContextWrapper>
   );

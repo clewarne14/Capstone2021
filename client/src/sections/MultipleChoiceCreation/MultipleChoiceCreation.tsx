@@ -1,16 +1,15 @@
 import React, { FC, useState } from "react";
 import { Grid } from "@mui/material";
 import { useAlert } from "../../contexts/AlertContext";
-import Button from "../../components/Button";
 import ChoiceSelect, {
   Choice,
 } from "../../components/ChoiceSelect/ChoiceSelect";
 import ProblemCreationHeader from "../../components/ProblemCreationHeader/ProblemCreationHeader";
 import TightWrapper from "../../components/TightWrapper";
-import colors from "../../colors";
 import { useAuth0 } from "@auth0/auth0-react";
 import { PostRequestResponse } from "../../Routes";
 import { useNavigate } from "react-router-dom";
+import SubmitButton from "../../components/SubmitButton";
 
 const MultipleChoiceCreation: FC = () => {
   const setAlert = useAlert();
@@ -124,12 +123,7 @@ const MultipleChoiceCreation: FC = () => {
 
       <Grid container justifyContent="flex-end" item xs={12}>
         <Grid xs={2} item>
-          <Button
-            onClick={validateAndSubmit}
-            sx={{ backgroundColor: colors.maroon, color: colors.white }}
-          >
-            Submit
-          </Button>
+          <SubmitButton onClick={validateAndSubmit}>Submit</SubmitButton>
         </Grid>
       </Grid>
     </TightWrapper>

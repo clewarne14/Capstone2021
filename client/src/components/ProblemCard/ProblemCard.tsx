@@ -5,6 +5,7 @@ import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import Button from "../Button";
 import colors from "../../colors";
 import Tag from "../Tag";
+import SubmitButton from "../SubmitButton";
 
 type ProblemType = "multiple choice" | "algorithmic";
 
@@ -84,7 +85,7 @@ const ProblemCard: FC<Props> = ({
           </Grid>
         </Grid>
         <Grid display="flex" alignItems="center" sm={12 / 5} container item>
-          <Button
+          <SubmitButton
             onClick={() => {
               if (problemType === "multiple choice") {
                 navigation(`multiple-choice/${problemId}`);
@@ -98,7 +99,7 @@ const ProblemCard: FC<Props> = ({
             }}
           >
             Solve
-          </Button>
+          </SubmitButton>
         </Grid>
       </Grid>
     </Card>

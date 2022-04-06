@@ -7,10 +7,10 @@ import {
   InputLabel,
   Dialog,
 } from "@mui/material";
+import CheckIcon from "@mui/icons-material/Check";
 import FileUploadButton from "../../../../components/FileUploadButton";
 import Button from "../../../../components/Button";
 import Editor from "../../../../components/Editor";
-import CheckIcon from "@mui/icons-material/Check";
 import colors from "../../../../colors";
 
 type Props = {
@@ -81,7 +81,7 @@ const NewFileOrUploadButton: FC<Props> = ({
         />
         <Grid item sm={4}>
           <Button
-            onClick={handleOpen}
+            onClick={uploadedFile && handleOpen}
             endIcon={uploadedFile ? <></> : <CheckIcon color="success" />}
           >
             New file

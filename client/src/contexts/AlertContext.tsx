@@ -13,6 +13,7 @@ import CloseIcon from "@mui/icons-material/Close";
 type AlertType = {
   text: string;
   variant: "success" | "warning" | "error" | "none" | "info";
+  variantOverride?: string; // This is optional, will override the variant string present at the beginning of an alert
 };
 
 const AlertContext = createContext<Dispatch<SetStateAction<AlertType>> | null>(
@@ -57,9 +58,11 @@ const AlertContextProvider: FC<Props> = ({ children }: Props) => {
               <CloseIcon fontSize="inherit" />
             </IconButton>
           }
-          sx={{ fontSize: "1.2rem", textAlign: "center" }}
+          sx={{ fontSize: "1.2rem", textAlign: "center", fontWeight: 700 }}
         >
-          {`${alert.variant.toUpperCase()}: ${alert.text}`}
+          {`${alert.variantOverride ?? alert.variant.toUpperCase()}: ${
+            alert.text
+          }`}
         </Alert>
       </Snackbar>
       {children}

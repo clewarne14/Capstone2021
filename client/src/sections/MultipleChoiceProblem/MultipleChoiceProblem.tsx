@@ -1,25 +1,61 @@
 import React, { FC, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import {
-  Radio,
-  FormControl,
-  FormControlLabel,
-  Grid,
-  RadioGroup,
-  Typography,
-  FormLabel,
-} from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import { MultipleChoiceProblemGetResponse } from "../../Routes";
-import colors from "../../colors";
-import { Box } from "@mui/system";
+import TightWrapper from "../../components/TightWrapper";
+import ChoiceBox from "./components/ChoiceBox/ChoiceBox";
+import SubmitButton from "../../components/SubmitButton";
+import { useLoading } from "../../contexts/LoadingContext";
+import { useAlert } from "../../contexts/AlertContext";
 
 const MultipleChoiceProblem: FC = () => {
   const [problem, setProblem] = useState<MultipleChoiceProblemGetResponse>();
   const [choices, setChoices] = useState<{ text: string; used: boolean }[]>();
+  const [selected, setSelected] = useState("");
   const { problemId } = useParams<{ problemId: string }>();
+  const setAlert = useAlert();
+  const setLoading = useLoading();
+
+  const handleSubmit = () => {
+    if (!problem || !choices) {
+      setAlert({
+        text: "Something strange happened, refresh the page",
+        variant: "error",
+      });
+      return;
+    } else {
+    }
+    if (selected === "") {
+      setAlert({
+        text: "You must select one of the choices",
+        variant: "warning",
+      });
+      return;
+    }
+    if (problem.answer !== selected) {
+      setAlert({
+        text: selected,
+        variant: "error",
+        variantOverride: "Incorrect answer",
+      });
+
+      setChoices((oldChoices) =>
+        oldChoices?.map((choice) =>
+          choice.text === selected ? { text: choice.text, used: true } : choice
+        )
+      );
+      setSelected("");
+      return;
+    }
+    setAlert({
+      text: `${selected} is the correct answer!`,
+      variant: "success",
+    });
+  };
 
   useEffect(() => {
     (async () => {
+      setLoading({ active: true, delay: 1000 });
       const data = await fetch(
         `http://localhost:4000/multiple-choice/${problemId}`
       );
@@ -31,61 +67,43 @@ const MultipleChoiceProblem: FC = () => {
       }));
       setChoices(formattedChoices);
     })();
-  }, [problemId]);
+  }, [problemId, setLoading]);
 
   return problem && choices ? (
-    <Grid
-      padding={2}
-      marginTop="2rem"
-      container
-      display="flex"
-      flexDirection="column"
-      textAlign="center"
-    >
-      <Typography variant="h3" sx={{ fontWeight: 700 }}>
-        {problem.title}
-      </Typography>
-      <Typography variant="h5">
-        By <span>{problem.creatorName}</span>
-      </Typography>
-      <Typography variant="h5" marginTop="2rem">
-        {problem.problemDescription}
-      </Typography>
-      <Grid container item marginTop="3rem">
+    <TightWrapper spacing={8}>
+      <Grid
+        container
+        item
+        display="flex"
+        flexDirection="column"
+        textAlign="center"
+      >
+        <Typography sx={{ fontWeight: 700 }} variant="h3">
+          {problem.title}
+        </Typography>
+        <Typography variant="h5">By {problem.creatorName}</Typography>
+      </Grid>
+      <Grid textAlign="center" item>
+        <Typography variant="h5">{problem.problemDescription}</Typography>
+      </Grid>
+      {/* CONTAINER */}
+      <Grid item container spacing={2} height="35vh">
         {choices.map((choice) => (
-          <Grid
-            item
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            container
-            sm={3}
-            sx={{
-              backgroundColor: colors.gray,
-              borderRadius: "5%",
-              height: "20rem",
-              "&:hover": {
-                transition: "0.3s",
-              },
-              cursor: "pointer",
-            }}
-          >
-            <Typography sx={{ marginTop: "2rem" }} variant="h5">
-              {choice.text}
-            </Typography>
-            <Box
-              sx={{
-                marginTop: "50%",
-                borderRadius: "50%",
-                backgroundColor: colors.darkgray,
-                width: "2rem",
-                height: "2rem",
-              }}
-            ></Box>
-          </Grid>
+          <ChoiceBox
+            disabled={choice.used}
+            setSelected={setSelected}
+            size={12 / choices.length}
+            text={choice.text}
+            selected={selected === choice.text}
+          />
         ))}
       </Grid>
-    </Grid>
+      <Grid item container justifyContent="center">
+        <Grid item sm={2}>
+          <SubmitButton onClick={handleSubmit}>Submit</SubmitButton>
+        </Grid>
+      </Grid>
+    </TightWrapper>
   ) : (
     <>Nothing</>
   );

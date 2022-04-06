@@ -1,14 +1,11 @@
 import React, { useState } from "react";
-import { Grid, InputLabel } from "@mui/material";
+import { Grid } from "@mui/material";
 import ProblemCreationHeader from "../../components/ProblemCreationHeader/ProblemCreationHeader";
 import Select from "../../components/Select/Select";
-import Editor from "../../components/Editor";
-import Button from "../../components/Button";
-import FileUploadButton from "../../components/FileUploadButton";
-import colors from "../../colors";
 import { useAlert } from "../../contexts/AlertContext";
 import NewFileOrUploadButton from "./components/NewFileOrUploadButton/NewFileOrUploadButton";
 import TightWrapper from "../../components/TightWrapper";
+import SubmitButton from "../../components/SubmitButton";
 
 const languages = ["python", "javascript", "java", "c++"];
 
@@ -74,18 +71,13 @@ const AlgorithmicCreation = () => {
 
       <Grid container justifyContent="flex-end" item xs={12}>
         <Grid xs={2} item>
-          <Button
+          <SubmitButton
             onClick={() => {
-              console.log(setAlert);
-              if (setAlert) {
-                setAlert({ variant: "success", text: "Adding successful" });
-                console.log("here");
-              }
+              setAlert({ variant: "success", text: "Adding successful" });
             }}
-            sx={{ backgroundColor: colors.maroon, color: colors.white }}
           >
             Submit
-          </Button>
+          </SubmitButton>
         </Grid>
       </Grid>
     </TightWrapper>

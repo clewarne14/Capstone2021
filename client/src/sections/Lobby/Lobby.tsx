@@ -13,6 +13,8 @@ const Lobby: FC = () => {
 
   useEffect(() => {
     (async () => {
+      setLoading({ active: true, delay: 1000 });
+
       const data = await fetch("http://localhost:4000/multiple-choice");
       const response: Array<MultipleChoiceProblemGetResponse> =
         await data.json();
@@ -20,7 +22,8 @@ const Lobby: FC = () => {
       console.log(response);
       setProblems(response);
     })();
-  }, []);
+  }, [setLoading]);
+
   return (
     <Grid container marginTop="2rem">
       <Grid spacing={2} padding={3} sm={8} item container>
