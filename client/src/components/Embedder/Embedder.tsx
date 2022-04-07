@@ -39,7 +39,7 @@ const Embedder: FC<Props> = ({
             variantOverride: "",
           });
           navigator.clipboard.writeText(
-            `<iframe src='${window.location.href}' title="codecreate" />`
+            `<iframe width="100%" height="1000rem" src='${window.location.href}' title="codecreate" />`
           );
         }}
       />
