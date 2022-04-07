@@ -60,7 +60,7 @@ const AlertContextProvider: FC<Props> = ({ children }: Props) => {
           }
           sx={{ fontSize: "1.2rem", textAlign: "center", fontWeight: 700 }}
         >
-          {`${alert.variantOverride ?? alert.variant.toUpperCase()}: ${
+          {`${alert.variantOverride ?? `${alert.variant.toUpperCase()}:`} ${
             alert.text
           }`}
         </Alert>

@@ -7,6 +7,8 @@ import ChoiceBox from "./components/ChoiceBox/ChoiceBox";
 import SubmitButton from "../../components/SubmitButton";
 import { useLoading } from "../../contexts/LoadingContext";
 import { useAlert } from "../../contexts/AlertContext";
+import Embedder from "../../components/Embedder";
+import Likes from "../../components/Likes";
 
 const MultipleChoiceProblem: FC = () => {
   const [problem, setProblem] = useState<MultipleChoiceProblemGetResponse>();
@@ -36,7 +38,7 @@ const MultipleChoiceProblem: FC = () => {
       setAlert({
         text: selected,
         variant: "error",
-        variantOverride: "Incorrect answer",
+        variantOverride: "Incorrect answer:",
       });
 
       setChoices((oldChoices) =>
@@ -55,7 +57,7 @@ const MultipleChoiceProblem: FC = () => {
 
   useEffect(() => {
     (async () => {
-      setLoading({ active: true, delay: 1000 });
+      // setLoading({ active: true, delay: 1000 });
       const data = await fetch(
         `http://localhost:4000/multiple-choice/${problemId}`
       );
@@ -78,9 +80,31 @@ const MultipleChoiceProblem: FC = () => {
         flexDirection="column"
         textAlign="center"
       >
-        <Typography sx={{ fontWeight: 700 }} variant="h3">
-          {problem.title}
-        </Typography>
+        <Grid
+          container
+          item
+          display="flex"
+          alignItems="center"
+          justifyContent="space-around"
+        >
+          <Grid item sm={1}>
+            <Embedder sx={{ fontSize: "2rem" }} />
+          </Grid>
+          <Grid item sx={{ width: "fit-content" }}>
+            <Typography
+              sx={{
+                fontWeight: 700,
+              }}
+              textAlign="center"
+              variant="h3"
+            >
+              {problem.title}
+            </Typography>
+          </Grid>
+          <Grid item sm={1}>
+            <Likes numLikes={problem.likes} showThumbsDown={true} />
+          </Grid>
+        </Grid>
         <Typography variant="h5">By {problem.creatorName}</Typography>
       </Grid>
       <Grid textAlign="center" item>

@@ -1,11 +1,10 @@
 import React, { FC } from "react";
 import { useNavigate } from "react-router-dom";
 import { Grid, Typography, Card } from "@mui/material";
-import ThumbUpIcon from "@mui/icons-material/ThumbUp";
-import Button from "../Button";
 import colors from "../../colors";
 import Tag from "../Tag";
 import SubmitButton from "../SubmitButton";
+import Likes from "../Likes";
 
 type ProblemType = "multiple choice" | "algorithmic";
 
@@ -77,11 +76,8 @@ const ProblemCard: FC<Props> = ({
           container
           item
         >
-          <Grid item>
-            <Typography sx={{ fontWeight: 700 }}>{likes}</Typography>
-          </Grid>
-          <Grid item>
-            <ThumbUpIcon />
+          <Grid item sm={4}>
+            <Likes numLikes={likes} />
           </Grid>
         </Grid>
         <Grid display="flex" alignItems="center" sm={12 / 5} container item>
