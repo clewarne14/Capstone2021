@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Grid, Typography } from "@mui/material";
+import Confetti from "react-confetti";
 import { MultipleChoiceProblemGetResponse } from "../../Routes";
 import TightWrapper from "../../components/TightWrapper";
 import ChoiceBox from "./components/ChoiceBox/ChoiceBox";
@@ -14,6 +15,7 @@ const MultipleChoiceProblem: FC = () => {
   const [problem, setProblem] = useState<MultipleChoiceProblemGetResponse>();
   const [choices, setChoices] = useState<{ text: string; used: boolean }[]>();
   const [selected, setSelected] = useState("");
+  const [showConfetti, setShowConfetti] = useState(false);
   const { problemId } = useParams<{ problemId: string }>();
   const setAlert = useAlert();
   const setLoading = useLoading();
@@ -53,6 +55,7 @@ const MultipleChoiceProblem: FC = () => {
       text: `${selected} is the correct answer!`,
       variant: "success",
     });
+    setShowConfetti(true);
   };
 
   useEffect(() => {
@@ -72,62 +75,65 @@ const MultipleChoiceProblem: FC = () => {
   }, [problemId, setLoading]);
 
   return problem && choices ? (
-    <TightWrapper spacing={8}>
-      <Grid
-        container
-        item
-        display="flex"
-        flexDirection="column"
-        textAlign="center"
-      >
+    <>
+      {showConfetti && <Confetti />}
+      <TightWrapper spacing={8}>
         <Grid
           container
           item
           display="flex"
-          alignItems="center"
-          justifyContent="space-around"
+          flexDirection="column"
+          textAlign="center"
         >
-          <Grid item sm={1}>
-            <Embedder sx={{ fontSize: "2rem" }} />
+          <Grid
+            container
+            item
+            display="flex"
+            alignItems="center"
+            justifyContent="space-around"
+          >
+            <Grid item sm={1}>
+              <Embedder sx={{ fontSize: "2rem" }} />
+            </Grid>
+            <Grid item sx={{ width: "fit-content" }}>
+              <Typography
+                sx={{
+                  fontWeight: 700,
+                }}
+                textAlign="center"
+                variant="h3"
+              >
+                {problem.title}
+              </Typography>
+            </Grid>
+            <Grid item sm={1}>
+              <Likes numLikes={problem.likes} showThumbsDown={true} />
+            </Grid>
           </Grid>
-          <Grid item sx={{ width: "fit-content" }}>
-            <Typography
-              sx={{
-                fontWeight: 700,
-              }}
-              textAlign="center"
-              variant="h3"
-            >
-              {problem.title}
-            </Typography>
-          </Grid>
-          <Grid item sm={1}>
-            <Likes numLikes={problem.likes} showThumbsDown={true} />
+          <Typography variant="h5">By {problem.creatorName}</Typography>
+        </Grid>
+        <Grid textAlign="center" item>
+          <Typography variant="h5">{problem.problemDescription}</Typography>
+        </Grid>
+        {/* CONTAINER */}
+        <Grid item container spacing={2} height="35vh">
+          {choices.map((choice) => (
+            <ChoiceBox
+              disabled={choice.used}
+              setSelected={setSelected}
+              size={12 / choices.length}
+              text={choice.text}
+              selected={selected === choice.text}
+            />
+          ))}
+        </Grid>
+        <Grid item container justifyContent="center">
+          <Grid item sm={2}>
+            <SubmitButton onClick={handleSubmit}>Submit</SubmitButton>
           </Grid>
         </Grid>
-        <Typography variant="h5">By {problem.creatorName}</Typography>
-      </Grid>
-      <Grid textAlign="center" item>
-        <Typography variant="h5">{problem.problemDescription}</Typography>
-      </Grid>
-      {/* CONTAINER */}
-      <Grid item container spacing={2} height="35vh">
-        {choices.map((choice) => (
-          <ChoiceBox
-            disabled={choice.used}
-            setSelected={setSelected}
-            size={12 / choices.length}
-            text={choice.text}
-            selected={selected === choice.text}
-          />
-        ))}
-      </Grid>
-      <Grid item container justifyContent="center">
-        <Grid item sm={2}>
-          <SubmitButton onClick={handleSubmit}>Submit</SubmitButton>
-        </Grid>
-      </Grid>
-    </TightWrapper>
+      </TightWrapper>
+    </>
   ) : (
     <>Nothing</>
   );

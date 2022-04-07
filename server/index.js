@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import { getDb } from '../server/build/database.js';
-import exec from 'child_process';
+import { execSync } from 'child_process';
 import fetch from 'node-fetch';
 import dotenv from 'dotenv';
 
@@ -142,6 +142,7 @@ if __name__ == "__main__":
     "' -TestJSON '" +
     testJSON +
     "'";
+  console.log(command);
   //Execute docker container and run code
   var s = '';
   const callDocker = async function () {
