@@ -62,7 +62,7 @@ app.post('/multiple-choice', async (req, res) => {
 
 app.post('/testCode', async (req, res) => {
   const { Language, Code } = req.body;
-
+  console.log(Code);
   let c = `def fib(inp):
     if inp==3:
       return "0 1 2"
@@ -94,7 +94,7 @@ if __name__ == "__main__":
     `{ "name": "Fibonacci 2", "pass": "false", "methodCall": "fib(4)", "expected": "0 1 1 2", "actual": "none", "message":"none" } ]}`;
   const command =
     "docker run -e VERSION=1.1 -i --rm -p 9000:5000 code-create -UserCode '" +
-    c +
+    Code +
     "' -TestJSON '" +
     testJSON +
     "'";
@@ -107,6 +107,7 @@ if __name__ == "__main__":
         return;
       }
       console.log(stdout);
+      console.log('hello');
       s = stdout;
       return s;
     }).toString();
