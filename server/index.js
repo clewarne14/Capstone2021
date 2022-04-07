@@ -107,6 +107,12 @@ app.post('/createUser', (req, res) => {
 app.post('/testCode', async (req, res) => {
   const { Language, Code } = req.body;
 
+  let c = `def fib(inp):
+    if inp==3:
+      return "0 1 2"
+    if inp==4:
+      return "0 1 1 3"`;
+
   let Test = `
 import execFile
 
@@ -126,15 +132,64 @@ if __name__ == "__main__":
         print("TRUE")
     else:
         print("FALSE")`;
+  let testJSON =
+    `{ "TESTS" : [` +
+    `{ "name": "Fibonacci 1", "pass": "false", "methodCall": "fib(3)", "expected": "0 1 1", "actual": "none", "message":"none" },` +
+    `{ "name": "Fibonacci 2", "pass": "false", "methodCall": "fib(4)", "expected": "0 1 1 2", "actual": "none", "message":"none" } ]}`;
   const command =
-    "docker run -e VERSION=1.1 -i --rm -p 9000:5000 code-create python '" +
-    Code +
-    "' '" +
-    Test +
-    "' > output.txt";
+    "docker run -e VERSION=1.1 -i --rm -p 9000:5000 code-create -UserCode '" +
+    c +
+    "' -TestJSON '" +
+    testJSON +
+    "'";
   //Execute docker container and run code
-  exec(command);
-  return 'Done';
+  var s = '';
+  const callDocker = async function () {
+    var output = execSync(command, (err, stdout, stderr) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      console.log(stdout);
+      s = stdout;
+      return s;
+    }).toString();
+    return output;
+  };
+  // const readFile = async function () {
+  //   fs.readFile('output.txt', 'utf-8', (output, err) => {
+  //     if (err) {
+  //       console.error(err);
+  //       return;
+  //     }
+  //     s = output;
+  //     console.log(output);
+  //   });
+  // };
+  //callDocker()
+  const ret = await callDocker();
+  let output = JSON.parse(ret);
+  let failedTests = '';
+  for (let i = 0; i < output['TESTS'].length; i++) {
+    if (output['TESTS'][i]['pass'] != 'True') {
+      if (failedTests == '') {
+        failedTests +=
+          'Your code did not pass the tests!\nTest name: ' +
+          output['TESTS'][i]['name'] +
+          '\nMethod call: ' +
+          output['TESTS'][i]['methodCall'] +
+          '\nExpected: ' +
+          output['TESTS'][i]['expected'] +
+          '\nActual: ' +
+          output['TESTS'][i]['actual'];
+        if (output['TESTS'][i]['message'] != 'none') {
+          failedTests += '\n' + output['TESTS'][i]['message'];
+        }
+      }
+    }
+  }
+  console.log(failedTests);
+  res.send(failedTests);
 });
 
 app.listen(SERVER_PORT, async () => {

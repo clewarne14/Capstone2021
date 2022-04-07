@@ -57,7 +57,7 @@ const MultipleChoiceProblem: FC = () => {
 
   useEffect(() => {
     (async () => {
-      // setLoading({ active: true, delay: 1000 });
+      setLoading({ active: true, delay: 1000 });
       const data = await fetch(
         `http://localhost:4000/multiple-choice/${problemId}`
       );
