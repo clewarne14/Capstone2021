@@ -3,19 +3,19 @@ import { Button as MUIButton, Theme } from "@mui/material";
 import { SxProps } from "@mui/system";
 import colors from "../../colors";
 
-type Props = {
+export type ButtonProps = {
   children: any;
   onClick?: () => void;
   sx?: SxProps<Theme>;
   endIcon?: ReactNode;
 };
 
-const Button: FC<Props> = ({
+const Button: FC<ButtonProps> = ({
   onClick,
   children,
   sx,
   endIcon = <></>,
-}: Props) => {
+}: ButtonProps) => {
   return (
     <MUIButton
       endIcon={endIcon}

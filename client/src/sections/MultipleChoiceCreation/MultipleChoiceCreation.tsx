@@ -1,13 +1,15 @@
-import React, { FC, useCallback, useState } from "react";
+import React, { FC, useState } from "react";
 import { Grid } from "@mui/material";
 import { useAlert } from "../../contexts/AlertContext";
-import Button from "../../components/Button";
 import ChoiceSelect, {
   Choice,
 } from "../../components/ChoiceSelect/ChoiceSelect";
-import colors from "../../colors";
 import ProblemCreationHeader from "../../components/ProblemCreationHeader/ProblemCreationHeader";
-import HelpButton from "../../components/HelpButton";
+import TightWrapper from "../../components/TightWrapper";
+import { useAuth0 } from "@auth0/auth0-react";
+import { PostRequestResponse } from "../../Routes";
+import { useNavigate } from "react-router-dom";
+import SubmitButton from "../../components/SubmitButton";
 
 const MultipleChoiceCreation: FC = () => {
   const setAlert = useAlert();
@@ -22,12 +24,19 @@ const MultipleChoiceCreation: FC = () => {
     },
     { active: false, text: "", id: 2 },
   ]);
+  const { isAuthenticated, user } = useAuth0();
+  const navigation = useNavigate();
 
   /**
    * Validates text fields (title, description, as well as the choices text inputs)
    * @returns false if any of the validations go wrong, true otherwise
    */
   const validate = () => {
+    if (!isAuthenticated) {
+      setAlert({ text: "Sign in to create this problem", variant: "error" });
+      return false;
+    }
+
     if (title.length === 0) {
       setAlert({ text: "Title must not be empty", variant: "warning" });
       return false;
@@ -65,21 +74,27 @@ const MultipleChoiceCreation: FC = () => {
     if (!validate()) return;
     const data = await fetch("http://localhost:4000/multiple-choice", {
       method: "POST",
-      body: JSON.stringify({ title, description, choices, tags }),
+      body: JSON.stringify({
+        title,
+        description,
+        choices,
+        tags,
+        user,
+      }),
       headers: { "Content-Type": "application/json" },
     });
+    const response: PostRequestResponse = await data.json();
+    console.log(response);
+    if (response.success) {
+      navigation("/code");
+      setAlert({ text: response.message, variant: "success" });
+    } else {
+      setAlert({ text: response.message, variant: "error" });
+    }
   };
 
   return (
-    <Grid
-      container
-      margin="auto"
-      display="flex"
-      justifyContent="center"
-      width="60%"
-      rowSpacing={5}
-      marginBottom="2rem"
-    >
+    <TightWrapper>
       <ProblemCreationHeader
         problemCreationTitle="Multiple Choice"
         description={description}
@@ -108,15 +123,10 @@ const MultipleChoiceCreation: FC = () => {
 
       <Grid container justifyContent="flex-end" item xs={12}>
         <Grid xs={2} item>
-          <Button
-            onClick={validateAndSubmit}
-            sx={{ backgroundColor: colors.maroon, color: colors.white }}
-          >
-            Submit
-          </Button>
+          <SubmitButton onClick={validateAndSubmit}>Submit</SubmitButton>
         </Grid>
       </Grid>
-    </Grid>
+    </TightWrapper>
   );
 };
 

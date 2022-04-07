@@ -27,8 +27,8 @@ const ChooseProblemType: FC = () => {
       </Typography>
       <Grid container spacing={isSmallScreen ? 3 : 6} width="100%">
         {options.map((option) => (
-          <Grid item xs={12} sm={12 / options.length}>
-            <IconButton key={option.text} {...option} />
+          <Grid key={option.text} item xs={12} sm={12 / options.length}>
+            <IconButton {...option} />
           </Grid>
         ))}
       </Grid>

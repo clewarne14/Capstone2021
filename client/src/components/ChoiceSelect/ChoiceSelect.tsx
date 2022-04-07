@@ -57,7 +57,7 @@ const ChoiceSelect: FC<Props> = ({
               }}
               sx={{ width: "100%", color: colors.black }}
               value={choice.text}
-              placeholder="Fill this question in"
+              placeholder="Fill this choice in"
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">

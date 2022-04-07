@@ -5,8 +5,29 @@ import ListIcon from "@mui/icons-material/List";
 import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
 import ChooseProblemType from "./sections/ChooseProblemType/ChooseProblemType";
 import MultipleChoiceCreation from "./sections/MultipleChoiceCreation/MultipleChoiceCreation";
-import ProblemBox from "./ProblemBox/ProblemBox";
 import AlgorithmicCreation from "./sections/AlgorithmicCreation/AlgorithmicCreation";
+import UserProfile from "./sections/UserProfile/UserProfile";
+import Lobby from "./sections/Lobby/Lobby";
+import ProblemBox from "./ProblemBox/ProblemBox";
+import MultipleChoiceProblem from "./sections/MultipleChoiceProblem/MultipleChoiceProblem";
+
+export type PostRequestResponse = {
+  success: boolean;
+  message: string;
+};
+
+export type MultipleChoiceProblemGetResponse = {
+  title: string;
+  dateCreated: string;
+  answer: string;
+  creatorName: string;
+  likes: number;
+  problemType: "multiple choice" | "algorithmic";
+  tags: Array<string>;
+  choices: Array<string>;
+  problemDescription: string;
+  problemId: number;
+};
 
 /**
  * This file contains all of the routes for our single page application.
@@ -21,25 +42,27 @@ export const routes = [
 
 const Routes: FC = () => (
   <DOMRoutes>
-    <Route path="create-problem/type" element={<ChooseProblemType />} />
+    <Route path="/create-problem/type" element={<ChooseProblemType />} />
     <Route
-      path="create-problem/multiple-choice"
+      path="/create-problem/multiple-choice"
       element={<MultipleChoiceCreation />}
     />
     <Route
-      path="create-problem/algorithmic"
+      path="/create-problem/algorithmic"
       element={<AlgorithmicCreation />}
     />
+    <Route path="/profile/:username" element={<UserProfile />} />
+    <Route path="/code" element={<Lobby />} />
     <Route
-      path="/code"
-      element={
-        <ProblemBox
-          startcode={"Public static void main()"}
-          problemtext={"Print out the first 5 fibonacci numbers"}
-        />
-      }
+      path="/code/multiple-choice/:problemId"
+      element={<MultipleChoiceProblem />}
     />
   </DOMRoutes>
 );
 
 export default Routes;
+
+//  <ProblemBox
+//    startcode={"Public static void main()"}
+//    problemtext={"Print out the first 5 fibonacci numbers"}
+//  />;

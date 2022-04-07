@@ -1,10 +1,11 @@
-const express = require('express');
-const cors = require('cors');
-const { getDb } = require('./build/database');
-const { exec, ChildProcess, execSync } = require('child_process');
-const fs = require('fs');
+import express from 'express';
+import cors from 'cors';
+import { getDb } from '../server/build/database.js';
+import exec from 'child_process';
+import fetch from 'node-fetch';
+import dotenv from 'dotenv';
 
-require('dotenv').config();
+dotenv.config();
 
 const app = express();
 const {
@@ -14,6 +15,10 @@ const {
   DATABASE_NAME,
   DATABASE_HOST,
   DATABASE_PORT,
+  AUTH0_DOMAIN,
+  AUTH0_SCOPE,
+  AUTH0_CLIENT_ID,
+  AUTH0_AUDIENCE,
 } = process.env;
 
 const db = getDb(
@@ -38,7 +43,7 @@ app.get('/tags', async (req, res) => {
 });
 
 app.post('/multiple-choice', async (req, res) => {
-  const { title, description, choices, tags } = req.body;
+  const { title, description, choices, tags, user } = req.body;
 
   const answer = choices.find((choice) => choice.active);
   const parsedChoices = choices.map((choice) => choice.text).join(', ');
@@ -52,12 +57,51 @@ app.post('/multiple-choice', async (req, res) => {
 
   try {
     await db.query(
-      `insert into multipleChoice (choices, problemDescription, title, tags, dateCreated, answer) values ('${parsedChoices}', '${description}', '${title}', '${parsedTags}', '${formattedDate}', '${answer.text}')`
+      `insert into multipleChoice (choices, problemDescription, title, tags, dateCreated, answer, creatorName, likes, problemType) values ('${parsedChoices}', '${description}', '${title}', '${parsedTags}', '${formattedDate}', '${answer.text}', '${user.nickname}', 0, 'multiple choice')`
     );
+    res.send({
+      success: true,
+      message: `${title} successfully created`,
+    });
   } catch (e) {
-    console.log('failed');
+    res.send({ success: false, message: e.text });
     throw e;
   }
+});
+
+app.get('/multiple-choice', async (req, res) => {
+  try {
+    const data = await db.query('select * from multipleChoice');
+    const formattedData = data.map((item) => ({
+      ...item,
+      tags: item.tags.split(','),
+      choices: item.choices.split(','),
+    }));
+    res.send(formattedData);
+  } catch (e) {
+    throw e;
+  }
+});
+
+app.get('/multiple-choice/:problemId', async (req, res) => {
+  const { problemId } = req.params;
+  try {
+    const problem = await db.query(
+      `select * from multipleChoice where problemId=${problemId}`
+    );
+    const formattedProblem = problem.map((item) => ({
+      ...item,
+      tags: item.tags.split(','),
+      choices: item.choices.split(','),
+    }));
+    res.send(formattedProblem[0]);
+  } catch (e) {
+    res.send({ message: e.text, success: false });
+  }
+});
+
+app.post('/createUser', (req, res) => {
+  console.log(req.body);
 });
 
 app.post('/testCode', async (req, res) => {

@@ -12,12 +12,14 @@
     "start": "nodemon index.js",
     "build": "tsc -w && nodemon index.js"
   },
+  "type": "module",
   "author": "",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "express": "^4.17.1",
+    "node-fetch": "^3.2.3",
     "nodemon": "^2.0.15"
   },
   "devDependencies": {
