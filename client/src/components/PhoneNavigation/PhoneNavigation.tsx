@@ -1,6 +1,6 @@
 import React, { FC, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
-import { BottomNavigation, BottomNavigationAction } from "@mui/material";
+import { BottomNavigation, BottomNavigationAction, Box } from "@mui/material";
 import { useSmallScreen } from "../../contexts/SmallScreenContext";
 import colors from "../../colors";
 import { routes } from "../../Routes";
@@ -17,23 +17,35 @@ const PhoneNavigation: FC = () => {
   return (
     <>
       {isSmallScreen && (
-        <BottomNavigation
-          showLabels
-          value={value}
-          onChange={(e, newValue) => setValue(newValue)}
-          sx={{ backgroundColor: colors.black, color: colors.blue }}
+        <Box
+          sx={{
+            paddingTop: "3.5rem",
+          }}
         >
-          {routes.map((route) => (
-            <BottomNavigationAction
-              sx={navigationSx}
-              label={route.text}
-              icon={route.icon}
-              component={RouterLink}
-              to={route.url}
-              key={route.text}
-            />
-          ))}
-        </BottomNavigation>
+          <BottomNavigation
+            showLabels
+            value={value}
+            onChange={(e, newValue) => setValue(newValue)}
+            sx={{
+              position: "fixed",
+              width: "100%",
+              bottom: 0,
+              backgroundColor: colors.black,
+              color: colors.blue,
+            }}
+          >
+            {routes.map((route) => (
+              <BottomNavigationAction
+                sx={navigationSx}
+                label={route.text}
+                icon={route.icon}
+                component={RouterLink}
+                to={route.url}
+                key={route.text}
+              />
+            ))}
+          </BottomNavigation>
+        </Box>
       )}
     </>
   );

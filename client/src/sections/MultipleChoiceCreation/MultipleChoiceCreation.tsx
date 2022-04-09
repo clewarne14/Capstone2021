@@ -84,7 +84,6 @@ const MultipleChoiceCreation: FC = () => {
       headers: { "Content-Type": "application/json" },
     });
     const response: PostRequestResponse = await data.json();
-    console.log(response);
     if (response.success) {
       navigation("/code");
       setAlert({ text: response.message, variant: "success" });

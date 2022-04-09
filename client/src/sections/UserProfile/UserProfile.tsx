@@ -15,8 +15,6 @@ const UserProfile: FC = () => {
         `https://${process.env.REACT_APP_AUTH0_DOMAIN}/api/v2/users?search_engine=v3`,
         { headers: { authorization: `Bearer ${token}` } }
       );
-      console.log(`Bearer ${token}`);
-      console.log(data);
     })();
   }, []);
 

@@ -19,7 +19,6 @@ const Lobby: FC = () => {
       const response: Array<MultipleChoiceProblemGetResponse> =
         await data.json();
 
-      console.log(response);
       setProblems(response);
     })();
   }, [setLoading]);

@@ -29,7 +29,6 @@ const ProblemCreationHeader: FC<Props> = ({
     (async () => {
       const res = await fetch("http://localhost:4000/tags");
       const data = await res.json();
-      console.log("here");
       setDbTags(data.map((tag: { name: string }) => tag.name));
     })();
   }, []);
