@@ -22,7 +22,14 @@ const ChooseProblemType: FC = () => {
     <section
       style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
     >
-      <Typography sx={{ textAlign: "center", margin: "3.5rem" }} variant="h3">
+      <Typography
+        sx={{
+          textAlign: "center",
+          margin: "3.5rem",
+          width: "100%",
+        }}
+        variant={isSmallScreen ? "h5" : "h3"}
+      >
         Choose problem type
       </Typography>
       <Grid container spacing={isSmallScreen ? 3 : 6} width="100%">

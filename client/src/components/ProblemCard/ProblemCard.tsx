@@ -8,7 +8,7 @@ import Likes from "../Likes";
 
 type ProblemType = "multiple choice" | "algorithmic";
 
-type Props = {
+export type ProblemCardProps = {
   title: string;
   problemType: ProblemType;
   username: string;
@@ -18,7 +18,7 @@ type Props = {
   problemId: number;
 };
 
-const ProblemCard: FC<Props> = ({
+const ProblemCard: FC<ProblemCardProps> = ({
   likes,
   problemType,
   tags,
@@ -26,7 +26,7 @@ const ProblemCard: FC<Props> = ({
   userPicture,
   username,
   problemId,
-}: Props) => {
+}: ProblemCardProps) => {
   const navigation = useNavigate();
   return (
     <Card sx={{ backgroundColor: colors.gray, width: "100%" }}>
