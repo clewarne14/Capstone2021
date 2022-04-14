@@ -3,3 +3,7 @@ html {
   display: flex;
   flex-direction: column;
 }
+
+body {
+  margin: 0;
+}

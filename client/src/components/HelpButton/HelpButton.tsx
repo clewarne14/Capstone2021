@@ -4,11 +4,9 @@ import { SxProps } from "@mui/system";
 import {
   IconButton,
   Dialog,
-  DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Button,
   Theme,
 } from "@mui/material";
 import colors from "../../colors";

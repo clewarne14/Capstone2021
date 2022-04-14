@@ -28,10 +28,11 @@ const PhoneNavigation: FC = () => {
             onChange={(e, newValue) => setValue(newValue)}
             sx={{
               position: "fixed",
-              width: "100%",
               bottom: 0,
               backgroundColor: colors.black,
               color: colors.blue,
+              width: "100%",
+              zIndex: 4,
             }}
           >
             {routes.map((route) => (

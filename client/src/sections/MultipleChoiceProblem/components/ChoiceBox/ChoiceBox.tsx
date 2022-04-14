@@ -2,6 +2,7 @@ import React, { Dispatch, FC, SetStateAction, useState } from "react";
 import { Box, Card, Grid, Typography } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import colors from "../../../../colors";
+import { useSmallScreen } from "../../../../contexts/SmallScreenContext";
 
 type Props = {
   text: string;
@@ -19,8 +20,16 @@ const ChoiceBox: FC<Props> = ({
   setSelected,
 }: Props) => {
   const [raised, setRaised] = useState(false);
+  const isSmallScreen = useSmallScreen();
+
   return (
-    <Grid key={text} item sm={size} height="100%">
+    <Grid
+      key={text}
+      item
+      xs={12}
+      sm={size}
+      height={isSmallScreen ? "50%" : "100%"}
+    >
       <Card
         onMouseOver={() => setRaised(true)}
         onMouseOut={() => setRaised(false)}
@@ -38,6 +47,7 @@ const ChoiceBox: FC<Props> = ({
           pointerEvents: disabled ? "none" : "auto",
           border: selected ? `3px solid ${colors.green}` : "",
           opacity: disabled ? "50%" : "100%",
+          width: "100%",
         }}
       >
         <Typography textAlign="center" variant="h5">

@@ -106,7 +106,7 @@ const MultipleChoiceProblem: FC = () => {
                 {problem.title}
               </Typography>
             </Grid>
-            <Grid item sm={1}>
+            <Grid item xs={2} sm={1}>
               <Likes numLikes={problem.likes} showThumbsDown={true} />
             </Grid>
           </Grid>
@@ -116,7 +116,7 @@ const MultipleChoiceProblem: FC = () => {
           <Typography variant="h5">{problem.problemDescription}</Typography>
         </Grid>
         {/* CONTAINER */}
-        <Grid item container spacing={2} height="35vh">
+        <Grid item container spacing={3} height="35vh">
           {choices.map((choice) => (
             <ChoiceBox
               disabled={choice.used}
@@ -135,7 +135,7 @@ const MultipleChoiceProblem: FC = () => {
       </TightWrapper>
     </>
   ) : (
-    <>Nothing</>
+    <>This problem doesn't exist...</>
   );
 };
 

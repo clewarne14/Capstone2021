@@ -15,7 +15,7 @@ const AlgorithmicCreation = () => {
   const [tags, setTags] = useState<Array<string>>([]);
   const [language, setLanguage] = useState("python");
   const [startCode, setStartCode] = useState("");
-  const [startCodeFile, setstartCodeFile] = useState<File>();
+  const [startCodeFile, setStartCodeFile] = useState<File>();
   const [testSuiteCode, setTestSuiteCode] = useState("");
   const [testSuiteCodeFile, setTestSuiteCodeFile] = useState<File>();
   const setAlert = useAlert();
@@ -61,12 +61,31 @@ const AlgorithmicCreation = () => {
       </Grid>
 
       <NewFileOrUploadButton
-        header="Test code"
+        header="Starting code"
+        language={language}
+        newFile={startCode}
+        setNewFile={setStartCode}
+        uploadedFile={startCodeFile}
+        setUploadedFile={setStartCodeFile}
+        helpButton={{
+          description:
+            "Algorithmic problems (especially debugging problems) will sometimes come with code that the user starts with. Examples of starting code could be function headers without the actual implementation, or with the implementation if you are doing something like a debugging problem.",
+          title: "Starting code",
+        }}
+      />
+
+      <NewFileOrUploadButton
+        header="Test code suite"
         language={language}
         newFile={testSuiteCode}
         setNewFile={setTestSuiteCode}
         uploadedFile={testSuiteCodeFile}
         setUploadedFile={setTestSuiteCodeFile}
+        helpButton={{
+          description:
+            "The test code suite contains the tests that will run against users code.",
+          title: "Test code suite",
+        }}
       />
 
       <Grid container justifyContent="flex-end" item xs={12}>
