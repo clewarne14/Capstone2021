@@ -203,3 +203,5 @@ app.listen(SERVER_PORT, async () => {
     console.error(e);
   }
 });
+
+export { app };
