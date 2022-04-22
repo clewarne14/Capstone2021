@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
 import { Grid } from "@mui/material";
 import ProblemCreationHeader from "../../components/ProblemCreationHeader/ProblemCreationHeader";
 import Select from "../../components/Select/Select";
@@ -6,6 +8,7 @@ import { useAlert } from "../../contexts/AlertContext";
 import NewFileOrUploadButton from "./components/NewFileOrUploadButton/NewFileOrUploadButton";
 import TightWrapper from "../../components/TightWrapper";
 import SubmitButton from "../../components/SubmitButton";
+import { PostRequestResponse } from "../../Routes";
 
 const languages = ["python", "javascript", "java", "c++"];
 
@@ -18,7 +21,9 @@ const AlgorithmicCreation = () => {
   const [startCodeFile, setStartCodeFile] = useState<File>();
   const [testSuiteCode, setTestSuiteCode] = useState("");
   const [testSuiteCodeFile, setTestSuiteCodeFile] = useState<File>();
+  const { isAuthenticated, user } = useAuth0();
   const setAlert = useAlert();
+  const navigation = useNavigate();
 
   /**
    * Validates text fields (title, description, as well as the choices text inputs)
@@ -35,7 +40,41 @@ const AlgorithmicCreation = () => {
       return false;
     }
 
+    if (!testSuiteCodeFile && testSuiteCode.length === 0) {
+      setAlert({
+        text: "Test suite code must not be empty",
+        variant: "warning",
+      });
+      return false;
+    }
+
     return true;
+  };
+
+  const validateAndSubmit = async () => {
+    if (!validate()) return;
+
+    const data = await fetch("http://localhost:4000/algorithmic", {
+      method: "POST",
+      body: JSON.stringify({
+        title,
+        description,
+        tags,
+        user,
+        testSuite: testSuiteCode,
+        language,
+        startingCode: startCode,
+      }),
+      headers: { "Content-Type": "application/json" },
+    });
+
+    const response: PostRequestResponse = await data.json();
+    if (response.success) {
+      navigation("/code");
+      setAlert({ text: response.message, variant: "success" });
+    } else {
+      setAlert({ text: response.message, variant: "error" });
+    }
   };
 
   return (
@@ -90,13 +129,7 @@ const AlgorithmicCreation = () => {
 
       <Grid container justifyContent="flex-end" item xs={12}>
         <Grid xs={2} item>
-          <SubmitButton
-            onClick={() => {
-              setAlert({ variant: "success", text: "Adding successful" });
-            }}
-          >
-            Submit
-          </SubmitButton>
+          <SubmitButton onClick={validateAndSubmit}>Submit</SubmitButton>
         </Grid>
       </Grid>
     </TightWrapper>

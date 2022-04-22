@@ -100,8 +100,9 @@ const NewFileOrUploadButton: FC<Props> = ({
         </Grid>
         {/* Make sure this isn't an uploaded file already */}
         {!uploadedFile && (
-          <Grid item xs={12}>
+          <Grid item xs={12} height="30vh">
             <Editor
+              height="30vh"
               code={newFile}
               setCode={(val) => setNewFile(val)}
               language={language}

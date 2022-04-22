@@ -2,17 +2,17 @@ import React, { FC, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Grid, Typography } from "@mui/material";
 import Confetti from "react-confetti";
-import { MultipleChoiceProblemGetResponse } from "../../Routes";
+import { MultipleChoiceProblemType } from "../../Routes";
 import TightWrapper from "../../components/TightWrapper";
 import ChoiceBox from "./components/ChoiceBox/ChoiceBox";
 import SubmitButton from "../../components/SubmitButton";
 import { useLoading } from "../../contexts/LoadingContext";
 import { useAlert } from "../../contexts/AlertContext";
-import Embedder from "../../components/Embedder";
-import Likes from "../../components/Likes";
+import ProblemHeader from "../../components/ProblemHeader";
 
 const MultipleChoiceProblem: FC = () => {
-  const [problem, setProblem] = useState<MultipleChoiceProblemGetResponse>();
+  const [problemSolved, setProblemSolved] = useState(false);
+  const [problem, setProblem] = useState<MultipleChoiceProblemType>();
   const [choices, setChoices] = useState<{ text: string; used: boolean }[]>();
   const [selected, setSelected] = useState("");
   const [showConfetti, setShowConfetti] = useState(false);
@@ -56,6 +56,7 @@ const MultipleChoiceProblem: FC = () => {
       variant: "success",
     });
     setShowConfetti(true);
+    setProblemSolved(true);
   };
 
   useEffect(() => {
@@ -64,7 +65,7 @@ const MultipleChoiceProblem: FC = () => {
       const data = await fetch(
         `http://localhost:4000/multiple-choice/${problemId}`
       );
-      const response: MultipleChoiceProblemGetResponse = await data.json();
+      const response: MultipleChoiceProblemType = await data.json();
       setProblem(response);
       const formattedChoices = response.choices.map((choice) => ({
         text: choice,
@@ -78,43 +79,12 @@ const MultipleChoiceProblem: FC = () => {
     <>
       {showConfetti && <Confetti />}
       <TightWrapper spacing={8}>
-        <Grid
-          container
-          item
-          display="flex"
-          flexDirection="column"
-          textAlign="center"
-        >
-          <Grid
-            container
-            item
-            display="flex"
-            alignItems="center"
-            justifyContent="space-around"
-          >
-            <Grid item sm={1}>
-              <Embedder sx={{ fontSize: "2rem" }} />
-            </Grid>
-            <Grid item sx={{ width: "fit-content" }}>
-              <Typography
-                sx={{
-                  fontWeight: 700,
-                }}
-                textAlign="center"
-                variant="h3"
-              >
-                {problem.title}
-              </Typography>
-            </Grid>
-            <Grid item xs={2} sm={1}>
-              <Likes numLikes={problem.likes} showThumbsDown={true} />
-            </Grid>
-          </Grid>
-          <Typography variant="h5">By {problem.creatorName}</Typography>
-        </Grid>
-        <Grid textAlign="center" item>
-          <Typography variant="h5">{problem.problemDescription}</Typography>
-        </Grid>
+        <ProblemHeader
+          creatorName={problem.creatorName}
+          likes={problem.likes}
+          problemDescription={problem.problemDescription}
+          problemTitle={problem.title}
+        />
         {/* CONTAINER */}
         <Grid item container spacing={3} height="35vh">
           {choices.map((choice) => (
@@ -129,7 +99,9 @@ const MultipleChoiceProblem: FC = () => {
         </Grid>
         <Grid item container justifyContent="center">
           <Grid item sm={2}>
-            <SubmitButton onClick={handleSubmit}>Submit</SubmitButton>
+            <SubmitButton disabled={problemSolved} onClick={handleSubmit}>
+              Submit
+            </SubmitButton>
           </Grid>
         </Grid>
       </TightWrapper>

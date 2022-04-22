@@ -6,9 +6,11 @@ const SubmitButton: FC<ButtonProps> = ({
   children,
   endIcon,
   onClick,
+  disabled,
   sx,
 }: ButtonProps) => (
   <Button
+    disabled={disabled}
     endIcon={endIcon}
     onClick={onClick}
     sx={{

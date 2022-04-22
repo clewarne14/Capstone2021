@@ -69,6 +69,32 @@ app.post('/multiple-choice', async (req, res) => {
   }
 });
 
+app.post('/algorithmic', async (req, res) => {
+  const { title, description, tags, user, startingCode, testSuite, language } =
+    req.body;
+
+  const parsedTags = tags.join(', ');
+  const currentDatetime = new Date();
+  const formattedDate = currentDatetime
+    .toISOString()
+    .split('T')
+    .join(' ')
+    .substring(0, 19);
+
+  try {
+    await db.query(
+      `insert into algorithmic (title, tags, dateCreated, problemDescription, creatorName, likes, problemType, startingCode, testSuite, language) values ('${title}', '${parsedTags}', '${formattedDate}', '${description}', '${user}', 0, 'algorithmic', '${startingCode}', '${testSuite}', '${language}')`
+    );
+    res.send({
+      success: true,
+      message: `${title} successfully created`,
+    });
+  } catch (e) {
+    res.send({ success: false, message: e.text });
+    throw e;
+  }
+});
+
 app.get('/multiple-choice', async (req, res) => {
   try {
     const data = await db.query('select * from multipleChoice');
@@ -94,6 +120,23 @@ app.get('/multiple-choice/:problemId', async (req, res) => {
       tags: item.tags.split(','),
       choices: item.choices.split(','),
     }));
+    res.send(formattedProblem[0]);
+  } catch (e) {
+    res.send({ message: e.text, success: false });
+  }
+});
+
+app.get('/algorithmic/:problemId', async (req, res) => {
+  const { problemId } = req.params;
+  try {
+    const problem = await db.query(
+      `select * from algorithmic where problemId=${problemId}`
+    );
+    const formattedProblem = problem.map((item) => ({
+      ...item,
+      tags: item.tags.split(','),
+    }));
+    console.log(formattedProblem);
     res.send(formattedProblem[0]);
   } catch (e) {
     res.send({ message: e.text, success: false });

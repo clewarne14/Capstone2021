@@ -8,26 +8,35 @@ import MultipleChoiceCreation from "./sections/MultipleChoiceCreation/MultipleCh
 import AlgorithmicCreation from "./sections/AlgorithmicCreation/AlgorithmicCreation";
 import UserProfile from "./sections/UserProfile/UserProfile";
 import Lobby from "./sections/Lobby/Lobby";
-import ProblemBox from "./ProblemBox/ProblemBox";
 import MultipleChoiceProblem from "./sections/MultipleChoiceProblem/MultipleChoiceProblem";
+import AlgorithmicProblem from "./sections/AlgorithmicProblem/AlgorithmicProblem";
 
 export type PostRequestResponse = {
   success: boolean;
   message: string;
 };
 
-export type MultipleChoiceProblemGetResponse = {
+type Problem = {
   title: string;
   dateCreated: string;
-  answer: string;
   creatorName: string;
   likes: number;
   problemType: "multiple choice" | "algorithmic";
   tags: Array<string>;
-  choices: Array<string>;
   problemDescription: string;
   problemId: number;
 };
+
+export interface MultipleChoiceProblemType extends Problem {
+  answer: string;
+  choices: Array<string>;
+}
+
+export interface AlgorithmicProblemType extends Problem {
+  testSuite: string;
+  startingCode: string;
+  language: string;
+}
 
 /**
  * This file contains all of the routes for our single page application.
@@ -51,8 +60,13 @@ const Routes: FC = () => (
       path="/create-problem/algorithmic"
       element={<AlgorithmicCreation />}
     />
+
     <Route path="/profile/:username" element={<UserProfile />} />
     <Route path="/code" element={<Lobby />} />
+    <Route
+      path="/code/algorithmic/:problemId"
+      element={<AlgorithmicProblem />}
+    />
     <Route
       path="/code/multiple-choice/:problemId"
       element={<MultipleChoiceProblem />}
@@ -61,8 +75,3 @@ const Routes: FC = () => (
 );
 
 export default Routes;
-
-//  <ProblemBox
-//    startcode={"Public static void main()"}
-//    problemtext={"Print out the first 5 fibonacci numbers"}
-//  />;

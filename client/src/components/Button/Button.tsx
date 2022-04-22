@@ -8,18 +8,21 @@ export type ButtonProps = {
   onClick?: () => void;
   sx?: SxProps<Theme>;
   endIcon?: ReactNode;
+  disabled?: boolean;
 };
 
 const Button: FC<ButtonProps> = ({
   onClick,
   children,
   sx,
+  disabled,
   endIcon = <></>,
 }: ButtonProps) => {
   return (
     <MUIButton
       endIcon={endIcon}
       variant="contained"
+      disabled={disabled}
       color="primary"
       sx={{
         backgroundColor: colors.white,

@@ -32,9 +32,9 @@ const Navbar: FC = () => {
   ];
 
   return (
-    <Box sx={{ paddingBottom: "4rem" }}>
+    <Box sx={{ paddingBottom: "5rem" }}>
       <AppBar
-        sx={{ padding: "1rem", position: "absolute", top: 0 }}
+        sx={{ padding: "1rem", position: "absolute", top: 0, height: "5rem" }}
         color="secondary"
       >
         <Grid container justifyContent="space-between">
