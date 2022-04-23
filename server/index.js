@@ -57,7 +57,7 @@ app.post('/multiple-choice', async (req, res) => {
 
   try {
     await db.query(
-      `insert into multipleChoice (choices, problemDescription, title, tags, dateCreated, answer, creatorName, likes, problemType) values ('${parsedChoices}', '${description}', '${title}', '${parsedTags}', '${formattedDate}', '${answer.text}', '${user.nickname}', 0, 'multiple choice')`
+      `insert into multipleChoice (choices, problemDescription, title, tags, dateCreated, answer, creatorName, likes, problemType) values ('${parsedChoices}', '${description}', '${title}', '${parsedTags}', '${formattedDate}', '${answer.text}', '${user.nickname}', 0, 'multiple-choice')`
     );
     res.send({
       success: true,
@@ -124,6 +124,55 @@ app.get('/multiple-choice/:problemId', async (req, res) => {
   } catch (e) {
     res.send({ message: e.text, success: false });
   }
+});
+
+app.get('/algorithmic', async (req, res) => {
+  try {
+    const data = await db.query('select * from algorithmic');
+    const formattedData = data.map((item) => ({
+      ...item,
+      tags: item.tags.split(','),
+    }));
+    res.send(formattedData);
+  } catch (e) {
+    throw e;
+  }
+});
+
+// Gets the most recent problems
+app.get('/problems', async (req, res) => {
+  const algorithmic = await db.query('select * from algorithmic');
+  const multipleChoice = await db.query('select * from multipleChoice');
+
+  const algorithmicProblems = algorithmic.map((problem) => ({
+    title: problem.title,
+    tags: problem.tags.split(','),
+    dateCreated: problem.dateCreated,
+    problemDescription: problem.problemDescription,
+    problemId: problem.problemId,
+    creatorName: problem.creatorName,
+    likes: problem.likes,
+    problemType: problem.problemType,
+  }));
+
+  const multipleChoiceProblems = multipleChoice.map((problem) => ({
+    title: problem.title,
+    tags: problem.tags.split(','),
+    dateCreated: problem.dateCreated,
+    problemDescription: problem.problemDescription,
+    problemId: problem.problemId,
+    creatorName: problem.creatorName,
+    likes: problem.likes,
+    problemType: problem.problemType,
+  }));
+
+  const problems = [...multipleChoiceProblems, ...algorithmicProblems];
+
+  res.send(
+    problems.sort(
+      (problem1, problem2) => problem2.dateCreated - problem1.dateCreated
+    )
+  );
 });
 
 app.get('/algorithmic/:problemId', async (req, res) => {

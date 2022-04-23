@@ -2,15 +2,17 @@ import React, { FC, useEffect, useState } from "react";
 import { Grid, Typography } from "@mui/material";
 import ProblemCard from "../../components/ProblemCard";
 import SmallProblemCard from "../../components/SmallProblemCard";
-import { MultipleChoiceProblemType } from "../../Routes";
+import {
+  AlgorithmicProblemType,
+  MultipleChoiceProblemType,
+  Problem,
+} from "../../Routes";
 import LobbyHeader from "./components/LobbyHeader/LobbyHeader";
 import { useLoading } from "../../contexts/LoadingContext";
 import { useSmallScreen } from "../../contexts/SmallScreenContext";
 
 const Lobby: FC = () => {
-  const [problems, setProblems] = useState<Array<MultipleChoiceProblemType>>(
-    []
-  );
+  const [problems, setProblems] = useState<Array<Problem>>([]);
   const isSmallScreen = useSmallScreen();
   const setLoading = useLoading();
 
@@ -18,10 +20,10 @@ const Lobby: FC = () => {
     (async () => {
       setLoading({ active: true, delay: 1000 });
 
-      const data = await fetch("http://localhost:4000/multiple-choice");
-      const response: Array<MultipleChoiceProblemType> = await data.json();
+      const allProblems = await fetch("http://localhost:4000/problems");
+      const allProblemsData: Array<Problem> = await allProblems.json();
 
-      setProblems(response);
+      setProblems(allProblemsData);
     })();
   }, [setLoading]);
 

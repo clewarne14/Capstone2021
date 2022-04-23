@@ -16,7 +16,7 @@ export type PostRequestResponse = {
   message: string;
 };
 
-type Problem = {
+export type Problem = {
   title: string;
   dateCreated: string;
   creatorName: string;

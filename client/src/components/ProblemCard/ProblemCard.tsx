@@ -82,12 +82,7 @@ const ProblemCard: FC<ProblemCardProps> = ({
         </Grid>
         <Grid display="flex" alignItems="center" sm={12 / 5} container item>
           <SubmitButton
-            onClick={() => {
-              if (problemType === "multiple choice") {
-                navigation(`multiple-choice/${problemId}`);
-              } else {
-              }
-            }}
+            onClick={() => navigation(`${problemType}/${problemId}`)}
             sx={{
               backgroundColor: colors.maroon,
               color: colors.white,

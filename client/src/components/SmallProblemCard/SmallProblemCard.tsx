@@ -89,12 +89,7 @@ const SmallProblemCard: FC<ProblemCardProps> = ({
         <Grid item container xs={12} display="flex" justifyContent="center">
           <Grid item xs={3}>
             <SubmitButton
-              onClick={() => {
-                if (problemType === "multiple choice") {
-                  navigation(`multiple-choice/${problemId}`);
-                } else {
-                }
-              }}
+              onClick={() => navigation(`${problemType}/${problemId}`)}
             >
               Solve
             </SubmitButton>
