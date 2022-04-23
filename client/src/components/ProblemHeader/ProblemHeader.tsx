@@ -49,7 +49,7 @@ const ProblemHeader: FC<Props> = ({
             </Typography>
           </Grid>
           <Grid item xs={2} sm={1}>
-            <Likes numLikes={likes} showThumbsDown={true} />
+            <Likes updateable={true} numLikes={likes} showThumbsDown={true} />
           </Grid>
         </Grid>
         <Typography variant="h5">By {creatorName}</Typography>

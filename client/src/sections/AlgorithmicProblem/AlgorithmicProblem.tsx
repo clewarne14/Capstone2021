@@ -7,6 +7,7 @@ import ProblemHeader from "../../components/ProblemHeader";
 import Editor from "../../components/Editor";
 import colors from "../../colors";
 import Button from "../../components/Button";
+import SubmitButton from "../../components/SubmitButton";
 
 const AlgorithmicProblem: FC = () => {
   const [problem, setProblem] = useState<AlgorithmicProblemType>();
@@ -22,8 +23,8 @@ const AlgorithmicProblem: FC = () => {
       );
 
       const response: AlgorithmicProblemType = await data.json();
-      console.log(response);
       setProblem(response);
+      setUserCode(response.startingCode);
     })();
   }, [problemId, setLoading]);
 
@@ -67,23 +68,30 @@ const AlgorithmicProblem: FC = () => {
               container
               textAlign="center"
               width="100%"
+              height="100%"
             >
-              <Typography variant="h6">{problem.problemDescription}</Typography>
-              <Grid
-                alignSelf="flex-end"
-                container
-                item
-                spacing={3}
-                padding="1rem"
-              >
+              <Typography marginTop="2rem" variant="h6">
+                {problem.problemDescription}
+              </Typography>
+              <Grid container item spacing={3} padding="1rem" marginTop="auto">
                 <Grid sm={4} item>
-                  <Button>Tests</Button>
+                  <Button>Input Test</Button>
                 </Grid>
                 <Grid sm={4} item>
-                  <Button>Run Code</Button>
+                  <Button
+                    sx={{
+                      backgroundColor: colors.green,
+                      "&:hover": {
+                        backgroundColor: colors.darkGreen,
+                        color: colors.white,
+                      },
+                    }}
+                  >
+                    Run Code
+                  </Button>
                 </Grid>
                 <Grid sm={4} item>
-                  <Button>Submit</Button>
+                  <SubmitButton>Submit</SubmitButton>
                 </Grid>
               </Grid>
             </Grid>
