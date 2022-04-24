@@ -186,15 +186,26 @@ app.get('/algorithmic/:problemId', async (req, res) => {
       ...item,
       tags: item.tags.split(','),
     }));
-    console.log(formattedProblem);
     res.send(formattedProblem[0]);
   } catch (e) {
     res.send({ message: e.text, success: false });
   }
 });
 
-app.post('/createUser', (req, res) => {
-  console.log(req.body);
+app.post('/createUser', async (req, res) => {
+  const { username, picture } = req.body;
+
+  try {
+    await db.query(
+      `insert into user (username, profilePicture, lists, reputation, problemsCreated, problemsSolved) values ('${username}', '${picture}', '', 0, '', '')`
+    );
+    res.send({
+      message: `${username} was successfully created!`,
+      success: true,
+    });
+  } catch (e) {
+    res.send({ message: e.text, success: false });
+  }
 });
 
 app.post('/testCode', async (req, res) => {

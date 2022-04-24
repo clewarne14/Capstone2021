@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Grid, Typography } from "@mui/material";
+import { Grid } from "@mui/material";
 import Confetti from "react-confetti";
 import { MultipleChoiceProblemType } from "../../Routes";
 import TightWrapper from "../../components/TightWrapper";
@@ -89,7 +89,7 @@ const MultipleChoiceProblem: FC = () => {
         <Grid item container spacing={3} height="35vh">
           {choices.map((choice) => (
             <ChoiceBox
-              disabled={choice.used}
+              disabled={choice.used || problemSolved}
               setSelected={setSelected}
               size={12 / choices.length}
               text={choice.text}
