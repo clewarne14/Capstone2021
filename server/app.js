@@ -2,7 +2,6 @@ import express from 'express';
 import cors from 'cors';
 import { getDb } from './build/database.js';
 import { execSync } from 'child_process';
-import fetch from 'node-fetch';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -33,7 +32,9 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get('/', (req, res) => {});
+app.get('/', (req, res) => {
+  res.send('Is this working');
+});
 
 app.get('/code', (req, res) => {});
 
@@ -296,4 +297,4 @@ app.listen(SERVER_PORT, async () => {
   }
 });
 
-export { app };
+export default app;

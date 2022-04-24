@@ -41,7 +41,7 @@ const Navbar: FC = () => {
           <Grid item xs={10} sm={6}>
             <Typography variant="h3">CodeCreate</Typography>
           </Grid>
-          <Grid container item xs={2} sm={6} columnSpacing={2}>
+          < Grid container item xs={2} sm={6} columnSpacing={2}>
             {!isSmallScreen && (
               // Render the navbar buttons
               <Grid item container columnSpacing={2} sm={10} lg={11}>

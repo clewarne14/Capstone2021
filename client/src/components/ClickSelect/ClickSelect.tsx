@@ -21,7 +21,7 @@ const ClickSelect: FC<Props> = ({ children, options, sx }: Props) => {
   return (
     <>
       <Tooltip
-        sx={{ width: "100%", height: "100%", cursor: "pointer", ...sx }}
+        sx={{ height: "100%", cursor: "pointer", ...sx }}
         title="Open settings"
         onClick={handleOpenUserMenu}
       >
