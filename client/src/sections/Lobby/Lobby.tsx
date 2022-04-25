@@ -2,12 +2,7 @@ import React, { FC, useEffect, useState } from "react";
 import { Grid, Typography } from "@mui/material";
 import ProblemCard from "../../components/ProblemCard";
 import SmallProblemCard from "../../components/SmallProblemCard";
-import {
-  AlgorithmicProblemType,
-  MultipleChoiceProblemType,
-  Problem,
-  User,
-} from "../../Routes";
+import { Problem, User } from "../../Routes";
 import LobbyHeader from "./components/LobbyHeader/LobbyHeader";
 import { useLoading } from "../../contexts/LoadingContext";
 import { useSmallScreen } from "../../contexts/SmallScreenContext";
@@ -24,6 +19,15 @@ const Lobby: FC = () => {
       const allProblems = await fetch("http://localhost:4000/problems");
       const allProblemsData: Array<Problem> = await allProblems.json();
 
+      allProblemsData.forEach(async (problem, index) => {
+        const user = await fetch(
+          `http://localhost:4000/user/${problem.creatorName}`
+        );
+        const userData: User = await user.json();
+        allProblemsData[index].profilePicture = userData.profilePicture;
+        console.log(userData.profilePicture);
+      });
+
       setProblems(allProblemsData);
     })();
   }, [setLoading]);
@@ -38,7 +42,7 @@ const Lobby: FC = () => {
         </Grid>
         {!isSmallScreen && <LobbyHeader />}
         <Grid item container spacing={3}>
-          {problems.map(async (problem) => {
+          {problems.map((problem) => {
             const {
               creatorName,
               likes,
@@ -47,11 +51,8 @@ const Lobby: FC = () => {
               title,
               dateCreated,
               problemId,
+              profilePicture,
             } = problem;
-            const user = await fetch(
-              `http://localhost:4000/user/${creatorName}`
-            );
-            const userData: User = await user.json();
 
             return (
               <Grid key={`${title}-${creatorName}-${dateCreated}`} item sm={12}>
@@ -63,7 +64,7 @@ const Lobby: FC = () => {
                     tags={tags}
                     title={title}
                     username={creatorName}
-                    userPicture={userData.profilePicture}
+                    userPicture={profilePicture ?? ""}
                   />
                 ) : (
                   <ProblemCard
@@ -73,9 +74,7 @@ const Lobby: FC = () => {
                     tags={tags}
                     title={title}
                     username={creatorName}
-                    userPicture={
-                      "https://media-exp1.licdn.com/dms/image/C4E03AQGFjkjQIYFTVQ/profile-displayphoto-shrink_400_400/0/1618550044653?e=2147483647&v=beta&t=6bOTWGxpoxHX7-tHErjufgWpZyzIMPhIQ7ERKpsp2eQ"
-                    }
+                    userPicture={profilePicture ?? ""}
                   />
                 )}
               </Grid>

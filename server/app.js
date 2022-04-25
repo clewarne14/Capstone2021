@@ -47,7 +47,7 @@ app.post('/multiple-choice', async (req, res) => {
   const { title, description, choices, tags, email } = req.body;
 
   const foundUserByEmail = await db.query(
-    `select * from user where email = ${email}`
+    `select * from user where email = '${email}'`
   );
 
   const answer = choices.find((choice) => choice.active);
@@ -62,7 +62,7 @@ app.post('/multiple-choice', async (req, res) => {
 
   try {
     await db.query(
-      `insert into multipleChoice (choices, problemDescription, title, tags, dateCreated, answer, creatorName, likes, problemType) values ('${parsedChoices}', '${description}', '${title}', '${parsedTags}', '${formattedDate}', '${answer.text}', '${foundUserByEmail.username}', 0, 'multiple-choice')`
+      `insert into multipleChoice (choices, problemDescription, title, tags, dateCreated, answer, creatorName, likes, problemType) values ('${parsedChoices}', '${description}', '${title}', '${parsedTags}', '${formattedDate}', '${answer.text}', '${foundUserByEmail[0].username}', 0, 'multiple-choice')`
     );
     res.send({
       success: true,
@@ -75,8 +75,12 @@ app.post('/multiple-choice', async (req, res) => {
 });
 
 app.post('/algorithmic', async (req, res) => {
-  const { title, description, tags, user, startingCode, testSuite, language } =
+  const { title, description, tags, email, startingCode, testSuite, language } =
     req.body;
+
+  const foundUserByEmail = await db.query(
+    `select * from user where email = '${email}'`
+  );
 
   const parsedTags = tags.join(', ');
   const currentDatetime = new Date();
@@ -88,7 +92,7 @@ app.post('/algorithmic', async (req, res) => {
 
   try {
     await db.query(
-      `insert into algorithmic (title, tags, dateCreated, problemDescription, creatorName, likes, problemType, startingCode, testSuite, language) values ('${title}', '${parsedTags}', '${formattedDate}', '${description}', '${user}', 0, 'algorithmic', '${startingCode}', '${testSuite}', '${language}')`
+      `insert into algorithmic (title, tags, dateCreated, problemDescription, creatorName, likes, problemType, startingCode, testSuite, language) values ('${title}', '${parsedTags}', '${formattedDate}', '${description}', '${foundUserByEmail[0].username}', 0, 'algorithmic', '${startingCode}', '${testSuite}', '${language}')`
     );
     res.send({
       success: true,
@@ -114,11 +118,11 @@ app.get('/multiple-choice', async (req, res) => {
   }
 });
 
-app.get('user/:name', async (req, res) => {
+app.get('/user/:name', async (req, res) => {
   const { name } = req.params;
   try {
     const user = await db.query(`select * from user where username='${name}'`);
-    res.send(user);
+    res.send(user[0]);
   } catch (e) {
     res.send({ message: e.text, success: false });
   }
@@ -211,7 +215,9 @@ app.post('/createUser', async (req, res) => {
 
   try {
     await db.query(
-      `insert into user (username, profilePicture, lists, reputation, problemsCreated, problemsSolved, email) values ('${username}', '${picture}', '', 0, '', '', '${email}')`
+      `insert into user (username, profilePicture, lists, reputation, problemsCreated, problemsSolved, email) values ('${username}', '${
+        picture ?? ''
+      }', '', 0, '', '', '${email}')`
     );
     res.send({
       message: `${username} was successfully created!`,

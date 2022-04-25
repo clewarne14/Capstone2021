@@ -17,7 +17,7 @@ export type PostRequestResponse = {
 };
 
 export type Problem = {
-  title: string;
+title: string;
   dateCreated: string;
   creatorName: string;
   likes: number;
@@ -25,15 +25,18 @@ export type Problem = {
   tags: Array<string>;
   problemDescription: string;
   problemId: number;
+  profilePicture?: string;
 };
 
 export type User = {
+  email: string;
   username: string;
-  profilePicture: string;
+  profilePicture?: string;
   reputation: number;
   lists: string;
   problemsCreated: string;
   problemsSolved: string;
+  bio?: string;
 };
 
 export interface MultipleChoiceProblemType extends Problem {
