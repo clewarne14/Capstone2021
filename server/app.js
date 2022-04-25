@@ -44,7 +44,11 @@ app.get('/tags', async (req, res) => {
 });
 
 app.post('/multiple-choice', async (req, res) => {
-  const { title, description, choices, tags, user } = req.body;
+  const { title, description, choices, tags, email } = req.body;
+
+  const foundUserByEmail = await db.query(
+    `select * from user where email = ${email}`
+  );
 
   const answer = choices.find((choice) => choice.active);
   const parsedChoices = choices.map((choice) => choice.text).join(', ');
@@ -58,7 +62,7 @@ app.post('/multiple-choice', async (req, res) => {
 
   try {
     await db.query(
-      `insert into multipleChoice (choices, problemDescription, title, tags, dateCreated, answer, creatorName, likes, problemType) values ('${parsedChoices}', '${description}', '${title}', '${parsedTags}', '${formattedDate}', '${answer.text}', '${user.nickname}', 0, 'multiple-choice')`
+      `insert into multipleChoice (choices, problemDescription, title, tags, dateCreated, answer, creatorName, likes, problemType) values ('${parsedChoices}', '${description}', '${title}', '${parsedTags}', '${formattedDate}', '${answer.text}', '${foundUserByEmail.username}', 0, 'multiple-choice')`
     );
     res.send({
       success: true,
@@ -107,6 +111,16 @@ app.get('/multiple-choice', async (req, res) => {
     res.send(formattedData);
   } catch (e) {
     throw e;
+  }
+});
+
+app.get('user/:name', async (req, res) => {
+  const { name } = req.params;
+  try {
+    const user = await db.query(`select * from user where username='${name}'`);
+    res.send(user);
+  } catch (e) {
+    res.send({ message: e.text, success: false });
   }
 });
 
@@ -193,11 +207,11 @@ app.get('/algorithmic/:problemId', async (req, res) => {
 });
 
 app.post('/createUser', async (req, res) => {
-  const { username, picture } = req.body;
+  const { username, picture, email } = req.body;
 
   try {
     await db.query(
-      `insert into user (username, profilePicture, lists, reputation, problemsCreated, problemsSolved) values ('${username}', '${picture}', '', 0, '', '')`
+      `insert into user (username, profilePicture, lists, reputation, problemsCreated, problemsSolved, email) values ('${username}', '${picture}', '', 0, '', '', '${email}')`
     );
     res.send({
       message: `${username} was successfully created!`,

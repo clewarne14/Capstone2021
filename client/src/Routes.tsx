@@ -27,6 +27,15 @@ export type Problem = {
   problemId: number;
 };
 
+export type User = {
+  username: string;
+  profilePicture: string;
+  reputation: number;
+  lists: string;
+  problemsCreated: string;
+  problemsSolved: string;
+};
+
 export interface MultipleChoiceProblemType extends Problem {
   answer: string;
   choices: Array<string>;

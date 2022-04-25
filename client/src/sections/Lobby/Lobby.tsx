@@ -6,6 +6,7 @@ import {
   AlgorithmicProblemType,
   MultipleChoiceProblemType,
   Problem,
+  User,
 } from "../../Routes";
 import LobbyHeader from "./components/LobbyHeader/LobbyHeader";
 import { useLoading } from "../../contexts/LoadingContext";
@@ -37,7 +38,7 @@ const Lobby: FC = () => {
         </Grid>
         {!isSmallScreen && <LobbyHeader />}
         <Grid item container spacing={3}>
-          {problems.map((problem) => {
+          {problems.map(async (problem) => {
             const {
               creatorName,
               likes,
@@ -47,6 +48,11 @@ const Lobby: FC = () => {
               dateCreated,
               problemId,
             } = problem;
+            const user = await fetch(
+              `http://localhost:4000/user/${creatorName}`
+            );
+            const userData: User = await user.json();
+
             return (
               <Grid key={`${title}-${creatorName}-${dateCreated}`} item sm={12}>
                 {isSmallScreen ? (
@@ -57,9 +63,7 @@ const Lobby: FC = () => {
                     tags={tags}
                     title={title}
                     username={creatorName}
-                    userPicture={
-                      "https://media-exp1.licdn.com/dms/image/C4E03AQGFjkjQIYFTVQ/profile-displayphoto-shrink_400_400/0/1618550044653?e=2147483647&v=beta&t=6bOTWGxpoxHX7-tHErjufgWpZyzIMPhIQ7ERKpsp2eQ"
-                    }
+                    userPicture={userData.profilePicture}
                   />
                 ) : (
                   <ProblemCard

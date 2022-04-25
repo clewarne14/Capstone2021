@@ -79,7 +79,7 @@ const MultipleChoiceCreation: FC = () => {
         description,
         choices,
         tags,
-        user,
+        email: user?.email,
       }),
       headers: { "Content-Type": "application/json" },
     });
