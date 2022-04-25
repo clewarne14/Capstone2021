@@ -60,7 +60,7 @@ const AlgorithmicCreation = () => {
         title,
         description,
         tags,
-        user,
+        email: user ? user.email : "",
         testSuite: testSuiteCode,
         language,
         startingCode: startCode,

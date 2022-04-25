@@ -82,6 +82,8 @@ app.post('/algorithmic', async (req, res) => {
     `select * from user where email = '${email}'`
   );
 
+  console.log(foundUserByEmail);
+
   const parsedTags = tags.join(', ');
   const currentDatetime = new Date();
   const formattedDate = currentDatetime
@@ -216,7 +218,7 @@ app.post('/createUser', async (req, res) => {
   try {
     await db.query(
       `insert into user (username, profilePicture, lists, reputation, problemsCreated, problemsSolved, email) values ('${username}', '${
-        picture ?? ''
+        picture ? picture : ''
       }', '', 0, '', '', '${email}')`
     );
     res.send({
