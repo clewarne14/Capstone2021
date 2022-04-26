@@ -19,7 +19,7 @@ const Likes: FC<Props> = ({
   const { isAuthenticated, user } = useAuth0();
 
   return (
-    <Box justifyContent="space-around" display="flex" alignItems="center">
+    <Box display="flex" alignItems="center" width="100%">
       <ThumbUpIcon
         sx={{
           cursor: updateable ? "pointer" : "none",
@@ -29,7 +29,9 @@ const Likes: FC<Props> = ({
           },
         }}
       />
-      <Typography sx={{ fontWeight: 700 }}>{numLikes}</Typography>
+      <Typography sx={{ fontWeight: 700, margin: "0 1rem" }}>
+        {numLikes}
+      </Typography>
       {showThumbsDown && (
         <ThumbDownIcon
           sx={{

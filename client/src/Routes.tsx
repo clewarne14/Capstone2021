@@ -11,17 +11,25 @@ import Lobby from "./sections/Lobby/Lobby";
 import MultipleChoiceProblem from "./sections/MultipleChoiceProblem/MultipleChoiceProblem";
 import AlgorithmicProblem from "./sections/AlgorithmicProblem/AlgorithmicProblem";
 
+export type ProblemType = "multiple choice" | "algorithmic";
+
 export type PostRequestResponse = {
   success: boolean;
   message: string;
 };
 
+export type CompressedProblem = {
+  likes: number;
+  title: string;
+  problemType: ProblemType;
+};
+
 export type Problem = {
-title: string;
+  title: string;
   dateCreated: string;
   creatorName: string;
   likes: number;
-  problemType: "multiple choice" | "algorithmic";
+  problemType: ProblemType;
   tags: Array<string>;
   problemDescription: string;
   problemId: number;

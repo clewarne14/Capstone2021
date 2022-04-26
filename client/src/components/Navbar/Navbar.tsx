@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { SxProps } from "@mui/system";
 import { AppBar, Typography, Grid, Avatar, Theme, Box } from "@mui/material";
+import { useUsername } from "../../contexts/AuthUsernameContext";
 import { useSmallScreen } from "../../contexts/SmallScreenContext";
 import colors from "../../colors";
 import { routes } from "../../Routes";
@@ -18,11 +19,12 @@ const buttonSx: SxProps<Theme> = {
 const Navbar: FC = () => {
   const isSmallScreen = useSmallScreen();
   const navigate = useNavigate();
+  const username = useUsername();
   const { loginWithPopup, logout, user, isAuthenticated } = useAuth0();
 
   const settings = [
     {
-      onClick: () => navigate(`/profile/${user?.nickname}`),
+      onClick: () => navigate(`/profile/${username}`),
       text: "Profile",
     },
     {

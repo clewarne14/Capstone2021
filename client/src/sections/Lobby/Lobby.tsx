@@ -63,7 +63,7 @@ const Lobby: FC = () => {
                     tags={tags}
                     title={title}
                     username={creatorName}
-                    userPicture={profilePicture ?? "empty_avatar.png"}
+                    userPicture={profilePicture ?? "/empty_avatar.png"}
                   />
                 ) : (
                   <ProblemCard
@@ -73,7 +73,7 @@ const Lobby: FC = () => {
                     tags={tags}
                     title={title}
                     username={creatorName}
-                    userPicture={profilePicture ?? "empty_avatar.png"}
+                    userPicture={profilePicture ?? "/empty_avatar.png"}
                   />
                 )}
               </Grid>

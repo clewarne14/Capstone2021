@@ -43,6 +43,48 @@ const updateProblemsCreated = async (problemType, username, problemId) => {
   );
 };
 
+const getProblemsRecent = async () => {
+  const algorithmic = await db.query('select * from algorithmic');
+  const multipleChoice = await db.query('select * from multipleChoice');
+
+  const algorithmicProblems = algorithmic.map((problem) => ({
+    title: problem.title,
+    tags: problem.tags.split(','),
+    dateCreated: problem.dateCreated,
+    problemDescription: problem.problemDescription,
+    problemId: problem.problemId,
+    creatorName: problem.creatorName,
+    likes: problem.likes,
+    problemType: problem.problemType,
+  }));
+
+  const multipleChoiceProblems = multipleChoice.map((problem) => ({
+    title: problem.title,
+    tags: problem.tags.split(','),
+    dateCreated: problem.dateCreated,
+    problemDescription: problem.problemDescription,
+    problemId: problem.problemId,
+    creatorName: problem.creatorName,
+    likes: problem.likes,
+    problemType: problem.problemType,
+  }));
+
+  const problems = [...multipleChoiceProblems, ...algorithmicProblems];
+
+  const sortedProblems = problems.sort(
+    (problem1, problem2) => problem2.dateCreated - problem1.dateCreated
+  );
+
+  return sortedProblems;
+};
+
+const getUsernameByEmail = async (email) => {
+  const res = await db.query(
+    `select username from user where email='${email}'`
+  );
+  return res[0].username;
+};
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -154,6 +196,25 @@ app.get('/multiple-choice', async (req, res) => {
   }
 });
 
+/**
+ * Get user by email
+ */
+app.get('/user/email/:email', async (req, res) => {
+  const { email } = req.params;
+  try {
+    const username = await getUsernameByEmail(email);
+    const user = await db.query(
+      `select * from user where username='${username}'`
+    );
+    res.send(user[0]);
+  } catch (e) {
+    res.send({ message: e.text, success: false });
+  }
+});
+
+/**
+ * Get user by username
+ */
 app.get('/user/:name', async (req, res) => {
   const { name } = req.params;
   try {
@@ -196,38 +257,8 @@ app.get('/algorithmic', async (req, res) => {
 
 // Gets the most recent problems
 app.get('/problems', async (req, res) => {
-  const algorithmic = await db.query('select * from algorithmic');
-  const multipleChoice = await db.query('select * from multipleChoice');
-
-  const algorithmicProblems = algorithmic.map((problem) => ({
-    title: problem.title,
-    tags: problem.tags.split(','),
-    dateCreated: problem.dateCreated,
-    problemDescription: problem.problemDescription,
-    problemId: problem.problemId,
-    creatorName: problem.creatorName,
-    likes: problem.likes,
-    problemType: problem.problemType,
-  }));
-
-  const multipleChoiceProblems = multipleChoice.map((problem) => ({
-    title: problem.title,
-    tags: problem.tags.split(','),
-    dateCreated: problem.dateCreated,
-    problemDescription: problem.problemDescription,
-    problemId: problem.problemId,
-    creatorName: problem.creatorName,
-    likes: problem.likes,
-    problemType: problem.problemType,
-  }));
-
-  const problems = [...multipleChoiceProblems, ...algorithmicProblems];
-
-  res.send(
-    problems.sort(
-      (problem1, problem2) => problem2.dateCreated - problem1.dateCreated
-    )
-  );
+  const sortedProblems = await getProblemsRecent();
+  res.send(sortedProblems);
 });
 
 app.get('/algorithmic/:problemId', async (req, res) => {
@@ -244,6 +275,61 @@ app.get('/algorithmic/:problemId', async (req, res) => {
   } catch (e) {
     res.send({ message: e.text, success: false });
   }
+});
+
+app.get('/user/:name/problems', async (req, res) => {
+  const { name } = req.params;
+
+  const user = await db.query(
+    `select problemsCreated, problemsSolved from user where username='${name}'`
+  );
+
+  const problems = user[0];
+
+  const problemsCreated = problems.problemsCreated.split(',');
+  const problemsSolved = problems.problemsSolved.split(',');
+
+  const recentProblemsCreated = [];
+  const recentProblemsSolved = [];
+
+  for (let i = 0; i < 3; i++) {
+    if (problemsCreated.length - i >= 0) {
+      const aProblem = problemsCreated[problemsCreated.length - 1 - i];
+      if (aProblem && aProblem.length !== 0)
+        recentProblemsCreated.push(aProblem);
+    }
+
+    if (problemsSolved.length - i >= 0) {
+      const aProblem = problemsSolved[problemsSolved.length - 1 - i];
+      if (aProblem && aProblem.length !== 0)
+        recentProblemsSolved.push(aProblem);
+    }
+  }
+
+  /**
+   * Helper function to a problem based on provided problemId and problem type
+   * @param {*} problem problem type and problem id
+   * @returns The problem matching this criteria
+   */
+  const getProblem = async (problem) => {
+    let [problemType, problemId] = problem.split('-');
+    if (problemType === 'multiple-choice') problemType = 'multipleChoice';
+
+    const problemInfo = await db.query(
+      `select likes, problemType, title from ${problemType} where problemId = ${problemId}`
+    );
+
+    return problemInfo[0];
+  };
+
+  const recentProblemsCreatedInfo = recentProblemsCreated.map(getProblem);
+
+  const recentProblemsSolvedInfo = recentProblemsSolved.map(getProblem);
+
+  res.send({
+    problemsCreated: await Promise.all(recentProblemsCreatedInfo),
+    problemsSolved: await Promise.all(recentProblemsSolvedInfo),
+  });
 });
 
 app.post('/createUser', async (req, res) => {
