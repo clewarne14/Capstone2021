@@ -37,12 +37,12 @@ const MultipleChoiceCreation: FC = () => {
       return false;
     }
 
-    if (title.length === 0) {
+    if (title.trim().length === 0) {
       setAlert({ text: "Title must not be empty", variant: "warning" });
       return false;
     }
 
-    if (description.length === 0) {
+    if (description.trim().length === 0) {
       setAlert({ text: "Description must not be empty", variant: "warning" });
       return false;
     }
@@ -50,7 +50,7 @@ const MultipleChoiceCreation: FC = () => {
     const choicesUsed = new Set();
 
     for (const choice of choices) {
-      if (choice.text === "") {
+      if (choice.text.trim() === "") {
         setAlert({
           text: "One or more choices are empty. Either get rid of the offending choice or include text in that choice box.",
           variant: "warning",
@@ -58,13 +58,13 @@ const MultipleChoiceCreation: FC = () => {
         return false;
       }
 
-      if (choicesUsed.has(choice.text)) {
+      if (choicesUsed.has(choice.text.trim())) {
         setAlert({
-          text: `One or more choices with the text: "${choice.text}", please remove or change the offending choice(s)`,
+          text: `One or more choices with the text: "${choice.text.trim()}", please remove or change the offending choice(s)`,
           variant: "warning",
         });
         return false;
-      } else choicesUsed.add(choice.text);
+      } else choicesUsed.add(choice.text.trim());
     }
 
     return true;

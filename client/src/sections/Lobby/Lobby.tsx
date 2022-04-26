@@ -25,7 +25,6 @@ const Lobby: FC = () => {
         );
         const userData: User = await user.json();
         allProblemsData[index].profilePicture = userData.profilePicture;
-        console.log(userData.profilePicture);
       });
 
       setProblems(allProblemsData);
@@ -64,7 +63,7 @@ const Lobby: FC = () => {
                     tags={tags}
                     title={title}
                     username={creatorName}
-                    userPicture={profilePicture ?? ""}
+                    userPicture={profilePicture ?? "empty_avatar.png"}
                   />
                 ) : (
                   <ProblemCard
@@ -74,7 +73,7 @@ const Lobby: FC = () => {
                     tags={tags}
                     title={title}
                     username={creatorName}
-                    userPicture={profilePicture ?? ""}
+                    userPicture={profilePicture ?? "empty_avatar.png"}
                   />
                 )}
               </Grid>

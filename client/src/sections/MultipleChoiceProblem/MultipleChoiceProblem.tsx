@@ -36,7 +36,8 @@ const MultipleChoiceProblem: FC = () => {
       });
       return;
     }
-    if (problem.answer !== selected) {
+
+    if (problem.answer.trim() !== selected.trim()) {
       setAlert({
         text: selected,
         variant: "error",
@@ -45,7 +46,9 @@ const MultipleChoiceProblem: FC = () => {
 
       setChoices((oldChoices) =>
         oldChoices?.map((choice) =>
-          choice.text === selected ? { text: choice.text, used: true } : choice
+          choice.text.trim() === selected.trim()
+            ? { text: choice.text.trim(), used: true }
+            : choice
         )
       );
       setSelected("");
@@ -89,6 +92,7 @@ const MultipleChoiceProblem: FC = () => {
         <Grid item container spacing={3} height="35vh">
           {choices.map((choice) => (
             <ChoiceBox
+              key={choice.text}
               disabled={choice.used || problemSolved}
               setSelected={setSelected}
               size={12 / choices.length}

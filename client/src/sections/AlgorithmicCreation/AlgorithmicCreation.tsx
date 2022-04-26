@@ -30,17 +30,22 @@ const AlgorithmicCreation = () => {
    * @returns false if any of the validations go wrong, true otherwise
    */
   const validate = () => {
-    if (title.length === 0) {
+    if (!isAuthenticated) {
+      setAlert({ text: "Sign in to create this problem", variant: "error" });
+      return false;
+    }
+
+    if (title.trim().length === 0) {
       setAlert({ text: "Title must not be empty", variant: "warning" });
       return false;
     }
 
-    if (description.length === 0) {
+    if (description.trim().length === 0) {
       setAlert({ text: "Description must not be empty", variant: "warning" });
       return false;
     }
 
-    if (!testSuiteCodeFile && testSuiteCode.length === 0) {
+    if (!testSuiteCodeFile && testSuiteCode.trim().length === 0) {
       setAlert({
         text: "Test suite code must not be empty",
         variant: "warning",

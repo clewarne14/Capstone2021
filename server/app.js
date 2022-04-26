@@ -28,6 +28,21 @@ const db = getDb(
   DATABASE_PORT
 );
 
+const updateProblemsCreated = async (problemType, username, problemId) => {
+  const queryProblemsCreated = await db.query(
+    `select problemsCreated from user where username='${username}'`
+  );
+
+  const problemsCreated = queryProblemsCreated[0];
+  const updatedProblemsCreated =
+    problemsCreated.problemsCreated + ',' + problemType + '-' + (problemId + 1);
+
+  // Update this user's problems created
+  await db.query(
+    `update user set problemsCreated = '${updatedProblemsCreated}' where username='${username}'`
+  );
+};
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -46,9 +61,11 @@ app.get('/tags', async (req, res) => {
 app.post('/multiple-choice', async (req, res) => {
   const { title, description, choices, tags, email } = req.body;
 
-  const foundUserByEmail = await db.query(
+  const queriedUserByEmail = await db.query(
     `select * from user where email = '${email}'`
   );
+
+  const foundUserByEmail = queriedUserByEmail[0].username;
 
   const answer = choices.find((choice) => choice.active);
   const parsedChoices = choices.map((choice) => choice.text).join(', ');
@@ -61,9 +78,18 @@ app.post('/multiple-choice', async (req, res) => {
     .substring(0, 19);
 
   try {
-    await db.query(
-      `insert into multipleChoice (choices, problemDescription, title, tags, dateCreated, answer, creatorName, likes, problemType) values ('${parsedChoices}', '${description}', '${title}', '${parsedTags}', '${formattedDate}', '${answer.text}', '${foundUserByEmail[0].username}', 0, 'multiple-choice')`
+    const queriedProblemId = await db.query(
+      `select max(problemId) as problemId from multipleChoice`
     );
+
+    const problemId = queriedProblemId[0].problemId;
+
+    await db.query(
+      `insert into multipleChoice (choices, problemDescription, title, tags, dateCreated, answer, creatorName, likes, problemType) values ('${parsedChoices}', '${description}', '${title}', '${parsedTags}', '${formattedDate}', '${answer.text}', '${foundUserByEmail}', 0, 'multiple-choice')`
+    );
+
+    updateProblemsCreated('multipleChoice', foundUserByEmail, problemId);
+
     res.send({
       success: true,
       message: `${title} successfully created`,
@@ -78,11 +104,11 @@ app.post('/algorithmic', async (req, res) => {
   const { title, description, tags, email, startingCode, testSuite, language } =
     req.body;
 
-  const foundUserByEmail = await db.query(
+  const queriedUserByEmail = await db.query(
     `select * from user where email = '${email}'`
   );
 
-  console.log(foundUserByEmail);
+  const foundUserByEmail = queriedUserByEmail[0].username;
 
   const parsedTags = tags.join(', ');
   const currentDatetime = new Date();
@@ -93,9 +119,17 @@ app.post('/algorithmic', async (req, res) => {
     .substring(0, 19);
 
   try {
-    await db.query(
-      `insert into algorithmic (title, tags, dateCreated, problemDescription, creatorName, likes, problemType, startingCode, testSuite, language) values ('${title}', '${parsedTags}', '${formattedDate}', '${description}', '${foundUserByEmail[0].username}', 0, 'algorithmic', '${startingCode}', '${testSuite}', '${language}')`
+    const queriedProblemId = await db.query(
+      `select max(problemId) as problemId from algorithmic`
     );
+
+    const problemId = queriedProblemId[0].problemId;
+    await db.query(
+      `insert into algorithmic (title, tags, dateCreated, problemDescription, creatorName, likes, problemType, startingCode, testSuite, language) values ('${title}', '${parsedTags}', '${formattedDate}', '${description}', '${foundUserByEmail}', 0, 'algorithmic', '${startingCode}', '${testSuite}', '${language}')`
+    );
+
+    updateProblemsCreated('algorithmic', foundUserByEmail, problemId);
+
     res.send({
       success: true,
       message: `${title} successfully created`,
@@ -217,9 +251,9 @@ app.post('/createUser', async (req, res) => {
 
   try {
     await db.query(
-      `insert into user (username, profilePicture, lists, reputation, problemsCreated, problemsSolved, email) values ('${username}', '${
+      `insert into user (username, profilePicture, lists, reputation, problemsCreated, problemsSolved, email, problemsLiked) values ('${username}', '${
         picture ? picture : ''
-      }', '', 0, '', '', '${email}')`
+      }', ' ', 0, ' ', ' ', '${email}', ' ')`
     );
     res.send({
       message: `${username} was successfully created!`,
