@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { SxProps } from "@mui/system";
 import { AppBar, Typography, Grid, Avatar, Theme, Box } from "@mui/material";
-import { useUsername } from "../../contexts/AuthUsernameContext";
+import { useUser } from "../../contexts/AuthUserContext";
 import { useSmallScreen } from "../../contexts/SmallScreenContext";
 import colors from "../../colors";
 import { routes } from "../../Routes";
@@ -19,12 +19,12 @@ const buttonSx: SxProps<Theme> = {
 const Navbar: FC = () => {
   const isSmallScreen = useSmallScreen();
   const navigate = useNavigate();
-  const username = useUsername();
+  const currentUser = useUser();
   const { loginWithPopup, logout, user, isAuthenticated } = useAuth0();
 
   const settings = [
     {
-      onClick: () => navigate(`/profile/${username}`),
+      onClick: () => navigate(`/profile/${currentUser.username}`),
       text: "Profile",
     },
     {
@@ -66,7 +66,16 @@ const Navbar: FC = () => {
             {isAuthenticated && user && (
               <Grid item xs={10} sm={2} lg={1}>
                 <ClickSelect options={settings}>
-                  <Avatar variant="square" alt="Avatar" src={user.picture} />
+                  <Avatar
+                    variant="square"
+                    alt="Avatar"
+                    src={
+                      currentUser.profilePicture === "" ||
+                      !currentUser.profilePicture
+                        ? "empty_avatar.png"
+                        : currentUser.profilePicture
+                    }
+                  />
                 </ClickSelect>
               </Grid>
             )}

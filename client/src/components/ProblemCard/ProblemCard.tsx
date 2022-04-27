@@ -46,9 +46,13 @@ const ProblemCard: FC<ProblemCardProps> = ({
           container
           item
           textAlign="center"
+          sx={{ cursor: "pointer" }}
+          onClick={() => {
+            navigation(`/profile/${username}`);
+          }}
         >
           <Grid item>
-            <img width="50%" src={userPicture} alt={username} />
+            <img width="50%" height="100rem" src={userPicture} alt={username} />
           </Grid>
           <Typography>{username}</Typography>
         </Grid>

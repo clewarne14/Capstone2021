@@ -19,17 +19,25 @@ const Lobby: FC = () => {
       const allProblems = await fetch("http://localhost:4000/problems");
       const allProblemsData: Array<Problem> = await allProblems.json();
 
-      allProblemsData.forEach(async (problem, index) => {
+      const formattedProblems = allProblemsData.map(async (problem, index) => {
         const user = await fetch(
           `http://localhost:4000/user/${problem.creatorName}`
         );
         const userData: User = await user.json();
-        allProblemsData[index].profilePicture = userData.profilePicture;
+        return {
+          ...problem,
+          profilePicture:
+            userData.profilePicture === "" || !userData.profilePicture
+              ? "/empty_avatar.png"
+              : userData.profilePicture,
+        };
       });
 
-      setProblems(allProblemsData);
+      setProblems(await Promise.all(formattedProblems));
     })();
   }, [setLoading]);
+
+  console.log(problems);
 
   return (
     <Grid container marginTop="2rem">
@@ -63,7 +71,7 @@ const Lobby: FC = () => {
                     tags={tags}
                     title={title}
                     username={creatorName}
-                    userPicture={profilePicture ?? "/empty_avatar.png"}
+                    userPicture={profilePicture}
                   />
                 ) : (
                   <ProblemCard
@@ -73,7 +81,7 @@ const Lobby: FC = () => {
                     tags={tags}
                     title={title}
                     username={creatorName}
-                    userPicture={profilePicture ?? "/empty_avatar.png"}
+                    userPicture={profilePicture}
                   />
                 )}
               </Grid>

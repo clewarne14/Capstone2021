@@ -196,6 +196,21 @@ app.get('/multiple-choice', async (req, res) => {
   }
 });
 
+app.patch('/user/:name/profile', async (req, res) => {
+  const { name } = req.params;
+  const { bio, profilePicture } = req.body;
+
+  try {
+    const response = await db.query(
+      `update user set profilePicture='${profilePicture}', bio='${bio}' where username='${name}'`
+    );
+    res.send({ message: `Successfully updated user ${name}`, success: true });
+  } catch (e) {
+    console.log(e);
+    res.send({ message: e.text, success: false });
+  }
+});
+
 /**
  * Get user by email
  */

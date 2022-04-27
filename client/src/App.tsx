@@ -3,7 +3,7 @@ import { Auth0Provider, Auth0ProviderOptions } from "@auth0/auth0-react";
 import { ThemeProvider } from "@emotion/react";
 import { SmallScreenProvider } from "./contexts/SmallScreenContext";
 import { AlertContextProvider } from "./contexts/AlertContext";
-import { AuthUsernameContextProvider } from "./contexts/AuthUsernameContext";
+import { AuthUserContextProvider } from "./contexts/AuthUserContext";
 import { LoadingContextProvider } from "./contexts/LoadingContext";
 import Navbar from "./components/Navbar/Navbar";
 import PhoneNavigation from "./components/PhoneNavigation";
@@ -22,7 +22,7 @@ const auth: Auth0ProviderOptions = {
 const App = () => (
   <div className="page-container">
     <Auth0Provider {...auth}>
-      <AuthUsernameContextProvider>
+      <AuthUserContextProvider>
         <ThemeProvider theme={theme}>
           <AlertContextProvider>
             <LoadingContextProvider>
@@ -34,7 +34,7 @@ const App = () => (
             </LoadingContextProvider>
           </AlertContextProvider>
         </ThemeProvider>
-      </AuthUsernameContextProvider>
+      </AuthUserContextProvider>
     </Auth0Provider>
   </div>
 );

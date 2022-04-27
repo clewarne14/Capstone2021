@@ -2,10 +2,15 @@ import React, { FC, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Avatar, Grid, TextField, Typography } from "@mui/material";
+import { useUser } from "../../contexts/AuthUserContext";
 import TightWrapper from "../../components/TightWrapper";
 import { CompressedProblem, User } from "../../Routes";
 import Likes from "../../components/Likes";
 import CompressedProblemCard from "../../components/CompressedProblemCard";
+import CompressedProblemHolder from "../../components/CompressedProblemHolder";
+import Button from "../../components/Button";
+import colors from "../../colors";
+import SubmitButton from "../../components/SubmitButton";
 
 type CreatedAndSolvedProblems = {
   problemsCreated: Array<CompressedProblem>;
@@ -15,22 +20,96 @@ type CreatedAndSolvedProblems = {
 const UserProfile: FC = () => {
   const { username } = useParams<{ username: string }>();
   const [viewedUser, setViewedUser] = useState<User>();
+  const [currentDescription, setCurrentDescription] = useState("");
+  const [editing, setEditing] = useState(false);
+  const [imageUrl, setImageUrl] = useState("");
   const [recentlySolvedProblems, setRecentlySolvedProblems] = useState<
     Array<CompressedProblem>
   >([]);
   const [recentlyCreatedProblems, setRecentlyCreatedProblems] = useState<
     Array<CompressedProblem>
   >([]);
+  const currentUser = useUser();
 
-  const { isAuthenticated, user, getAccessTokenSilently } = useAuth0();
-  console.log();
+  const getFooter = () => {
+    if (username === currentUser.username && viewedUser) {
+      if (!editing)
+        return (
+          <Grid container item display="flex" justifyContent="flex-end">
+            <Grid item sm={2}>
+              <Button
+                onClick={() => setEditing(true)}
+                sx={{
+                  backgroundColor: colors.green,
+                  fontWeight: 700,
+                  "&:hover": {
+                    backgroundColor: colors.darkGreen,
+                  },
+                }}
+              >
+                Edit
+              </Button>
+            </Grid>
+          </Grid>
+        );
+      else
+        return (
+          <Grid
+            container
+            item
+            spacing={2}
+            display="flex"
+            justifyContent="flex-end"
+          >
+            <Grid item>
+              <Button
+                onClick={() => {
+                  setEditing(false);
+                  setCurrentDescription(viewedUser.bio ?? `Hi I'm ${username}`);
+                }}
+                sx={{
+                  backgroundColor: colors.charcoal,
+                  color: colors.white,
+                  "&:hover": {
+                    backgroundColor: colors.darkCharcoal,
+                  },
+                }}
+              >
+                Cancel
+              </Button>
+            </Grid>
+            <Grid item>
+              <SubmitButton
+                onClick={async () => {
+                  fetch(`http://localhost:4000/user/${username}/profile`, {
+                    method: "PATCH",
+                    body: JSON.stringify({
+                      bio: currentDescription,
+                      profilePicture:
+                        imageUrl === "" ? viewedUser.profilePicture : imageUrl,
+                    }),
+                    headers: { "Content-Type": "application/json" },
+                  });
+                }}
+              >
+                Apply changes
+              </SubmitButton>
+            </Grid>
+          </Grid>
+        );
+    }
+    return <div></div>;
+  };
 
   useEffect(() => {
     (async () => {
       const user = await fetch(`http://localhost:4000/user/${username}`);
       const userResponse: User = await user.json();
-      console.log(userResponse);
       setViewedUser(userResponse);
+
+      setCurrentDescription(
+        userResponse.bio ?? `Hi I'm ${userResponse.username}`
+      );
 
       const problems = await fetch(
         `http://localhost:4000/user/${username}/problems`
@@ -46,6 +125,8 @@ const UserProfile: FC = () => {
       );
     })();
   }, [username]);
+
+  let footer = getFooter();
 
   return viewedUser ? (
     <TightWrapper spacing={6}>
@@ -64,8 +145,17 @@ const UserProfile: FC = () => {
               {viewedUser.username}
             </Typography>
           </Grid>
-          <Grid item>
-            <img src={"/empty_avatar.png"} alt={viewedUser.username} />
+          <Grid item width="85%">
+            <img
+              width="100%"
+              height="300rem"
+              src={
+                viewedUser.profilePicture === "" || !viewedUser.profilePicture
+                  ? "/empty_avatar.png"
+                  : viewedUser.profilePicture
+              }
+              alt={viewedUser.username}
+            />
           </Grid>
           <Grid item>
             <Likes numLikes={viewedUser.reputation} />
@@ -79,54 +169,51 @@ const UserProfile: FC = () => {
           display="flex"
           justifyContent="center"
           alignItems="center"
+          flexDirection="column"
+          spacing={2}
         >
-          <TextField
-            fullWidth
-            multiline
-            value={viewedUser.bio ?? `Hi I'm ${viewedUser.username}`}
-            minRows={9}
-            inputProps={{ style: { fontSize: "1.5rem", textAlign: "center" } }}
-          />
-        </Grid>
-      </Grid>
-      <Grid item container>
-        <Grid item container sm={6}>
-          <Grid item container display="flex" justifyContent="center">
-            <Typography marginBottom="1rem" variant="h3">
-              Created
-            </Typography>
+          <Grid item width="100%">
+            <TextField
+              fullWidth
+              multiline
+              disabled={!editing}
+              value={currentDescription}
+              onChange={(e) => setCurrentDescription(e.target.value)}
+              sx={{
+                "&:disabled": {
+                  color: colors.black,
+                },
+              }}
+              minRows={editing ? 6 : 9}
+              inputProps={{
+                style: { fontSize: "1.5rem", textAlign: "center" },
+              }}
+              placeholder="Enter bio"
+            />
           </Grid>
-          <Grid item container display="flex" flexDirection="column">
-            {recentlyCreatedProblems.map((problem) => (
-              <Grid item key={problem.title}>
-                <CompressedProblemCard
-                  likes={problem.likes}
-                  problemType={problem.problemType}
-                  title={problem.title}
-                />
-              </Grid>
-            ))}
-          </Grid>
-        </Grid>
-        <Grid item container sm={6}>
-          <Grid item container display="flex" justifyContent="center">
-            <Typography marginBottom="1rem" variant="h3">
-              Solved
-            </Typography>
-            <Grid item container display="flex" flexDirection="column">
-              {recentlySolvedProblems.map((problem) => (
-                <Grid item key={problem.title}>
-                  <CompressedProblemCard
-                    likes={problem.likes}
-                    problemType={problem.problemType}
-                    title={problem.title}
-                  />
-                </Grid>
-              ))}
+          {editing && (
+            <Grid item width="100%">
+              <TextField
+                fullWidth
+                value={imageUrl}
+                onChange={(e) => setImageUrl(e.target.value)}
+                placeholder="Enter image url to change profile picture"
+              />
             </Grid>
-          </Grid>
+          )}
         </Grid>
       </Grid>
+      <Grid item container spacing={2}>
+        <CompressedProblemHolder
+          title="Created"
+          problems={recentlyCreatedProblems}
+        />
+        <CompressedProblemHolder
+          title="Solved"
+          problems={recentlySolvedProblems}
+        />
+      </Grid>
+      {footer}
     </TightWrapper>
   ) : (
     <>No user found</>

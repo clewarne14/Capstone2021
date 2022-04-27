@@ -9,6 +9,8 @@ const colors = {
   darkMaroon: "#540928",
   yellow: "#888c00",
   darkGreen: "#5c7a65",
+  charcoal: "#484B49",
+  darkCharcoal: "#313332",
 };
 
 export default colors;

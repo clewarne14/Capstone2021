@@ -33,7 +33,7 @@ export type Problem = {
   tags: Array<string>;
   problemDescription: string;
   problemId: number;
-  profilePicture?: string;
+  profilePicture: string;
 };
 
 export type User = {
