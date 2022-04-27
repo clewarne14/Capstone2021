@@ -1,7 +1,10 @@
 import React, { FC } from "react";
 import { Grid, Typography } from "@mui/material";
+
 import Embedder from "../Embedder";
 import Likes from "../Likes";
+import AddToListButtonAndPopup from "../AddToListButtonAndPopup";
+import { ProblemType } from "../../Routes";
 
 type Props = {
   likes: number;
@@ -9,6 +12,8 @@ type Props = {
   creatorName: string;
   problemDescription: string;
   showDescription?: boolean;
+  problemId: string;
+  problemType: ProblemType;
 };
 
 const ProblemHeader: FC<Props> = ({
@@ -17,6 +22,8 @@ const ProblemHeader: FC<Props> = ({
   problemDescription,
   problemTitle,
   showDescription = true,
+  problemId,
+  problemType,
 }: Props) => {
   return (
     <>
@@ -34,16 +41,33 @@ const ProblemHeader: FC<Props> = ({
           alignItems="center"
           justifyContent="space-around"
         >
-          <Grid item sm={1}>
-            <Embedder sx={{ fontSize: "2rem" }} />
+          <Grid
+            item
+            container
+            sm={1}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            spacing={2}
+          >
+            <Grid item sm={6}>
+              <Embedder sx={{ fontSize: "2rem" }} />
+            </Grid>
+            <Grid item sm={6}>
+              <AddToListButtonAndPopup
+                sx={{ fontSize: "2rem" }}
+                problemId={problemId}
+                problemType={problemType}
+              />
+            </Grid>
           </Grid>
-          <Grid item sx={{ width: "fit-content" }}>
+          <Grid item sx={{ width: "fit-content" }} sm={10}>
             <Typography
               sx={{
                 fontWeight: 700,
               }}
               textAlign="center"
-              variant="h3"
+              variant="h4"
             >
               {problemTitle}
             </Typography>

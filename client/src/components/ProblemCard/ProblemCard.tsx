@@ -15,7 +15,7 @@ export type ProblemCardProps = {
   userPicture: string;
   tags: Array<string>;
   likes: number;
-  problemId: number;
+  problemId: string;
 };
 
 const ProblemCard: FC<ProblemCardProps> = ({

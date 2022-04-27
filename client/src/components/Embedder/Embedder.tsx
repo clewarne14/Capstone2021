@@ -1,33 +1,18 @@
 import React, { FC, useState } from "react";
+import { SxProps } from "@mui/system";
+import { Theme } from "@mui/material";
 import CodeIcon from "@mui/icons-material/Code";
-import { Box, SxProps } from "@mui/system";
-import { Theme, Typography } from "@mui/material";
-import colors from "../../colors";
 import { useAlert } from "../../contexts/AlertContext";
+import HoverText from "../HoverText";
+import colors from "../../colors";
 
 type Props = { hoverText?: string; sx?: SxProps<Theme> };
 
-const Embedder: FC<Props> = ({
-  hoverText = "Embed this problem into your website",
-  sx,
-}: Props) => {
+const Embedder: FC<Props> = ({ hoverText = "Embed", sx }: Props) => {
   const [textActive, setTextActive] = useState(false);
   const setAlert = useAlert();
   return (
-    <Box sx={{ position: "relative" }}>
-      {textActive && (
-        <Typography
-          sx={{
-            width: "150%",
-            position: "absolute",
-            pointerEvents: "none",
-            top: "-3rem",
-            right: "-5rem",
-          }}
-        >
-          {hoverText}
-        </Typography>
-      )}
+    <HoverText open={textActive} text={hoverText}>
       <CodeIcon
         sx={{ color: colors.yellow, cursor: "pointer", ...sx }}
         onMouseOver={() => setTextActive(true)}
@@ -39,11 +24,11 @@ const Embedder: FC<Props> = ({
             variantOverride: "",
           });
           navigator.clipboard.writeText(
-            `<iframe src='${window.location.href}' title="codecreate" />`
+            `<iframe width="100%" height="1000rem" src='${window.location.href}' title="codecreate" />`
           );
         }}
       />
-    </Box>
+    </HoverText>
   );
 };
 

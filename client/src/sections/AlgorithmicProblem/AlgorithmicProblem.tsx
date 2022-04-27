@@ -38,6 +38,8 @@ const AlgorithmicProblem: FC = () => {
     >
       <Grid container item width="60%">
         <ProblemHeader
+          problemId={problem.problemId}
+          problemType={problem.problemType}
           showDescription={false}
           creatorName={problem.creatorName}
           likes={problem.likes}

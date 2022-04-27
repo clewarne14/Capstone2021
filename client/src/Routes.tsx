@@ -32,7 +32,7 @@ export type Problem = {
   problemType: ProblemType;
   tags: Array<string>;
   problemDescription: string;
-  problemId: number;
+  problemId: string;
   profilePicture: string;
 };
 

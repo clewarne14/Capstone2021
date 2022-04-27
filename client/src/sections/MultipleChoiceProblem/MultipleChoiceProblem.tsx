@@ -83,6 +83,8 @@ const MultipleChoiceProblem: FC = () => {
       {showConfetti && <Confetti />}
       <TightWrapper spacing={8}>
         <ProblemHeader
+          problemId={problem.problemId}
+          problemType={problem.problemType}
           creatorName={problem.creatorName}
           likes={problem.likes}
           problemDescription={problem.problemDescription}
