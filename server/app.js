@@ -28,6 +28,8 @@ const db = getDb(
   DATABASE_PORT
 );
 
+// HELPER FUNCTIONS ----------------------------------------
+
 const updateProblemsCreated = async (problemType, username, problemId) => {
   const queryProblemsCreated = await db.query(
     `select problemsCreated from user where username='${username}'`
@@ -117,6 +119,37 @@ const checkTags = (problems, tags) => {
   });
 };
 
+const parseString = (Code) => {
+  let codeSubmit = '';
+  for (let i = 0; i < Code.length; i++) {
+    if (i > Code.length - 1) {
+      codeSubmit += Code.charAt(i);
+      break;
+    }
+    if (
+      Code.charAt(i) == '"' ||
+      Code.charAt(i) == '\t' ||
+      Code.charAt(i) == '\n' ||
+      Code.charAt(i) == "'"
+    ) {
+      if (Code.charAt(i) == '"') {
+        codeSubmit += '\\"';
+      } else if (Code.charAt(i) == '\t') {
+        codeSubmit += '\\t';
+      } else if (Code.charAt(i) == '\n') {
+        codeSubmit += '\\n';
+      } else if (Code.charAt(i) == "'") {
+        codeSubmit += "\\'";
+      }
+    } else {
+      codeSubmit += Code.charAt(i);
+    }
+  }
+  return codeSubmit;
+};
+
+// HELPER FUNCTIONS ----------------------------------------
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -199,7 +232,11 @@ app.post('/algorithmic', async (req, res) => {
 
     const problemId = queriedProblemId[0].problemId;
     await db.query(
-      `insert into algorithmic (title, tags, dateCreated, problemDescription, creatorName, likes, problemType, startingCode, testSuite, language) values ('${title}', '${parsedTags}', '${formattedDate}', '${description}', '${foundUserByEmail}', 0, 'algorithmic', '${startingCode}', '${testSuite}', '${language}')`
+      `insert into algorithmic (title, tags, dateCreated, problemDescription, creatorName, likes, problemType, startingCode, testSuite, language) values ('${title}', '${parsedTags}', '${formattedDate}', '${parseString(
+        description
+      )}', '${foundUserByEmail}', 0, 'algorithmic', '${parseString(
+        startingCode
+      )}', '${parseString(testSuite)}', '${language}')`
     );
 
     updateProblemsCreated('algorithmic', foundUserByEmail, problemId);
@@ -468,12 +505,23 @@ app.post('/createUser', async (req, res) => {
 //   }
 // });
 
-app.post('/testCode', async (req, res) => {
+app.post('/testCode/:problemId', async (req, res) => {
   const { Language, Code } = req.body;
-
+  const { problemId } = req.params;
+  let dbTestJson = null;
+  let Test = null;
+  try {
+    dbTestJson = await db.query(
+      `select testSuite from algorithmic where problemId=${problemId}`
+    );
+    Test = dbTestJson[0]['testSuite'];
+  } catch (e) {
+    dbTestJson = null;
+    Test = null;
+  }
   let codeSubmit = '';
   let testSubmit = '';
-  let Test = `if __name__ == "__main__":\n\toutput = execFile.judgeCircle("UDUD")\n\tif output != True:\n\t\tprint('{ "TestName":"JudgeCircle 1", "MethodCall": "JudgeCircle(UDUD)", "ExpectedOutput": "True", "ActualOutput": "' + str(output) + '"}')\n\t\tsys.exit()\n\toutput = execFile.judgeCircle("UDLL")\n\tif output != False:\n\t\tprint('{ "TestName":"JudgeCircle 2", "MethodCall": "JudgeCircle(UDLL)", "ExpectedOutput": "False", "ActualOutput": "' + str(output) + '"}')\n\t\tsys.exit()`;
+  //let Test = `if __name__ == "__main__":\n\toutput = execFile.judgeCircle("UDUD")\n\tif output != True:\n\t\tprint('{ "TestName":"JudgeCircle 1", "MethodCall": "JudgeCircle(UDUD)", "ExpectedOutput": "True", "ActualOutput": "' + str(output) + '"}')\n\t\tsys.exit()\n\toutput = execFile.judgeCircle("UDLL")\n\tif output != False:\n\t\tprint('{ "TestName":"JudgeCircle 2", "MethodCall": "JudgeCircle(UDLL)", "ExpectedOutput": "False", "ActualOutput": "' + str(output) + '"}')\n\t\tsys.exit()`;
   for (let i = 0; i < Code.length; i++) {
     if (i > Code.length - 1) {
       codeSubmit += Code.charAt(i);
@@ -519,11 +567,10 @@ app.post('/testCode', async (req, res) => {
 
   let jsonInp =
     `{ "TESTS": "` + testSubmit + `" , "UserCode": "` + codeSubmit + `\"}`;
-  let jsonInpTemp = `{"TESTS": "if __name__ == \\\"__main__\\\":\\n\\t\\n\\toutput = execFile.fib(3)\\n\\tif output != \\\"0 1 1\\\":\\n\\t\\tprint('{ \\\"TestName\\\":\\\"Fibonacci 1\\\", \\\"MethodCall\\": \\\"fib(3)\\\", \\\"ExpectedOutput\\\": \\\"0 1 1\\\", \\\"ActualOutput\\\": \\\"' + output + '\\\"')\\n\\t\\tsys.exit()\\n\\toutput = execFile.fib(4)\\n\\tif output != \\\"0 1 1 2\\\":\\n\\t\\tprint('{ \\\"TestName\\\":  + \\\"Fibonacci 1\\\", \\\"MethodCall\\\": \\\"fib(3)\\\", \\\"ExpectedOutput\\\": \\\"0 1 1 2\\\", \\\"ActualOutput\\\": \\\"' + output + '\\\"}')\\n\\t\\tsys.exit()", "UserCode":"def fib(inp):\\n\\tif inp==3:\\n\\t\\treturn \\\"0 1 2\\\"\\n\\tif inp==4:\\n\\t\\treturn \\\"0 1 1 2\\\""}`;
+  //let jsonInpTemp = `{"TESTS": "if __name__ == \\\"__main__\\\":\\n\\t\\n\\toutput = execFile.fib(3)\\n\\tif output != \\\"0 1 1\\\":\\n\\t\\tprint('{ \\\"TestName\\\":\\\"Fibonacci 1\\\", \\\"MethodCall\\": \\\"fib(3)\\\", \\\"ExpectedOutput\\\": \\\"0 1 1\\\", \\\"ActualOutput\\\": \\\"' + output + '\\\"')\\n\\t\\tsys.exit()\\n\\toutput = execFile.fib(4)\\n\\tif output != \\\"0 1 1 2\\\":\\n\\t\\tprint('{ \\\"TestName\\\":  + \\\"Fibonacci 1\\\", \\\"MethodCall\\\": \\\"fib(3)\\\", \\\"ExpectedOutput\\\": \\\"0 1 1 2\\\", \\\"ActualOutput\\\": \\\"' + output + '\\\"}')\\n\\t\\tsys.exit()", "UserCode":"def fib(inp):\\n\\tif inp==3:\\n\\t\\treturn \\\"0 1 2\\\"\\n\\tif inp==4:\\n\\t\\treturn \\\"0 1 1 2\\\""}`;
   const command =
     'docker run -e VERSION=1.1 -i --rm -p 9000:5000 code-create-python ';
   //Execute docker container and run code
-  var s = '';
   const callDocker = async function () {
     var output = execSync(command, { input: jsonInp }).toString();
     return output;
