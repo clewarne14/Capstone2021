@@ -11,7 +11,7 @@ import Lobby from "./sections/Lobby/Lobby";
 import MultipleChoiceProblem from "./sections/MultipleChoiceProblem/MultipleChoiceProblem";
 import AlgorithmicProblem from "./sections/AlgorithmicProblem/AlgorithmicProblem";
 
-export type ProblemType = "multiple choice" | "algorithmic";
+export type ProblemType = "multiple choice" | "algorithmic" | "all";
 
 export type PostRequestResponse = {
   success: boolean;
@@ -36,6 +36,17 @@ export type Problem = {
   profilePicture: string;
 };
 
+export interface MultipleChoiceProblemType extends Problem {
+  answer: string;
+  choices: Array<string>;
+}
+
+export interface AlgorithmicProblemType extends Problem {
+  testSuite: string;
+  startingCode: string;
+  language: string;
+}
+
 export type User = {
   email: string;
   username: string;
@@ -47,16 +58,12 @@ export type User = {
   bio?: string;
 };
 
-export interface MultipleChoiceProblemType extends Problem {
-  answer: string;
-  choices: Array<string>;
-}
-
-export interface AlgorithmicProblemType extends Problem {
-  testSuite: string;
-  startingCode: string;
-  language: string;
-}
+export type List = {
+  problemsIds: Array<string>;
+  dateCreated: string;
+  listId: string;
+  createdBy: string;
+};
 
 /**
  * This file contains all of the routes for our single page application.

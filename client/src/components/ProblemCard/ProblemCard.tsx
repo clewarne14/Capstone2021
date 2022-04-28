@@ -2,11 +2,10 @@ import React, { FC } from "react";
 import { useNavigate } from "react-router-dom";
 import { Grid, Typography, Card } from "@mui/material";
 import colors from "../../colors";
+import { ProblemType } from "../../Routes";
 import Tag from "../Tag";
 import SubmitButton from "../SubmitButton";
 import Likes from "../Likes";
-
-type ProblemType = "multiple choice" | "algorithmic";
 
 export type ProblemCardProps = {
   title: string;

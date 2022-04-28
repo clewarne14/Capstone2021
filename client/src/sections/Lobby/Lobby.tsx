@@ -2,19 +2,28 @@ import React, { FC, useEffect, useState } from "react";
 import { Grid, Typography } from "@mui/material";
 import ProblemCard from "../../components/ProblemCard";
 import SmallProblemCard from "../../components/SmallProblemCard";
-import { Problem, User } from "../../Routes";
+import { User, Problem } from "../../Routes";
 import LobbyHeader from "./components/LobbyHeader/LobbyHeader";
 import { useLoading } from "../../contexts/LoadingContext";
 import { useSmallScreen } from "../../contexts/SmallScreenContext";
+import SearchBox from "../../components/SearchBox";
+import { SortBy } from "../../components/SearchBox/SearchBox";
 
 const Lobby: FC = () => {
   const [problems, setProblems] = useState<Array<Problem>>([]);
+  const [searchValue, setSearchValue] = useState("");
+  const [tags, setTags] = useState<Array<string>>([]);
+  const [createdBy, setCreatedBy] = useState("");
+  const [sortByValue, setSortByValue] = useState<SortBy>("Newest");
+  const [searchProblemType, setSearchProblemType] = useState<string>("All");
   const isSmallScreen = useSmallScreen();
   const setLoading = useLoading();
 
+  console.log(searchValue, tags, createdBy, sortByValue, searchProblemType);
+
   useEffect(() => {
     (async () => {
-      setLoading({ active: true, delay: 1000 });
+      // setLoading({ active: true, delay: 1000 });
 
       const allProblems = await fetch("http://localhost:4000/problems");
       const allProblemsData: Array<Problem> = await allProblems.json();
@@ -36,8 +45,6 @@ const Lobby: FC = () => {
       setProblems(await Promise.all(formattedProblems));
     })();
   }, [setLoading]);
-
-  console.log(problems);
 
   return (
     <Grid container marginTop="2rem">
@@ -89,7 +96,21 @@ const Lobby: FC = () => {
           })}
         </Grid>
       </Grid>
-      <Grid item container sm={4}></Grid>
+      <Grid item container sm={4}>
+        <SearchBox
+          createdBy={createdBy}
+          subjectName="problem"
+          createdByOnChange={(e) => setCreatedBy(e)}
+          problemType={searchProblemType}
+          searchValue={searchValue}
+          setTags={(e) => setTags(e)}
+          tags={tags}
+          problemTypeOnChange={(e) => setSearchProblemType(e)}
+          searchValueOnChange={(e) => setSearchValue(e)}
+          sortByValue={sortByValue}
+          sortByValueOnChange={(e) => setSortByValue(e)}
+        />
+      </Grid>
     </Grid>
   );
 };
