@@ -1,16 +1,15 @@
 import React, { FC, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useAuth0 } from "@auth0/auth0-react";
-import { Avatar, Grid, TextField, Typography } from "@mui/material";
+import { Grid, TextField, Typography } from "@mui/material";
 import { useUser } from "../../contexts/AuthUserContext";
 import TightWrapper from "../../components/TightWrapper";
-import { CompressedProblem, User } from "../../Routes";
+import { CompressedProblem, PostRequestResponse, User } from "../../Routes";
 import Likes from "../../components/Likes";
-import CompressedProblemCard from "../../components/CompressedProblemCard";
 import CompressedProblemHolder from "../../components/CompressedProblemHolder";
 import Button from "../../components/Button";
 import colors from "../../colors";
 import SubmitButton from "../../components/SubmitButton";
+import { useAlert } from "../../contexts/AlertContext";
 
 type CreatedAndSolvedProblems = {
   problemsCreated: Array<CompressedProblem>;
@@ -29,6 +28,7 @@ const UserProfile: FC = () => {
   const [recentlyCreatedProblems, setRecentlyCreatedProblems] = useState<
     Array<CompressedProblem>
   >([]);
+  const setAlert = useAlert();
   const currentUser = useUser();
 
   const getFooter = () => {
@@ -81,14 +81,24 @@ const UserProfile: FC = () => {
             <Grid item>
               <SubmitButton
                 onClick={async () => {
-                  fetch(`http://localhost:4000/user/${username}/profile`, {
-                    method: "PATCH",
-                    body: JSON.stringify({
-                      bio: currentDescription,
-                      profilePicture:
-                        imageUrl === "" ? viewedUser.profilePicture : imageUrl,
-                    }),
-                    headers: { "Content-Type": "application/json" },
+                  const response = await fetch(
+                    `http://localhost:4000/user/${username}/profile`,
+                    {
+                      method: "PATCH",
+                      body: JSON.stringify({
+                        bio: currentDescription,
+                        profilePicture:
+                          imageUrl === ""
+                            ? viewedUser.profilePicture
+                            : imageUrl,
+                      }),
+                      headers: { "Content-Type": "application/json" },
+                    }
+                  );
+                  const data: PostRequestResponse = await response.json();
+                  setAlert({
+                    text: data.message,
+                    variant: data.success ? "success" : "error",
                   });
                 }}
               >

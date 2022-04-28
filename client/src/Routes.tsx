@@ -10,6 +10,7 @@ import UserProfile from "./sections/UserProfile/UserProfile";
 import Lobby from "./sections/Lobby/Lobby";
 import MultipleChoiceProblem from "./sections/MultipleChoiceProblem/MultipleChoiceProblem";
 import AlgorithmicProblem from "./sections/AlgorithmicProblem/AlgorithmicProblem";
+import ListsPage from "./sections/ListsPage/ListsPage";
 
 export type ProblemType = "multiple choice" | "algorithmic" | "all";
 
@@ -90,6 +91,7 @@ const Routes: FC = () => (
 
     <Route path="/profile/:username" element={<UserProfile />} />
     <Route path="/code" element={<Lobby />} />
+    <Route path="/lists" element={<ListsPage />} />
     <Route
       path="/code/algorithmic/:problemId"
       element={<AlgorithmicProblem />}

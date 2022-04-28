@@ -23,7 +23,7 @@ const Lobby: FC = () => {
 
   useEffect(() => {
     (async () => {
-      // setLoading({ active: true, delay: 1000 });
+      setLoading({ active: true, delay: 1000 });
 
       const allProblems = await fetch("http://localhost:4000/problems");
       const allProblemsData: Array<Problem> = await allProblems.json();
