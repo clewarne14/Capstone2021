@@ -20,6 +20,7 @@ type Props = {
   sortByValue: string;
   sortByValueOnChange: (e: any) => void;
   problemTypeOnChange: (e: any) => void;
+  onSubmit: () => void;
 };
 
 const SearchBox: FC<Props> = ({
@@ -34,9 +35,16 @@ const SearchBox: FC<Props> = ({
   problemTypeOnChange,
   sortByValue,
   sortByValueOnChange,
+  onSubmit,
 }: Props) => {
   return (
-    <Card sx={{ backgroundColor: colors.gray, height: "min-content" }}>
+    <Card
+      sx={{
+        backgroundColor: colors.gray,
+        height: "min-content",
+        width: "100%",
+      }}
+    >
       <Grid
         container
         display="flex"
@@ -99,7 +107,7 @@ const SearchBox: FC<Props> = ({
 
         <Grid container item display="flex" justifyContent="flex-end">
           <Grid xs={4} item>
-            <SubmitButton>Search</SubmitButton>
+            <SubmitButton onClick={onSubmit}>Search</SubmitButton>
           </Grid>
         </Grid>
       </Grid>

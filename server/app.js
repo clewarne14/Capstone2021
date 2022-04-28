@@ -43,39 +43,30 @@ const updateProblemsCreated = async (problemType, username, problemId) => {
   );
 };
 
-const getProblemsRecent = async () => {
+const getFormattedProblems = (problems) => {
+  const formattedProblems = problems.map((problem) => ({
+    title: problem.title,
+    tags: problem.tags.split(','),
+    dateCreated: problem.dateCreated,
+    problemDescription: problem.problemDescription,
+    problemId: problem.problemId,
+    creatorName: problem.creatorName,
+    likes: problem.likes,
+    problemType: problem.problemType,
+  }));
+  return formattedProblems;
+};
+
+const getAllProblems = async () => {
   const algorithmic = await db.query('select * from algorithmic');
   const multipleChoice = await db.query('select * from multipleChoice');
 
-  const algorithmicProblems = algorithmic.map((problem) => ({
-    title: problem.title,
-    tags: problem.tags.split(','),
-    dateCreated: problem.dateCreated,
-    problemDescription: problem.problemDescription,
-    problemId: problem.problemId,
-    creatorName: problem.creatorName,
-    likes: problem.likes,
-    problemType: problem.problemType,
-  }));
-
-  const multipleChoiceProblems = multipleChoice.map((problem) => ({
-    title: problem.title,
-    tags: problem.tags.split(','),
-    dateCreated: problem.dateCreated,
-    problemDescription: problem.problemDescription,
-    problemId: problem.problemId,
-    creatorName: problem.creatorName,
-    likes: problem.likes,
-    problemType: problem.problemType,
-  }));
+  const algorithmicProblems = getFormattedProblems(algorithmic);
+  const multipleChoiceProblems = getFormattedProblems(multipleChoice);
 
   const problems = [...multipleChoiceProblems, ...algorithmicProblems];
 
-  const sortedProblems = problems.sort(
-    (problem1, problem2) => problem2.dateCreated - problem1.dateCreated
-  );
-
-  return sortedProblems;
+  return problems;
 };
 
 const getUsernameByEmail = async (email) => {
@@ -83,6 +74,47 @@ const getUsernameByEmail = async (email) => {
     `select username from user where email='${email}'`
   );
   return res[0].username;
+};
+
+const sortValues = (values, sortByValue) => {
+  // Sort all of the problems
+  switch (sortByValue) {
+    case 'Newest':
+      values = values.sort(
+        (problem1, problem2) => problem2.dateCreated - problem1.dateCreated
+      );
+      break;
+    case 'Oldest':
+      values = values.sort(
+        (problem1, problem2) => problem1.dateCreated - problem2.dateCreated
+      );
+      break;
+    case 'Most popular':
+      values = values.sort(
+        (problem1, problem2) => problem2.likes - problem1.likes
+      );
+      break;
+    case 'Least popular':
+      values = values.sort(
+        (problem1, problem2) => problem1.likes - problem2.likes
+      );
+      break;
+    default:
+      throw Error(`The sort value '${sortByValue}' doesn't exist!`);
+  }
+  return values;
+};
+
+const checkTags = (problems, tags) => {
+  if (tags.length === 0) return problems;
+  const tagSet = new Set(tags);
+  return problems.filter((problem) => {
+    console.log(problem);
+    for (const tag of problem.tags) {
+      if (tagSet.has(tag.trim())) return true;
+    }
+    return false;
+  });
 };
 
 app.use(cors());
@@ -270,10 +302,44 @@ app.get('/algorithmic', async (req, res) => {
   }
 });
 
-// Gets the most recent problems
-app.get('/problems', async (req, res) => {
-  const sortedProblems = await getProblemsRecent();
-  res.send(sortedProblems);
+// Get problems based on search parameters
+app.post('/problems', async (req, res) => {
+  const { searchValue, tags, createdBy, sortByValue, searchProblemType } =
+    req.body;
+
+  let problems = [];
+
+  // Check whether the user wants Algoritmic, Multiple Choice, or All problems
+  switch (searchProblemType) {
+    case 'All':
+      problems = await getAllProblems();
+      problems = checkTags(problems, tags);
+      problems = sortValues(problems, sortByValue);
+
+      break;
+    case 'Multiple Choice':
+      problems = await db.query(
+        `select * from multipleChoice where creatorName like '%${createdBy}%' and title like '%${searchValue}%'`
+      );
+      problems = getFormattedProblems(problems);
+      problems = checkTags(problems, tags);
+      problems = sortValues(problems, sortByValue);
+
+      break;
+    case 'Algorithmic':
+      problems = await db.query(
+        `select * from algorithmic where creatorName like '%${createdBy}%' and title like '%${searchValue}%'`
+      );
+      problems = getFormattedProblems(problems);
+      problems = checkTags(problems, tags);
+      problems = sortValues(problems, sortByValue);
+
+      break;
+    default:
+      throw Error(`The problem type '${problemType}' doesn't exist!`);
+  }
+
+  res.send(problems);
 });
 
 app.get('/algorithmic/:problemId', async (req, res) => {

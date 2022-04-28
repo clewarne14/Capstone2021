@@ -1,13 +1,50 @@
 import React, { FC, useEffect, useState } from "react";
 import { Grid, Typography } from "@mui/material";
-import ProblemCard from "../../components/ProblemCard";
-import SmallProblemCard from "../../components/SmallProblemCard";
-import { User, Problem } from "../../Routes";
-import LobbyHeader from "./components/LobbyHeader/LobbyHeader";
 import { useLoading } from "../../contexts/LoadingContext";
 import { useSmallScreen } from "../../contexts/SmallScreenContext";
+import ProblemCard from "../../components/ProblemCard";
+import SmallProblemCard from "../../components/SmallProblemCard";
+import LobbyHeader from "./components/LobbyHeader/LobbyHeader";
 import SearchBox from "../../components/SearchBox";
 import { SortBy } from "../../components/SearchBox/SearchBox";
+import { User, Problem } from "../../Routes";
+
+const searchProblems = async (
+  searchValue: string,
+  tags: Array<string>,
+  createdBy: string,
+  sortByValue: string,
+  searchProblemType: string
+) => {
+  const response = await fetch("http://localhost:4000/problems", {
+    body: JSON.stringify({
+      searchValue,
+      tags,
+      createdBy,
+      sortByValue,
+      searchProblemType,
+    }),
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+  });
+  const data: Array<Problem> = await response.json();
+
+  const problemsWithProfilePictures = data.map(async (problem) => {
+    const user = await fetch(
+      `http://localhost:4000/user/${problem.creatorName}`
+    );
+    const userData: User = await user.json();
+    return {
+      ...problem,
+      profilePicture:
+        userData.profilePicture === "" || !userData.profilePicture
+          ? "/empty_avatar.png"
+          : userData.profilePicture,
+    };
+  });
+
+  return problemsWithProfilePictures;
+};
 
 const Lobby: FC = () => {
   const [problems, setProblems] = useState<Array<Problem>>([]);
@@ -16,38 +53,29 @@ const Lobby: FC = () => {
   const [createdBy, setCreatedBy] = useState("");
   const [sortByValue, setSortByValue] = useState<SortBy>("Newest");
   const [searchProblemType, setSearchProblemType] = useState<string>("All");
+  const [searchButtonClicked, setSearchButtonClicked] = useState(false);
   const isSmallScreen = useSmallScreen();
   const setLoading = useLoading();
 
-  console.log(searchValue, tags, createdBy, sortByValue, searchProblemType);
-
   useEffect(() => {
+    console.log(searchButtonClicked);
     (async () => {
       setLoading({ active: true, delay: 1000 });
 
-      const allProblems = await fetch("http://localhost:4000/problems");
-      const allProblemsData: Array<Problem> = await allProblems.json();
+      const retrievedProblems = await searchProblems(
+        searchValue,
+        tags,
+        createdBy,
+        sortByValue,
+        searchProblemType
+      );
 
-      const formattedProblems = allProblemsData.map(async (problem, index) => {
-        const user = await fetch(
-          `http://localhost:4000/user/${problem.creatorName}`
-        );
-        const userData: User = await user.json();
-        return {
-          ...problem,
-          profilePicture:
-            userData.profilePicture === "" || !userData.profilePicture
-              ? "/empty_avatar.png"
-              : userData.profilePicture,
-        };
-      });
-
-      setProblems(await Promise.all(formattedProblems));
+      setProblems(await Promise.all(retrievedProblems));
     })();
-  }, [setLoading]);
+  }, [searchButtonClicked]);
 
   return (
-    <Grid container marginTop="2rem">
+    <Grid container marginTop="2rem" padding="1rem">
       <Grid spacing={2} padding={3} sm={8} item container>
         <Grid xs={12} marginBottom="2rem" item>
           <Typography textAlign="center" variant={isSmallScreen ? "h4" : "h2"}>
@@ -98,6 +126,7 @@ const Lobby: FC = () => {
       </Grid>
       <Grid item container sm={4}>
         <SearchBox
+          onSubmit={() => setSearchButtonClicked((oldVal) => !oldVal)}
           createdBy={createdBy}
           subjectName="problem"
           createdByOnChange={(e) => setCreatedBy(e)}
