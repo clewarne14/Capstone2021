@@ -1,0 +1,13 @@
+`{"TESTS": "if __name__ == \\\"__main__\\\":
+    output = execFile.fib(3)
+    if output != \\\"0 1 1\\\":
+     print('{ \\\"TestName\\\":\\\"Fibonacci 1\\\", \\\"MethodCall\\\": \\\"fib(3)\\\", \\\"ExpectedOutput\\\": \\\"0 1 1\\\", \\\"ActualOutput\\\": \\\"' + output + '\\\"}\\\")
+     sys.exit()
+    output = execFile.fib(4)
+    if output != \\\"0 1 1 2\\\":
+     print('{ \\\"TestName\\\":  + \\\"Fibonacci 1\\\", \\\"MethodCall\\\": \\\"fib(3)\\\", \\\"ExpectedOutput\\\": \\\"0 1 1 2\\\", \\\"ActualOutput\\\": \\\"' + output + '\\\"}\\\")
+     sys.exit()", "UserCode":"def fib(inp):
+    if inp==3:
+     return \\\"0 1 2\\\"
+    if inp==4:
+     return \\\"0 1 1 3\\\""}`;

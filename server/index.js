@@ -4,6 +4,7 @@ import { getDb } from '../server/build/database.js';
 import { execSync } from 'child_process';
 import fetch from 'node-fetch';
 import dotenv from 'dotenv';
+import { strictEqual } from 'assert';
 
 dotenv.config();
 
@@ -104,95 +105,144 @@ app.post('/createUser', (req, res) => {
   console.log(req.body);
 });
 
+// app.post('/testSubmitJSON', (req, res) => {
+//   const Test = req.body;
+//   let testSubmit = '';
+//   let outputTest = null;
+//   let outputJSON = null;
+//   for (let i = 0; i < Test.length; i++) {
+//     if (i > Test.length - 1) {
+//       testSubmit += Test.charAt(i);
+//       break;
+//     }
+//     if (
+//       Test.charAt(i) == '"' ||
+//       Test.charAt(i) == '\t' ||
+//       Test.charAt(i) == '\n'
+//     ) {
+//       console.log('TEST');
+//       if (Test.charAt(i) == '"') {
+//         console.log('Test2');
+//         testSubmit += '\\"';
+//       } else if (Test.charAt(i) == '\t') {
+//         testSubmit += '\\t';
+//       } else if (Test.charAt(i) == '\n') {
+//         testSubmit += '\\n';
+//       }
+//     } else {
+//       testSubmit += Test.charAt(i);
+//     }
+//   }
+//   try{
+//     outputJSON = json.parse(testSubmit);
+//     outputTest =
+//   }
+//   catch(Error){
+
+//   }
+// });
+
 app.post('/testCode', async (req, res) => {
   const { Language, Code } = req.body;
-  console.log(Code);
-  let c = `def fib(inp):
-    if inp==3:
-      return "0 1 2"
-    if inp==4:
-      return "0 1 1 3"`;
 
-  let Test = `
-import execFile
+  let codeSubmit = '';
+  let testSubmit = '';
+  let Test = `if __name__ == "__main__":\n\toutput = execFile.judgeCircle("UDUD")\n\tif output != True:\n\t\tprint('{ "TestName":"JudgeCircle 1", "MethodCall": "JudgeCircle(UDUD)", "ExpectedOutput": "True", "ActualOutput": "' + str(output) + '"}')\n\t\tsys.exit()\n\toutput = execFile.judgeCircle("UDLL")\n\tif output != False:\n\t\tprint('{ "TestName":"JudgeCircle 2", "MethodCall": "JudgeCircle(UDLL)", "ExpectedOutput": "False", "ActualOutput": "' + str(output) + '"}')\n\t\tsys.exit()`;
+  for (let i = 0; i < Code.length; i++) {
+    if (i > Code.length - 1) {
+      codeSubmit += Code.charAt(i);
+      break;
+    }
+    if (
+      Code.charAt(i) == '"' ||
+      Code.charAt(i) == '\t' ||
+      Code.charAt(i) == '\n'
+    ) {
+      if (Code.charAt(i) == '"') {
+        codeSubmit += '\\"';
+      } else if (Code.charAt(i) == '\t') {
+        codeSubmit += '\\t';
+      } else if (Code.charAt(i) == '\n') {
+        codeSubmit += '\\n';
+      }
+    } else {
+      codeSubmit += Code.charAt(i);
+    }
+  }
+  for (let i = 0; i < Test.length; i++) {
+    if (i > Test.length - 1) {
+      testSubmit += Test.charAt(i);
+      break;
+    }
+    if (
+      Test.charAt(i) == '"' ||
+      Test.charAt(i) == '\t' ||
+      Test.charAt(i) == '\n'
+    ) {
+      if (Test.charAt(i) == '"') {
+        testSubmit += '\\"';
+      } else if (Test.charAt(i) == '\t') {
+        testSubmit += '\\t';
+      } else if (Test.charAt(i) == '\n') {
+        testSubmit += '\\n';
+      }
+    } else {
+      testSubmit += Test.charAt(i);
+    }
+  }
 
-def test1():
-    if execFile.fib(3)== "0 1 1":
-        return True
-    else:
-        return False
-def test2():
-    if execFile.fib(4)=="0 1 1 2":
-        return True
-    else:
-        return False
-
-if __name__ == "__main__":
-    if test1() and test2():
-        print("TRUE")
-    else:
-        print("FALSE")`;
-  let testJSON =
-    `{ "TESTS" : [` +
-    `{ "name": "Fibonacci 1", "pass": "false", "methodCall": "fib(3)", "expected": "0 1 1", "actual": "none", "message":"none" },` +
-    `{ "name": "Fibonacci 2", "pass": "false", "methodCall": "fib(4)", "expected": "0 1 1 2", "actual": "none", "message":"none" } ]}`;
+  let jsonInp =
+    `{ "TESTS": "` + testSubmit + `" , "UserCode": "` + codeSubmit + `\"}`;
+  let jsonInpTemp = `{"TESTS": "if __name__ == \\\"__main__\\\":\\n\\t\\n\\toutput = execFile.fib(3)\\n\\tif output != \\\"0 1 1\\\":\\n\\t\\tprint('{ \\\"TestName\\\":\\\"Fibonacci 1\\\", \\\"MethodCall\\": \\\"fib(3)\\\", \\\"ExpectedOutput\\\": \\\"0 1 1\\\", \\\"ActualOutput\\\": \\\"' + output + '\\\"')\\n\\t\\tsys.exit()\\n\\toutput = execFile.fib(4)\\n\\tif output != \\\"0 1 1 2\\\":\\n\\t\\tprint('{ \\\"TestName\\\":  + \\\"Fibonacci 1\\\", \\\"MethodCall\\\": \\\"fib(3)\\\", \\\"ExpectedOutput\\\": \\\"0 1 1 2\\\", \\\"ActualOutput\\\": \\\"' + output + '\\\"}')\\n\\t\\tsys.exit()", "UserCode":"def fib(inp):\\n\\tif inp==3:\\n\\t\\treturn \\\"0 1 2\\\"\\n\\tif inp==4:\\n\\t\\treturn \\\"0 1 1 2\\\""}`;
   const command =
-    "docker run -e VERSION=1.1 -i --rm -p 9000:5000 code-create -UserCode '" +
-    Code +
-    "' -TestJSON '" +
-    testJSON +
-    "'";
+    'docker run -e VERSION=1.1 -i --rm -p 9000:5000 code-create-python ';
   //Execute docker container and run code
   var s = '';
   const callDocker = async function () {
-    var output = execSync(command, (err, stdout, stderr) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-      console.log(stdout);
-      console.log('hello');
-      s = stdout;
-      return s;
-    }).toString();
+    var output = execSync(command, { input: jsonInp }).toString();
     return output;
   };
-  // const readFile = async function () {
-  //   fs.readFile('output.txt', 'utf-8', (output, err) => {
-  //     if (err) {
-  //       console.error(err);
-  //       return;
-  //     }
-  //     s = output;
-  //     console.log(output);
-  //   });
-  // };
-  //callDocker()
-  const ret = await callDocker();
-  let output = JSON.parse(ret);
+  let ret = await callDocker();
+  // console.log(ret);
+  let output = null;
+  if (ret.trim().length != 0) {
+    try {
+      output = JSON.parse(ret);
+    } catch (e) {
+      res.send(
+        'The return value was not in a correct JSON format.\nThis is not a problem with your code but with the tests provided.\nPlease contact the creator of the problem.'
+      );
+    }
+  } else {
+    output = '';
+  }
   let failedTests = '';
-  for (let i = 0; i < output['TESTS'].length; i++) {
-    if (output['TESTS'][i]['pass'] != 'True') {
-      if (failedTests == '') {
+
+  //Creating the failedTests message to be output to the user
+  if (ret.trim().length != 0) {
+    try {
+      failedTests +=
+        'Your code did not pass the tests!\nTest name: ' +
+        output['TestName'] +
+        '\nMethod call: ' +
+        output['MethodCall'] +
+        '\nExpected: ' +
+        output['ExpectedOutput'] +
+        '\nActual: ' +
+        output['ActualOutput'];
+      if ('error' in output) {
         failedTests +=
-          'Your code did not pass the tests!\nTest name: ' +
-          output['TESTS'][i]['name'] +
-          '\nMethod call: ' +
-          output['TESTS'][i]['methodCall'] +
-          '\nExpected: ' +
-          output['TESTS'][i]['expected'] +
-          '\nActual: ' +
-          output['TESTS'][i]['actual'];
-        if (output['TESTS'][i]['message'] != 'none') {
-          failedTests += '\n' + output['TESTS'][i]['message'];
-        }
+          '\nThere was an error running your code.\nError: ' + output['error'];
       }
+    } catch (e) {
+      res.send(
+        'The tests submitted by the problem creator were submitted in the wrong format.\nContact the test creator.'
+      );
     }
   }
   if (failedTests == '') {
     failedTests = 'Congratulations! Your code passed all of the tests!';
   }
-  console.log(failedTests);
   res.send(failedTests);
 });
 
