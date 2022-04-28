@@ -119,30 +119,30 @@ const checkTags = (problems, tags) => {
   });
 };
 
-const parseString = (Code) => {
+const parseString = (code) => {
   let codeSubmit = '';
-  for (let i = 0; i < Code.length; i++) {
-    if (i > Code.length - 1) {
-      codeSubmit += Code.charAt(i);
+  for (let i = 0; i < code.length; i++) {
+    if (i > code.length - 1) {
+      codeSubmit += code.charAt(i);
       break;
     }
     if (
-      Code.charAt(i) == '"' ||
-      Code.charAt(i) == '\t' ||
-      Code.charAt(i) == '\n' ||
-      Code.charAt(i) == "'"
+      code.charAt(i) == '"' ||
+      code.charAt(i) == '\t' ||
+      code.charAt(i) == '\n' ||
+      code.charAt(i) == "'"
     ) {
-      if (Code.charAt(i) == '"') {
+      if (code.charAt(i) == '"') {
         codeSubmit += '\\"';
-      } else if (Code.charAt(i) == '\t') {
+      } else if (code.charAt(i) == '\t') {
         codeSubmit += '\\t';
-      } else if (Code.charAt(i) == '\n') {
+      } else if (code.charAt(i) == '\n') {
         codeSubmit += '\\n';
-      } else if (Code.charAt(i) == "'") {
+      } else if (code.charAt(i) == "'") {
         codeSubmit += "\\'";
       }
     } else {
-      codeSubmit += Code.charAt(i);
+      codeSubmit += code.charAt(i);
     }
   }
   return codeSubmit;
@@ -506,7 +506,7 @@ app.post('/createUser', async (req, res) => {
 // });
 
 app.post('/testCode/:problemId', async (req, res) => {
-  const { Language, Code } = req.body;
+  const { language, code } = req.body;
   const { problemId } = req.params;
   let dbTestJson = null;
   let Test = null;
@@ -522,25 +522,25 @@ app.post('/testCode/:problemId', async (req, res) => {
   let codeSubmit = '';
   let testSubmit = '';
   //let Test = `if __name__ == "__main__":\n\toutput = execFile.judgeCircle("UDUD")\n\tif output != True:\n\t\tprint('{ "TestName":"JudgeCircle 1", "MethodCall": "JudgeCircle(UDUD)", "ExpectedOutput": "True", "ActualOutput": "' + str(output) + '"}')\n\t\tsys.exit()\n\toutput = execFile.judgeCircle("UDLL")\n\tif output != False:\n\t\tprint('{ "TestName":"JudgeCircle 2", "MethodCall": "JudgeCircle(UDLL)", "ExpectedOutput": "False", "ActualOutput": "' + str(output) + '"}')\n\t\tsys.exit()`;
-  for (let i = 0; i < Code.length; i++) {
-    if (i > Code.length - 1) {
-      codeSubmit += Code.charAt(i);
+  for (let i = 0; i < code.length; i++) {
+    if (i > code.length - 1) {
+      codeSubmit += code.charAt(i);
       break;
     }
     if (
-      Code.charAt(i) == '"' ||
-      Code.charAt(i) == '\t' ||
-      Code.charAt(i) == '\n'
+      code.charAt(i) == '"' ||
+      code.charAt(i) == '\t' ||
+      code.charAt(i) == '\n'
     ) {
-      if (Code.charAt(i) == '"') {
+      if (code.charAt(i) == '"') {
         codeSubmit += '\\"';
-      } else if (Code.charAt(i) == '\t') {
+      } else if (code.charAt(i) == '\t') {
         codeSubmit += '\\t';
-      } else if (Code.charAt(i) == '\n') {
+      } else if (code.charAt(i) == '\n') {
         codeSubmit += '\\n';
       }
     } else {
-      codeSubmit += Code.charAt(i);
+      codeSubmit += code.charAt(i);
     }
   }
   for (let i = 0; i < Test.length; i++) {

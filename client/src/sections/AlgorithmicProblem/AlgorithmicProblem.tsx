@@ -93,7 +93,26 @@ const AlgorithmicProblem: FC = () => {
                   </Button>
                 </Grid>
                 <Grid sm={4} item>
-                  <SubmitButton>Submit</SubmitButton>
+                  <SubmitButton
+                    onClick={async () => {
+                      const response = await fetch(
+                        `http://localhost:4000/testCode/${problem.problemId}`,
+                        {
+                          body: JSON.stringify({
+                            language: problem.language,
+                            code: userCode,
+                          }),
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                        }
+                      );
+
+                      const data = await response.json();
+                      console.log(data);
+                    }}
+                  >
+                    Submit
+                  </SubmitButton>
                 </Grid>
               </Grid>
             </Grid>
