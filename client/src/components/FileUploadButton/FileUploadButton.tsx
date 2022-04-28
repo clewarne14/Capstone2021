@@ -17,7 +17,7 @@ const FileUploadButton: FC<Props> = ({
 }: Props) => {
   return (
     <Grid spacing={2} alignItems="center" container item={gridItem}>
-      <Grid item sm={4}>
+      <Grid item xs={8} sm={4}>
         <Button endIcon={endIcon} sx={{ position: "relative" }}>
           Upload file
           <input
@@ -36,7 +36,7 @@ const FileUploadButton: FC<Props> = ({
           />
         </Button>
       </Grid>
-      <Grid item sm={6}>
+      <Grid item xs={4} sm={6}>
         <InputLabel>{file ? file.name : ""}</InputLabel>
       </Grid>
     </Grid>

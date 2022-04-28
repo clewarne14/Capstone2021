@@ -1,26 +1,48 @@
 import React, { FC, useEffect, useState } from "react";
 import { Grid, Typography } from "@mui/material";
 import ProblemCard from "../../components/ProblemCard";
-import { MultipleChoiceProblemGetResponse } from "../../Routes";
+import SmallProblemCard from "../../components/SmallProblemCard";
+import { User, Problem } from "../../Routes";
 import LobbyHeader from "./components/LobbyHeader/LobbyHeader";
 import { useLoading } from "../../contexts/LoadingContext";
+import { useSmallScreen } from "../../contexts/SmallScreenContext";
+import SearchBox from "../../components/SearchBox";
+import { SortBy } from "../../components/SearchBox/SearchBox";
 
 const Lobby: FC = () => {
-  const [problems, setProblems] = useState<
-    Array<MultipleChoiceProblemGetResponse>
-  >([]);
+  const [problems, setProblems] = useState<Array<Problem>>([]);
+  const [searchValue, setSearchValue] = useState("");
+  const [tags, setTags] = useState<Array<string>>([]);
+  const [createdBy, setCreatedBy] = useState("");
+  const [sortByValue, setSortByValue] = useState<SortBy>("Newest");
+  const [searchProblemType, setSearchProblemType] = useState<string>("All");
+  const isSmallScreen = useSmallScreen();
   const setLoading = useLoading();
+
+  console.log(searchValue, tags, createdBy, sortByValue, searchProblemType);
 
   useEffect(() => {
     (async () => {
       setLoading({ active: true, delay: 1000 });
 
-      const data = await fetch("http://localhost:4000/multiple-choice");
-      const response: Array<MultipleChoiceProblemGetResponse> =
-        await data.json();
+      const allProblems = await fetch("http://localhost:4000/problems");
+      const allProblemsData: Array<Problem> = await allProblems.json();
 
-      console.log(response);
-      setProblems(response);
+      const formattedProblems = allProblemsData.map(async (problem, index) => {
+        const user = await fetch(
+          `http://localhost:4000/user/${problem.creatorName}`
+        );
+        const userData: User = await user.json();
+        return {
+          ...problem,
+          profilePicture:
+            userData.profilePicture === "" || !userData.profilePicture
+              ? "/empty_avatar.png"
+              : userData.profilePicture,
+        };
+      });
+
+      setProblems(await Promise.all(formattedProblems));
     })();
   }, [setLoading]);
 
@@ -28,11 +50,11 @@ const Lobby: FC = () => {
     <Grid container marginTop="2rem">
       <Grid spacing={2} padding={3} sm={8} item container>
         <Grid xs={12} marginBottom="2rem" item>
-          <Typography textAlign="center" variant="h2">
+          <Typography textAlign="center" variant={isSmallScreen ? "h4" : "h2"}>
             New problems
           </Typography>
         </Grid>
-        <LobbyHeader />
+        {!isSmallScreen && <LobbyHeader />}
         <Grid item container spacing={3}>
           {problems.map((problem) => {
             const {
@@ -43,26 +65,52 @@ const Lobby: FC = () => {
               title,
               dateCreated,
               problemId,
+              profilePicture,
             } = problem;
+
             return (
               <Grid key={`${title}-${creatorName}-${dateCreated}`} item sm={12}>
-                <ProblemCard
-                  problemId={problemId}
-                  likes={likes}
-                  problemType={problemType}
-                  tags={tags}
-                  title={title}
-                  username={creatorName}
-                  userPicture={
-                    "https://media-exp1.licdn.com/dms/image/C4E03AQGFjkjQIYFTVQ/profile-displayphoto-shrink_400_400/0/1618550044653?e=2147483647&v=beta&t=6bOTWGxpoxHX7-tHErjufgWpZyzIMPhIQ7ERKpsp2eQ"
-                  }
-                />
+                {isSmallScreen ? (
+                  <SmallProblemCard
+                    problemId={problemId}
+                    likes={likes}
+                    problemType={problemType}
+                    tags={tags}
+                    title={title}
+                    username={creatorName}
+                    userPicture={profilePicture}
+                  />
+                ) : (
+                  <ProblemCard
+                    problemId={problemId}
+                    likes={likes}
+                    problemType={problemType}
+                    tags={tags}
+                    title={title}
+                    username={creatorName}
+                    userPicture={profilePicture}
+                  />
+                )}
               </Grid>
             );
           })}
         </Grid>
       </Grid>
-      <Grid item container sm={4}></Grid>
+      <Grid item container sm={4}>
+        <SearchBox
+          createdBy={createdBy}
+          subjectName="problem"
+          createdByOnChange={(e) => setCreatedBy(e)}
+          problemType={searchProblemType}
+          searchValue={searchValue}
+          setTags={(e) => setTags(e)}
+          tags={tags}
+          problemTypeOnChange={(e) => setSearchProblemType(e)}
+          searchValueOnChange={(e) => setSearchValue(e)}
+          sortByValue={sortByValue}
+          sortByValueOnChange={(e) => setSortByValue(e)}
+        />
+      </Grid>
     </Grid>
   );
 };

@@ -12,6 +12,7 @@ import FileUploadButton from "../../../../components/FileUploadButton";
 import Button from "../../../../components/Button";
 import Editor from "../../../../components/Editor";
 import colors from "../../../../colors";
+import HelpButton from "../../../../components/HelpButton";
 
 type Props = {
   header: string;
@@ -20,6 +21,7 @@ type Props = {
   newFile: string;
   setNewFile: (val: string) => void;
   language: string;
+  helpButton?: { description: string; title: string };
 };
 
 const NewFileOrUploadButton: FC<Props> = ({
@@ -29,6 +31,7 @@ const NewFileOrUploadButton: FC<Props> = ({
   setUploadedFile,
   uploadedFile,
   language,
+  helpButton,
 }: Props) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const handleClose = () => setDialogOpen(false);
@@ -71,7 +74,15 @@ const NewFileOrUploadButton: FC<Props> = ({
 
       <Grid item container spacing={2}>
         <Grid item sm={12}>
-          <InputLabel sx={{ fontSize: "1.5rem" }}>{header}</InputLabel>
+          <InputLabel sx={{ fontSize: "1.5rem" }}>
+            {header}
+            {helpButton && (
+              <HelpButton
+                title={helpButton.title}
+                description={helpButton.description}
+              />
+            )}
+          </InputLabel>
         </Grid>
         <FileUploadButton
           endIcon={uploadedFile ? <CheckIcon color="success" /> : <></>}
@@ -79,7 +90,7 @@ const NewFileOrUploadButton: FC<Props> = ({
           setFile={(file) => setUploadedFile(file)}
           gridItem={true}
         />
-        <Grid item sm={4}>
+        <Grid item xs={8} sm={4}>
           <Button
             onClick={uploadedFile && handleOpen}
             endIcon={uploadedFile ? <></> : <CheckIcon color="success" />}
@@ -89,8 +100,9 @@ const NewFileOrUploadButton: FC<Props> = ({
         </Grid>
         {/* Make sure this isn't an uploaded file already */}
         {!uploadedFile && (
-          <Grid item sm={12}>
+          <Grid item xs={12} height="30vh">
             <Editor
+              height="30vh"
               code={newFile}
               setCode={(val) => setNewFile(val)}
               language={language}

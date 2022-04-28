@@ -2,23 +2,22 @@ import React, { FC } from "react";
 import { useNavigate } from "react-router-dom";
 import { Grid, Typography, Card } from "@mui/material";
 import colors from "../../colors";
+import { ProblemType } from "../../Routes";
 import Tag from "../Tag";
 import SubmitButton from "../SubmitButton";
 import Likes from "../Likes";
 
-type ProblemType = "multiple choice" | "algorithmic";
-
-type Props = {
+export type ProblemCardProps = {
   title: string;
   problemType: ProblemType;
   username: string;
   userPicture: string;
   tags: Array<string>;
   likes: number;
-  problemId: number;
+  problemId: string;
 };
 
-const ProblemCard: FC<Props> = ({
+const ProblemCard: FC<ProblemCardProps> = ({
   likes,
   problemType,
   tags,
@@ -26,7 +25,7 @@ const ProblemCard: FC<Props> = ({
   userPicture,
   username,
   problemId,
-}: Props) => {
+}: ProblemCardProps) => {
   const navigation = useNavigate();
   return (
     <Card sx={{ backgroundColor: colors.gray, width: "100%" }}>
@@ -46,9 +45,13 @@ const ProblemCard: FC<Props> = ({
           container
           item
           textAlign="center"
+          sx={{ cursor: "pointer" }}
+          onClick={() => {
+            navigation(`/profile/${username}`);
+          }}
         >
           <Grid item>
-            <img width="50%" src={userPicture} alt={username} />
+            <img width="50%" height="100rem" src={userPicture} alt={username} />
           </Grid>
           <Typography>{username}</Typography>
         </Grid>
@@ -82,12 +85,7 @@ const ProblemCard: FC<Props> = ({
         </Grid>
         <Grid display="flex" alignItems="center" sm={12 / 5} container item>
           <SubmitButton
-            onClick={() => {
-              if (problemType === "multiple choice") {
-                navigation(`multiple-choice/${problemId}`);
-              } else {
-              }
-            }}
+            onClick={() => navigation(`${problemType}/${problemId}`)}
             sx={{
               backgroundColor: colors.maroon,
               color: colors.white,

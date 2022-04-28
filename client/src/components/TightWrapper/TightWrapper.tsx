@@ -14,7 +14,9 @@ const TightWrapper: FC<Props> = ({ children, spacing = 5 }: Props) => {
       margin="auto"
       display="flex"
       justifyContent="center"
-      width="60%"
+      item
+      sm={7.2}
+      xs={10}
       rowSpacing={spacing}
       marginBottom="2rem"
       flexDirection="column"

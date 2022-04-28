@@ -8,25 +8,62 @@ import MultipleChoiceCreation from "./sections/MultipleChoiceCreation/MultipleCh
 import AlgorithmicCreation from "./sections/AlgorithmicCreation/AlgorithmicCreation";
 import UserProfile from "./sections/UserProfile/UserProfile";
 import Lobby from "./sections/Lobby/Lobby";
-import ProblemBox from "./ProblemBox/ProblemBox";
 import MultipleChoiceProblem from "./sections/MultipleChoiceProblem/MultipleChoiceProblem";
+import AlgorithmicProblem from "./sections/AlgorithmicProblem/AlgorithmicProblem";
+import ListsPage from "./sections/ListsPage/ListsPage";
+
+export type ProblemType = "multiple choice" | "algorithmic" | "all";
 
 export type PostRequestResponse = {
   success: boolean;
   message: string;
 };
 
-export type MultipleChoiceProblemGetResponse = {
+export type CompressedProblem = {
+  likes: number;
+  title: string;
+  problemType: ProblemType;
+};
+
+export type Problem = {
   title: string;
   dateCreated: string;
-  answer: string;
   creatorName: string;
   likes: number;
-  problemType: "multiple choice" | "algorithmic";
+  problemType: ProblemType;
   tags: Array<string>;
-  choices: Array<string>;
   problemDescription: string;
-  problemId: number;
+  problemId: string;
+  profilePicture: string;
+};
+
+export interface MultipleChoiceProblemType extends Problem {
+  answer: string;
+  choices: Array<string>;
+}
+
+export interface AlgorithmicProblemType extends Problem {
+  testSuite: string;
+  startingCode: string;
+  language: string;
+}
+
+export type User = {
+  email: string;
+  username: string;
+  profilePicture?: string;
+  reputation: number;
+  lists: string;
+  problemsCreated: string;
+  problemsSolved: string;
+  bio?: string;
+};
+
+export type List = {
+  problemsIds: Array<string>;
+  dateCreated: string;
+  listId: string;
+  createdBy: string;
 };
 
 /**
@@ -51,8 +88,14 @@ const Routes: FC = () => (
       path="/create-problem/algorithmic"
       element={<AlgorithmicCreation />}
     />
+
     <Route path="/profile/:username" element={<UserProfile />} />
     <Route path="/code" element={<Lobby />} />
+    <Route path="/lists" element={<ListsPage />} />
+    <Route
+      path="/code/algorithmic/:problemId"
+      element={<AlgorithmicProblem />}
+    />
     <Route
       path="/code/multiple-choice/:problemId"
       element={<MultipleChoiceProblem />}
@@ -61,8 +104,3 @@ const Routes: FC = () => (
 );
 
 export default Routes;
-
-//  <ProblemBox
-//    startcode={"Public static void main()"}
-//    problemtext={"Print out the first 5 fibonacci numbers"}
-//  />;

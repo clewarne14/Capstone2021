@@ -46,7 +46,7 @@ const ChoiceSelect: FC<Props> = ({
       </InputLabel>
       <Grid item justifyContent="center" container spacing={5}>
         {choices.map((choice) => (
-          <Grid key={choice.id} sm={6} item>
+          <Grid key={choice.id} xs={12} sm={6} item>
             <TextField
               onChange={(e) => {
                 const inputBeingEdited = choices.find(

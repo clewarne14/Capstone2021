@@ -1,16 +1,21 @@
 import React, { FC } from "react";
+import { SxProps } from "@mui/system";
+import { Theme } from "@mui/material";
 import Box from "@mui/material/Box";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
+import { useAlert } from "../../contexts/AlertContext";
 
 type Props = {
   label: string;
   options: Array<any>;
   onChange: (val: any) => void;
   values: Array<String>;
+  maxOptions?: number;
+  sx?: SxProps<Theme>;
 };
 
 const ITEM_HEIGHT = 36;
@@ -29,14 +34,17 @@ const MultipleSelect: FC<Props> = ({
   options,
   onChange,
   values,
+  maxOptions = 10000,
+  sx,
 }: Props) => {
+  const setAlert = useAlert();
   return (
     <>
       <InputLabel sx={{ fontSize: "1.5rem" }} id="demo-multiple-chip-label">
         {label}
       </InputLabel>
       <Select
-        sx={{ width: "100%" }}
+        sx={{ width: "100%", ...sx }}
         labelId="demo-multiple-chip-label"
         id="demo-multiple-chip"
         multiple
@@ -45,7 +53,12 @@ const MultipleSelect: FC<Props> = ({
           const {
             target: { value },
           } = e;
-          onChange(typeof value === "string" ? value.split(",") : value);
+          if (value.length > maxOptions) {
+            setAlert({
+              text: `The max number of options allowed is ${maxOptions}`,
+              variant: "warning",
+            });
+          } else onChange(typeof value === "string" ? value.split(",") : value);
         }}
         input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
         renderValue={(selected) => (

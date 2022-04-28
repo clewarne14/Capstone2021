@@ -8,19 +8,26 @@ import "codemirror/mode/clike/clike";
 import "codemirror/mode/python/python";
 import "codemirror/mode/css/css";
 import { Box } from "@mui/system";
-import { Grid } from "@mui/material";
+import "./styles.css";
 
 type Props = {
   code: string;
   setCode: (val: string) => void;
   language: string;
+  height: string;
 };
 
-const Editor: React.FC<Props> = ({ code, setCode, language }: Props) => {
+const Editor: React.FC<Props> = ({
+  code,
+  setCode,
+  language,
+  height,
+}: Props) => {
   return (
     <Box
       sx={{
         fontSize: "1rem",
+        height,
       }}
     >
       <CodeMirror
@@ -35,9 +42,6 @@ const Editor: React.FC<Props> = ({ code, setCode, language }: Props) => {
           lineNumbers: true,
         }}
       ></CodeMirror>
-      <Grid container alignItems="center" justifyContent="center">
-        <Grid xs={4} item textAlign="center"></Grid>
-      </Grid>
     </Box>
   );
 };
