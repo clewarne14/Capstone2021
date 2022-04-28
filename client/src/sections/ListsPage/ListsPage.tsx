@@ -10,7 +10,7 @@ const ListsPage: FC = () => {
   const [sortByValue, setSortByValue] = useState<SortBy>("Newest");
   const [searchProblemType, setSearchProblemType] = useState<string>("All");
   return (
-    <Grid container marginTop="2rem">
+    <Grid container marginTop="2rem" padding="1rem">
       <Grid item container sm={8}></Grid>
       <Grid item container sm={4}>
         <SearchBox
@@ -25,6 +25,7 @@ const ListsPage: FC = () => {
           searchValueOnChange={(e) => setSearchValue(e)}
           sortByValue={sortByValue}
           sortByValueOnChange={(e) => setSortByValue(e)}
+          onSubmit={() => alert("hi")}
         />
       </Grid>
     </Grid>
