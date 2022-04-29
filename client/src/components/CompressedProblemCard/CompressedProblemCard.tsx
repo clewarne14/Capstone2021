@@ -1,5 +1,6 @@
+import React, { FC, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, Grid, Typography } from "@mui/material";
-import React, { FC } from "react";
 import colors from "../../colors";
 import { ProblemType } from "../../Routes";
 import Likes from "../Likes";
@@ -7,6 +8,7 @@ import Likes from "../Likes";
 type Props = {
   title: string;
   problemType: ProblemType;
+  problemId: string;
   likes: number;
 };
 
@@ -14,9 +16,27 @@ const CompressedProblemCard: FC<Props> = ({
   likes,
   problemType,
   title,
+  problemId,
 }: Props) => {
+  const [active, setActive] = useState(false);
+  const navigation = useNavigate();
+
+  const openActive = () => setActive(true);
+  const closeActive = () => setActive(false);
+
   return (
-    <Card sx={{ backgroundColor: colors.gray }}>
+    <Card
+      sx={{
+        backgroundColor: colors.gray,
+        cursor: "pointer",
+        width: "100%",
+        height: "100%",
+      }}
+      onClick={() => navigation(`/code/${problemType}/${problemId}`)}
+      onMouseEnter={openActive}
+      onMouseLeave={closeActive}
+      raised={active}
+    >
       <Grid container item padding={2}>
         <Grid
           container
@@ -24,11 +44,11 @@ const CompressedProblemCard: FC<Props> = ({
           display="flex"
           flexDirection="column"
           alignItems="center"
-          sm={6}
+          sm={8}
         >
           <Grid item>
             <Typography sx={{ fontWeight: 700 }} variant="h6">
-              {title}
+              {title.length > 20 ? title.substring(0, 20) + "..." : title}
             </Typography>
           </Grid>
           <Grid item>
@@ -40,7 +60,7 @@ const CompressedProblemCard: FC<Props> = ({
         <Grid
           container
           item
-          sm={6}
+          sm={4}
           display="flex"
           justifyContent="center"
           alignItems="center"

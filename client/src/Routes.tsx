@@ -20,6 +20,7 @@ export type PostRequestResponse = {
 };
 
 export type CompressedProblem = {
+  problemId: string;
   likes: number;
   title: string;
   problemType: ProblemType;

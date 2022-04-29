@@ -9,7 +9,7 @@ const Loading: FC<Props> = ({ isLoading }: Props) => {
   return isLoading ? (
     <Box
       sx={{
-        position: "absolute",
+        position: "fixed",
         zIndex: 10000,
         backgroundColor: "rgba(0, 0, 0, 0.6)",
         width: "100vw",

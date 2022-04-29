@@ -9,6 +9,7 @@ import SubmitButton from "../../components/SubmitButton";
 import { useLoading } from "../../contexts/LoadingContext";
 import { useAlert } from "../../contexts/AlertContext";
 import ProblemHeader from "../../components/ProblemHeader";
+import useWindowDimensions from "../../hooks/useWindowSize";
 
 const MultipleChoiceProblem: FC = () => {
   const [problemSolved, setProblemSolved] = useState(false);
@@ -19,6 +20,7 @@ const MultipleChoiceProblem: FC = () => {
   const { problemId } = useParams<{ problemId: string }>();
   const setAlert = useAlert();
   const setLoading = useLoading();
+  const { height, width } = useWindowDimensions();
 
   const handleSubmit = () => {
     if (!problem || !choices) {
@@ -80,7 +82,7 @@ const MultipleChoiceProblem: FC = () => {
 
   return problem && choices ? (
     <>
-      {showConfetti && <Confetti />}
+      {showConfetti && <Confetti width={width - 25} height={height - 25} />}
       <TightWrapper spacing={8}>
         <ProblemHeader
           problemId={problem.problemId}

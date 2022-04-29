@@ -48,7 +48,14 @@ const AlgorithmicProblem: FC = () => {
         />
       </Grid>
 
-      <Grid container item display="flex" width="100%" spacing={3}>
+      <Grid
+        container
+        item
+        display="flex"
+        width="100%"
+        spacing={3}
+        marginTop="0"
+      >
         <Grid item sm={8}>
           <Editor
             height="60vh"

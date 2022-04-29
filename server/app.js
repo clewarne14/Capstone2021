@@ -59,9 +59,13 @@ const getFormattedProblems = (problems) => {
   return formattedProblems;
 };
 
-const getAllProblems = async () => {
-  const algorithmic = await db.query('select * from algorithmic');
-  const multipleChoice = await db.query('select * from multipleChoice');
+const getAllProblems = async (createdBy, searchValue) => {
+  const algorithmic = await db.query(
+    `select * from algorithmic where creatorName like '%${createdBy}%' and title like '%${searchValue}%'`
+  );
+  const multipleChoice = await db.query(
+    `select * from multipleChoice where creatorName like '%${createdBy}%' and title like '%${searchValue}%'`
+  );
 
   const algorithmicProblems = getFormattedProblems(algorithmic);
   const multipleChoiceProblems = getFormattedProblems(multipleChoice);
@@ -109,40 +113,38 @@ const sortValues = (values, sortByValue) => {
 
 const checkTags = (problems, tags) => {
   if (tags.length === 0) return problems;
-  const tagSet = new Set(tags);
   return problems.filter((problem) => {
-    console.log(problem);
-    for (const tag of problem.tags) {
-      if (tagSet.has(tag.trim())) return true;
+    for (const tag of tags) {
+      if (!problem.tags.includes(tag)) return false;
     }
-    return false;
+    return true;
   });
 };
 
-const parseString = (code) => {
+const parseString = (ode) => {
   let codeSubmit = '';
-  for (let i = 0; i < code.length; i++) {
-    if (i > code.length - 1) {
-      codeSubmit += code.charAt(i);
+  for (let i = 0; i < ode.length; i++) {
+    if (i > ode.length - 1) {
+      codeSubmit += ode.charAt(i);
       break;
     }
     if (
-      code.charAt(i) == '"' ||
-      code.charAt(i) == '\t' ||
-      code.charAt(i) == '\n' ||
-      code.charAt(i) == "'"
+      ode.charAt(i) == '"' ||
+      ode.charAt(i) == '\t' ||
+      ode.charAt(i) == '\n' ||
+      ode.charAt(i) == "'"
     ) {
-      if (code.charAt(i) == '"') {
+      if (ode.charAt(i) == '"') {
         codeSubmit += '\\"';
-      } else if (code.charAt(i) == '\t') {
+      } else if (ode.charAt(i) == '\t') {
         codeSubmit += '\\t';
-      } else if (code.charAt(i) == '\n') {
+      } else if (ode.charAt(i) == '\n') {
         codeSubmit += '\\n';
-      } else if (code.charAt(i) == "'") {
+      } else if (ode.charAt(i) == "'") {
         codeSubmit += "\\'";
       }
     } else {
-      codeSubmit += code.charAt(i);
+      codeSubmit += ode.charAt(i);
     }
   }
   return codeSubmit;
@@ -349,7 +351,7 @@ app.post('/problems', async (req, res) => {
   // Check whether the user wants Algoritmic, Multiple Choice, or All problems
   switch (searchProblemType) {
     case 'All':
-      problems = await getAllProblems();
+      problems = await getAllProblems(createdBy, searchValue);
       problems = checkTags(problems, tags);
       problems = sortValues(problems, sortByValue);
 
@@ -434,7 +436,7 @@ app.get('/user/:name/problems', async (req, res) => {
     if (problemType === 'multiple-choice') problemType = 'multipleChoice';
 
     const problemInfo = await db.query(
-      `select likes, problemType, title from ${problemType} where problemId = ${problemId}`
+      `select likes, problemType, title, problemId from ${problemType} where problemId = ${problemId}`
     );
 
     return problemInfo[0];

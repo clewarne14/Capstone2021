@@ -1,6 +1,6 @@
 import React, { FC } from "react";
+import { useNavigate } from "react-router-dom";
 import { Grid, Typography } from "@mui/material";
-
 import Embedder from "../Embedder";
 import Likes from "../Likes";
 import AddToListButtonAndPopup from "../AddToListButtonAndPopup";
@@ -25,6 +25,7 @@ const ProblemHeader: FC<Props> = ({
   problemId,
   problemType,
 }: Props) => {
+  const navigation = useNavigate();
   return (
     <>
       <Grid
@@ -76,7 +77,13 @@ const ProblemHeader: FC<Props> = ({
             <Likes updateable={true} numLikes={likes} showThumbsDown={true} />
           </Grid>
         </Grid>
-        <Typography variant="h5">By {creatorName}</Typography>
+        <Typography
+          variant="h5"
+          sx={{ cursor: "pointer" }}
+          onClick={() => navigation(`/profile/${creatorName}`)}
+        >
+          By {creatorName}
+        </Typography>
       </Grid>
       {showDescription && (
         <Grid textAlign="center" item>

@@ -77,12 +77,12 @@ const Lobby: FC = () => {
   return (
     <Grid container marginTop="2rem" padding="1rem">
       <Grid spacing={2} padding={3} sm={8} item container>
-        <Grid xs={12} marginBottom="2rem" item>
-          <Typography textAlign="center" variant={isSmallScreen ? "h4" : "h2"}>
-            New problems
-          </Typography>
-        </Grid>
-        {!isSmallScreen && <LobbyHeader />}
+        {!isSmallScreen && problems.length !== 0 && <LobbyHeader />}
+        {problems.length === 0 && (
+          <Grid item container display="flex" justifyContent="center">
+            <Typography variant="h3">No problems found</Typography>
+          </Grid>
+        )}
         <Grid item container spacing={3}>
           {problems.map((problem) => {
             const {
@@ -122,6 +122,7 @@ const Lobby: FC = () => {
               </Grid>
             );
           })}
+          )
         </Grid>
       </Grid>
       <Grid item container sm={4}>
