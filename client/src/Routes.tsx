@@ -10,7 +10,10 @@ import UserProfile from "./sections/UserProfile/UserProfile";
 import Lobby from "./sections/Lobby/Lobby";
 import MultipleChoiceProblem from "./sections/MultipleChoiceProblem/MultipleChoiceProblem";
 import AlgorithmicProblem from "./sections/AlgorithmicProblem/AlgorithmicProblem";
-import ListsPage from "./sections/ListsPage/ListsPage";
+import ListsLobby from "./sections/ListsLobby/ListsLobby";
+import ChooseListOption from "./sections/ChooseListOption/ChooseListOption";
+import ListPage from "./sections/ListPage/ListPage";
+import MyList from "./sections/MyList/MyList";
 
 export type ProblemType = "multiple choice" | "algorithmic" | "all";
 
@@ -92,7 +95,6 @@ const Routes: FC = () => (
 
     <Route path="/profile/:username" element={<UserProfile />} />
     <Route path="/code" element={<Lobby />} />
-    <Route path="/lists" element={<ListsPage />} />
     <Route
       path="/code/algorithmic/:problemId"
       element={<AlgorithmicProblem />}
@@ -101,6 +103,10 @@ const Routes: FC = () => (
       path="/code/multiple-choice/:problemId"
       element={<MultipleChoiceProblem />}
     />
+    <Route path="/lists" element={<ChooseListOption />} />
+    <Route path="/lists/public" element={<ListsLobby />} />
+    <Route path="/lists/:listId" element={<ListPage />} />
+    <Route path="/lists/:username" element={<MyList />} />
   </DOMRoutes>
 );
 

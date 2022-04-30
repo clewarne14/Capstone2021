@@ -3,7 +3,7 @@ import { Grid } from "@mui/material";
 import SearchBox from "../../components/SearchBox";
 import { SortBy } from "../../components/SearchBox/SearchBox";
 
-const ListsPage: FC = () => {
+const ListsLobby: FC = () => {
   const [searchValue, setSearchValue] = useState("");
   const [tags, setTags] = useState<Array<string>>([]);
   const [createdBy, setCreatedBy] = useState("");
@@ -32,4 +32,4 @@ const ListsPage: FC = () => {
   );
 };
 
-export default ListsPage;
+export default ListsLobby;
