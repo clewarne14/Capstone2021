@@ -115,6 +115,7 @@ const checkTags = (problems, tags) => {
   if (tags.length === 0) return problems;
   return problems.filter((problem) => {
     for (const tag of tags) {
+      console.log(problem.tags);
       if (!problem.tags.includes(tag)) return false;
     }
     return true;
@@ -177,8 +178,8 @@ app.post('/multiple-choice', async (req, res) => {
   const foundUserByEmail = queriedUserByEmail[0].username;
 
   const answer = choices.find((choice) => choice.active);
-  const parsedChoices = choices.map((choice) => choice.text).join(', ');
-  const parsedTags = tags.join(', ');
+  const parsedChoices = choices.map((choice) => choice.text).join(',');
+  const parsedTags = tags.join(',');
   const currentDatetime = new Date();
   const formattedDate = currentDatetime
     .toISOString()
@@ -219,7 +220,7 @@ app.post('/algorithmic', async (req, res) => {
 
   const foundUserByEmail = queriedUserByEmail[0].username;
 
-  const parsedTags = tags.join(', ');
+  const parsedTags = tags.join(',');
   const currentDatetime = new Date();
   const formattedDate = currentDatetime
     .toISOString()
@@ -308,6 +309,23 @@ app.get('/user/:name', async (req, res) => {
     res.send(user[0]);
   } catch (e) {
     res.send({ message: e.text, success: false });
+  }
+});
+
+/**
+ * Get lists by username
+ */
+
+app.get('/user/:name/lists', async (req, res) => {
+  const { name } = req.params;
+  try {
+    const user = await db.query(
+      `select lists from user where username='${name}'`
+    );
+    const lists = user[0].lists;
+    res.send(lists);
+  } catch (e) {
+    throw Error(e);
   }
 });
 

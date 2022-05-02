@@ -5,7 +5,7 @@ import { useSmallScreen } from "../../contexts/SmallScreenContext";
 
 const options = [
   {
-    text: "Public lists",
+    text: "All lists",
     icon: "list",
     url: "/lists/public",
   },

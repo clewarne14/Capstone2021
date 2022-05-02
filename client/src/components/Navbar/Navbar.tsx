@@ -46,7 +46,14 @@ const Navbar: FC = () => {
           <Grid container item xs={2} sm={6} columnSpacing={2}>
             {!isSmallScreen && (
               // Render the navbar buttons
-              <Grid item container columnSpacing={2} sm={10} lg={11}>
+              <Grid
+                justifyContent="flex-end"
+                item
+                container
+                columnSpacing={2}
+                sm={10}
+                lg={11}
+              >
                 {routes.map((route) => (
                   <Grid key={route.text} item sm={user ? 4 : 3}>
                     <Link style={{ textDecoration: "none" }} to={route.url}>

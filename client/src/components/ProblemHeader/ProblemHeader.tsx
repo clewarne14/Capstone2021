@@ -5,6 +5,7 @@ import Embedder from "../Embedder";
 import Likes from "../Likes";
 import AddToListButtonAndPopup from "../AddToListButtonAndPopup";
 import { ProblemType } from "../../Routes";
+import isIFrame from "../../hooks/iseIFrame";
 
 type Props = {
   likes: number;
@@ -26,6 +27,7 @@ const ProblemHeader: FC<Props> = ({
   problemType,
 }: Props) => {
   const navigation = useNavigate();
+
   return (
     <>
       <Grid
@@ -42,26 +44,28 @@ const ProblemHeader: FC<Props> = ({
           alignItems="center"
           justifyContent="space-around"
         >
-          <Grid
-            item
-            container
-            sm={1}
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            spacing={2}
-          >
-            <Grid item sm={6}>
-              <Embedder sx={{ fontSize: "2rem" }} />
+          {isIFrame() && (
+            <Grid
+              item
+              container
+              sm={1}
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              spacing={2}
+            >
+              <Grid item sm={6}>
+                <Embedder sx={{ fontSize: "2rem" }} />
+              </Grid>
+              <Grid item sm={6}>
+                <AddToListButtonAndPopup
+                  sx={{ fontSize: "2rem" }}
+                  problemId={problemId}
+                  problemType={problemType}
+                />
+              </Grid>
             </Grid>
-            <Grid item sm={6}>
-              <AddToListButtonAndPopup
-                sx={{ fontSize: "2rem" }}
-                problemId={problemId}
-                problemType={problemType}
-              />
-            </Grid>
-          </Grid>
+          )}
           <Grid item sx={{ width: "fit-content" }} sm={10}>
             <Typography
               sx={{
@@ -73,9 +77,11 @@ const ProblemHeader: FC<Props> = ({
               {problemTitle}
             </Typography>
           </Grid>
-          <Grid item xs={2} sm={1}>
-            <Likes updateable={true} numLikes={likes} showThumbsDown={true} />
-          </Grid>
+          {isIFrame() && (
+            <Grid item xs={2} sm={1}>
+              <Likes updateable={true} numLikes={likes} showThumbsDown={true} />
+            </Grid>
+          )}
         </Grid>
         <Typography
           variant="h5"

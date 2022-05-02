@@ -76,7 +76,6 @@ export type List = {
 
 // Navbar routes
 export const routes = [
-  { text: "Lists", url: "/lists", icon: <ListIcon /> },
   { text: "Code", url: "/code", icon: <ComputerIcon /> },
   { text: "Create", url: "/create-problem/type", icon: <AddToPhotosIcon /> },
 ];

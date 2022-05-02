@@ -86,7 +86,7 @@ const AlgorithmicProblem: FC = () => {
                 <Grid sm={4} item>
                   <Button>Input Test</Button>
                 </Grid>
-                <Grid sm={4} item>
+                {/* <Grid sm={4} item>
                   <Button
                     sx={{
                       backgroundColor: colors.green,
@@ -98,7 +98,7 @@ const AlgorithmicProblem: FC = () => {
                   >
                     Run Code
                   </Button>
-                </Grid>
+                </Grid> */}
                 <Grid sm={4} item>
                   <SubmitButton
                     onClick={async () => {
