@@ -283,6 +283,34 @@ app.patch('/user/:name/profile', async (req, res) => {
   }
 });
 
+app.patch('/user/:name/problemsSolved', async (req, res) => {
+  const { name } = req.params;
+  const { problemType, problemId } = req.body;
+
+  const actualProblemType =
+    problemType === 'multiple-choice' ? 'multipleChoice' : 'algorithmic';
+
+  const response = await db.query(
+    `select problemsSolved from user where username='${name}'`
+  );
+
+  let allProblemsSolved = response[0].problemsSolved;
+
+  if (!allProblemsSolved) allProblemsSolved = '';
+
+  allProblemsSolved.replace(`${actualProblemType}-${problemId},`, '');
+  allProblemsSolved += `${actualProblemType}-${problemId},`;
+
+  await db.query(
+    `update user set problemsSolved='${allProblemsSolved}' where username='${name}'`
+  );
+
+  try {
+  } catch (e) {
+    throw Error(e);
+  }
+});
+
 /**
  * Get user by email
  */

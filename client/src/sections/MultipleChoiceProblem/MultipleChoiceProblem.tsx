@@ -50,7 +50,7 @@ const MultipleChoiceProblem: FC = () => {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!problem || !choices) {
       setAlert({
         text: "Something strange happened, refresh the page",
@@ -90,6 +90,15 @@ const MultipleChoiceProblem: FC = () => {
     });
     setShowConfetti(true);
     setProblemSolved(true);
+
+    await fetch(`http://localhost:4000/user/${user.username}/problemsSolved`, {
+      body: JSON.stringify({
+        problemType: problem.problemType,
+        problemId: problem.problemId,
+      }),
+      headers: { "Content-Type": "application/json" },
+      method: "PATCH",
+    });
   };
 
   useEffect(() => {
