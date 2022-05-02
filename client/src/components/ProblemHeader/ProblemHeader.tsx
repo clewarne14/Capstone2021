@@ -15,6 +15,8 @@ type Props = {
   showDescription?: boolean;
   problemId: string;
   problemType: ProblemType;
+  likeProblem: () => void;
+  dislikeProblem: () => void;
 };
 
 const ProblemHeader: FC<Props> = ({
@@ -25,6 +27,8 @@ const ProblemHeader: FC<Props> = ({
   showDescription = true,
   problemId,
   problemType,
+  dislikeProblem,
+  likeProblem,
 }: Props) => {
   const navigation = useNavigate();
 
@@ -79,7 +83,13 @@ const ProblemHeader: FC<Props> = ({
           </Grid>
           {isIFrame() && (
             <Grid item xs={2} sm={1}>
-              <Likes updateable={true} numLikes={likes} showThumbsDown={true} />
+              <Likes
+                updateable={true}
+                numLikes={likes}
+                showThumbsDown={true}
+                onDislike={dislikeProblem}
+                onLike={likeProblem}
+              />
             </Grid>
           )}
         </Grid>

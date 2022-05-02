@@ -10,6 +10,8 @@ import { useLoading } from "../../contexts/LoadingContext";
 import { useAlert } from "../../contexts/AlertContext";
 import ProblemHeader from "../../components/ProblemHeader";
 import useWindowDimensions from "../../hooks/useWindowSize";
+import { updateLikes } from "../../components/Likes/Likes";
+import { useUser } from "../../contexts/AuthUserContext";
 
 const MultipleChoiceProblem: FC = () => {
   const [problemSolved, setProblemSolved] = useState(false);
@@ -17,10 +19,36 @@ const MultipleChoiceProblem: FC = () => {
   const [choices, setChoices] = useState<{ text: string; used: boolean }[]>();
   const [selected, setSelected] = useState("");
   const [showConfetti, setShowConfetti] = useState(false);
+  const [displayLikes, setDisplayLikes] = useState(0);
+  const user = useUser();
   const { problemId } = useParams<{ problemId: string }>();
   const setAlert = useAlert();
   const setLoading = useLoading();
   const { height, width } = useWindowDimensions();
+
+  const likeProblem = async () => {
+    if (problem) {
+      const newLikes = await updateLikes(
+        problem.problemType,
+        problem?.problemId,
+        user.username,
+        1
+      );
+      setDisplayLikes(newLikes);
+    }
+  };
+
+  const dislikeProblem = async () => {
+    if (problem) {
+      const newLikes = await updateLikes(
+        problem.problemType,
+        problem?.problemId,
+        user.username,
+        -1
+      );
+      setDisplayLikes(newLikes);
+    }
+  };
 
   const handleSubmit = () => {
     if (!problem || !choices) {
@@ -77,18 +105,21 @@ const MultipleChoiceProblem: FC = () => {
         used: false,
       }));
       setChoices(formattedChoices);
+      setDisplayLikes(response.likes);
     })();
-  }, [problemId, setLoading]);
+  }, [problemId, setLoading, setDisplayLikes]);
 
   return problem && choices ? (
     <>
       {showConfetti && <Confetti width={width - 25} height={height - 25} />}
       <TightWrapper spacing={8}>
         <ProblemHeader
+          likeProblem={likeProblem}
+          dislikeProblem={dislikeProblem}
           problemId={problem.problemId}
           problemType={problem.problemType}
           creatorName={problem.creatorName}
-          likes={problem.likes}
+          likes={displayLikes}
           problemDescription={problem.problemDescription}
           problemTitle={problem.title}
         />

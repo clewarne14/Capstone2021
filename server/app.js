@@ -359,6 +359,107 @@ app.get('/algorithmic', async (req, res) => {
   }
 });
 
+app.patch(`/problems/:problemId/likes`, async (req, res) => {
+  const { problemId } = req.params;
+  const { likeValue, username, problemType } = req.body;
+
+  const actualProblemType =
+    problemType === 'multiple-choice' ? 'multipleChoice' : 'algorithmic';
+
+  try {
+    const user = await db.query(
+      `select problemsLiked from user where username='${username}'`
+    );
+
+    let problemsInteractedWith = !user[0].problemsLiked
+      ? ''
+      : user[0].problemsLiked.split(',');
+
+    const foundProblem =
+      problemsInteractedWith === ''
+        ? null
+        : problemsInteractedWith.find((problem) => {
+            const [searchedProblemType, searchedProblemId] = problem.split('*');
+            return (
+              searchedProblemType === problemType &&
+              searchedProblemId === problemId
+            );
+          });
+
+    // If a problem is found, then look at the like value and update problemsInteractedWith
+    if (foundProblem) {
+      let [searchedProblemType, searchedProblemId, searchedProblemLikeValue] =
+        foundProblem.split('*');
+
+      searchedProblemLikeValue = parseInt(searchedProblemLikeValue);
+
+      // If the user wants to neither like nor dislike the problem
+      if (likeValue === searchedProblemLikeValue) {
+        // Check the users original like value and update problemsInteractedWith along with the problem accordingly
+        if (searchedProblemLikeValue === 1)
+          await db.query(
+            `update ${actualProblemType} set likes = likes - 1 where problemId='${problemId}'`
+          );
+        else
+          db.query(
+            `update ${actualProblemType} set likes = likes + 1 where problemId='${problemId}'`
+          );
+
+        const updatedLikes = user[0].problemsLiked.replace(
+          foundProblem + ',',
+          ''
+        );
+        await db.query(
+          `update user set problemsLiked='${updatedLikes}' where username='${username}'`
+        );
+      } else {
+        // If the user previously liked a problem, then dislikes it and vice versa
+        let updatedLikes = user[0].problemsLiked.replace(
+          foundProblem + ',',
+          ''
+        );
+        updatedLikes += `${problemType}*${problemId}*${likeValue},`;
+
+        if (likeValue === 1)
+          await db.query(
+            `update ${actualProblemType} set likes = likes + 2 where problemId='${problemId}'`
+          );
+        else
+          await db.query(
+            `update ${actualProblemType} set likes = likes - 2 where problemId='${problemId}'`
+          );
+
+        await db.query(
+          `update user set problemsLiked='${updatedLikes}' where username='${username}'`
+        );
+      }
+    } else {
+      const updatedLikes =
+        problemsInteractedWith + `${problemType}*${problemId}*${likeValue},`;
+      if (likeValue === 1)
+        await db.query(
+          `update ${actualProblemType} set likes = likes + 1 where problemId='${problemId}'`
+        );
+      else
+        await db.query(
+          `update ${actualProblemType} set likes = likes - 1 where problemId='${problemId}'`
+        );
+
+      await db.query(
+        `update user set problemsLiked='${updatedLikes}' where username='${username}'`
+      );
+    }
+
+    const updatedProblem = await db.query(
+      `select likes from ${actualProblemType} where problemId='${problemId}'`
+    );
+
+    res.send(updatedProblem[0].likes.toString());
+  } catch (e) {
+    throw Error(e);
+  }
+});
+
 // Get problems based on search parameters
 app.post('/problems', async (req, res) => {
   const { searchValue, tags, createdBy, sortByValue, searchProblemType } =
