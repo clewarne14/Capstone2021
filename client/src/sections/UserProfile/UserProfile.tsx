@@ -10,6 +10,7 @@ import Button from "../../components/Button";
 import colors from "../../colors";
 import SubmitButton from "../../components/SubmitButton";
 import { useAlert } from "../../contexts/AlertContext";
+import ProfilePicture from "../../components/ProfilePicture/ProfilePicture";
 
 type CreatedAndSolvedProblems = {
   problemsCreated: Array<CompressedProblem>;
@@ -156,15 +157,13 @@ const UserProfile: FC = () => {
             </Typography>
           </Grid>
           <Grid item width="85%">
-            <img
-              width="100%"
-              height="300rem"
+            <ProfilePicture
+              alt={viewedUser.username}
               src={
                 viewedUser.profilePicture === "" || !viewedUser.profilePicture
                   ? "/empty_avatar.png"
                   : viewedUser.profilePicture
               }
-              alt={viewedUser.username}
             />
           </Grid>
           <Grid item>

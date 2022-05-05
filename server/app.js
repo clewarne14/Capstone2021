@@ -59,9 +59,13 @@ const getFormattedProblems = (problems) => {
   return formattedProblems;
 };
 
-const getAllProblems = async () => {
-  const algorithmic = await db.query('select * from algorithmic');
-  const multipleChoice = await db.query('select * from multipleChoice');
+const getAllProblems = async (createdBy, searchValue) => {
+  const algorithmic = await db.query(
+    `select * from algorithmic where creatorName like '%${createdBy}%' and title like '%${searchValue}%'`
+  );
+  const multipleChoice = await db.query(
+    `select * from multipleChoice where creatorName like '%${createdBy}%' and title like '%${searchValue}%'`
+  );
 
   const algorithmicProblems = getFormattedProblems(algorithmic);
   const multipleChoiceProblems = getFormattedProblems(multipleChoice);
@@ -109,40 +113,39 @@ const sortValues = (values, sortByValue) => {
 
 const checkTags = (problems, tags) => {
   if (tags.length === 0) return problems;
-  const tagSet = new Set(tags);
   return problems.filter((problem) => {
-    console.log(problem);
-    for (const tag of problem.tags) {
-      if (tagSet.has(tag.trim())) return true;
+    for (const tag of tags) {
+      console.log(problem.tags);
+      if (!problem.tags.includes(tag)) return false;
     }
-    return false;
+    return true;
   });
 };
 
-const parseString = (code) => {
+const parseString = (ode) => {
   let codeSubmit = '';
-  for (let i = 0; i < code.length; i++) {
-    if (i > code.length - 1) {
-      codeSubmit += code.charAt(i);
+  for (let i = 0; i < ode.length; i++) {
+    if (i > ode.length - 1) {
+      codeSubmit += ode.charAt(i);
       break;
     }
     if (
-      code.charAt(i) == '"' ||
-      code.charAt(i) == '\t' ||
-      code.charAt(i) == '\n' ||
-      code.charAt(i) == "'"
+      ode.charAt(i) == '"' ||
+      ode.charAt(i) == '\t' ||
+      ode.charAt(i) == '\n' ||
+      ode.charAt(i) == "'"
     ) {
-      if (code.charAt(i) == '"') {
+      if (ode.charAt(i) == '"') {
         codeSubmit += '\\"';
-      } else if (code.charAt(i) == '\t') {
+      } else if (ode.charAt(i) == '\t') {
         codeSubmit += '\\t';
-      } else if (code.charAt(i) == '\n') {
+      } else if (ode.charAt(i) == '\n') {
         codeSubmit += '\\n';
-      } else if (code.charAt(i) == "'") {
+      } else if (ode.charAt(i) == "'") {
         codeSubmit += "\\'";
       }
     } else {
-      codeSubmit += code.charAt(i);
+      codeSubmit += ode.charAt(i);
     }
   }
   return codeSubmit;
@@ -175,8 +178,8 @@ app.post('/multiple-choice', async (req, res) => {
   const foundUserByEmail = queriedUserByEmail[0].username;
 
   const answer = choices.find((choice) => choice.active);
-  const parsedChoices = choices.map((choice) => choice.text).join(', ');
-  const parsedTags = tags.join(', ');
+  const parsedChoices = choices.map((choice) => choice.text).join(',');
+  const parsedTags = tags.join(',');
   const currentDatetime = new Date();
   const formattedDate = currentDatetime
     .toISOString()
@@ -217,7 +220,7 @@ app.post('/algorithmic', async (req, res) => {
 
   const foundUserByEmail = queriedUserByEmail[0].username;
 
-  const parsedTags = tags.join(', ');
+  const parsedTags = tags.join(',');
   const currentDatetime = new Date();
   const formattedDate = currentDatetime
     .toISOString()
@@ -280,6 +283,34 @@ app.patch('/user/:name/profile', async (req, res) => {
   }
 });
 
+app.patch('/user/:name/problemsSolved', async (req, res) => {
+  const { name } = req.params;
+  const { problemType, problemId } = req.body;
+
+  const actualProblemType =
+    problemType === 'multiple-choice' ? 'multipleChoice' : 'algorithmic';
+
+  const response = await db.query(
+    `select problemsSolved from user where username='${name}'`
+  );
+
+  let allProblemsSolved = response[0].problemsSolved;
+
+  if (!allProblemsSolved) allProblemsSolved = '';
+
+  allProblemsSolved.replace(`${actualProblemType}-${problemId},`, '');
+  allProblemsSolved += `${actualProblemType}-${problemId},`;
+
+  await db.query(
+    `update user set problemsSolved='${allProblemsSolved}' where username='${name}'`
+  );
+
+  try {
+  } catch (e) {
+    throw Error(e);
+  }
+});
+
 /**
  * Get user by email
  */
@@ -306,6 +337,23 @@ app.get('/user/:name', async (req, res) => {
     res.send(user[0]);
   } catch (e) {
     res.send({ message: e.text, success: false });
+  }
+});
+
+/**
+ * Get lists by username
+ */
+
+app.get('/user/:name/lists', async (req, res) => {
+  const { name } = req.params;
+  try {
+    const user = await db.query(
+      `select lists from user where username='${name}'`
+    );
+    const lists = user[0].lists;
+    res.send(lists);
+  } catch (e) {
+    throw Error(e);
   }
 });
 
@@ -339,6 +387,107 @@ app.get('/algorithmic', async (req, res) => {
   }
 });
 
+app.patch(`/problems/:problemId/likes`, async (req, res) => {
+  const { problemId } = req.params;
+  const { likeValue, username, problemType } = req.body;
+
+  const actualProblemType =
+    problemType === 'multiple-choice' ? 'multipleChoice' : 'algorithmic';
+
+  try {
+    const user = await db.query(
+      `select problemsLiked from user where username='${username}'`
+    );
+
+    let problemsInteractedWith = !user[0].problemsLiked
+      ? ''
+      : user[0].problemsLiked.split(',');
+
+    const foundProblem =
+      problemsInteractedWith === ''
+        ? null
+        : problemsInteractedWith.find((problem) => {
+            const [searchedProblemType, searchedProblemId] = problem.split('*');
+            return (
+              searchedProblemType === problemType &&
+              searchedProblemId === problemId
+            );
+          });
+
+    // If a problem is found, then look at the like value and update problemsInteractedWith
+    if (foundProblem) {
+      let [searchedProblemType, searchedProblemId, searchedProblemLikeValue] =
+        foundProblem.split('*');
+
+      searchedProblemLikeValue = parseInt(searchedProblemLikeValue);
+
+      // If the user wants to neither like nor dislike the problem
+      if (likeValue === searchedProblemLikeValue) {
+        // Check the users original like value and update problemsInteractedWith along with the problem accordingly
+        if (searchedProblemLikeValue === 1)
+          await db.query(
+            `update ${actualProblemType} set likes = likes - 1 where problemId='${problemId}'`
+          );
+        else
+          db.query(
+            `update ${actualProblemType} set likes = likes + 1 where problemId='${problemId}'`
+          );
+
+        const updatedLikes = user[0].problemsLiked.replace(
+          foundProblem + ',',
+          ''
+        );
+        await db.query(
+          `update user set problemsLiked='${updatedLikes}' where username='${username}'`
+        );
+      } else {
+        // If the user previously liked a problem, then dislikes it and vice versa
+        let updatedLikes = user[0].problemsLiked.replace(
+          foundProblem + ',',
+          ''
+        );
+        updatedLikes += `${problemType}*${problemId}*${likeValue},`;
+
+        if (likeValue === 1)
+          await db.query(
+            `update ${actualProblemType} set likes = likes + 2 where problemId='${problemId}'`
+          );
+        else
+          await db.query(
+            `update ${actualProblemType} set likes = likes - 2 where problemId='${problemId}'`
+          );
+
+        await db.query(
+          `update user set problemsLiked='${updatedLikes}' where username='${username}'`
+        );
+      }
+    } else {
+      const updatedLikes =
+        problemsInteractedWith + `${problemType}*${problemId}*${likeValue},`;
+      if (likeValue === 1)
+        await db.query(
+          `update ${actualProblemType} set likes = likes + 1 where problemId='${problemId}'`
+        );
+      else
+        await db.query(
+          `update ${actualProblemType} set likes = likes - 1 where problemId='${problemId}'`
+        );
+
+      await db.query(
+        `update user set problemsLiked='${updatedLikes}' where username='${username}'`
+      );
+    }
+
+    const updatedProblem = await db.query(
+      `select likes from ${actualProblemType} where problemId='${problemId}'`
+    );
+
+    res.send(updatedProblem[0].likes.toString());
+  } catch (e) {
+    throw Error(e);
+  }
+});
+
 // Get problems based on search parameters
 app.post('/problems', async (req, res) => {
   const { searchValue, tags, createdBy, sortByValue, searchProblemType } =
@@ -349,7 +498,7 @@ app.post('/problems', async (req, res) => {
   // Check whether the user wants Algoritmic, Multiple Choice, or All problems
   switch (searchProblemType) {
     case 'All':
-      problems = await getAllProblems();
+      problems = await getAllProblems(createdBy, searchValue);
       problems = checkTags(problems, tags);
       problems = sortValues(problems, sortByValue);
 
@@ -434,7 +583,7 @@ app.get('/user/:name/problems', async (req, res) => {
     if (problemType === 'multiple-choice') problemType = 'multipleChoice';
 
     const problemInfo = await db.query(
-      `select likes, problemType, title from ${problemType} where problemId = ${problemId}`
+      `select likes, problemType, title, problemId from ${problemType} where problemId = ${problemId}`
     );
 
     return problemInfo[0];

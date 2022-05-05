@@ -6,6 +6,7 @@ import { ProblemType } from "../../Routes";
 import Tag from "../Tag";
 import SubmitButton from "../SubmitButton";
 import Likes from "../Likes";
+import ProfilePicture from "../ProfilePicture/ProfilePicture";
 
 export type ProblemCardProps = {
   title: string;
@@ -45,13 +46,14 @@ const ProblemCard: FC<ProblemCardProps> = ({
           container
           item
           textAlign="center"
+          alignItems="center"
           sx={{ cursor: "pointer" }}
           onClick={() => {
             navigation(`/profile/${username}`);
           }}
         >
-          <Grid item>
-            <img width="50%" height="100rem" src={userPicture} alt={username} />
+          <Grid item width="50%">
+            <ProfilePicture alt={username} src={userPicture} />
           </Grid>
           <Typography>{username}</Typography>
         </Grid>

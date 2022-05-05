@@ -9,6 +9,9 @@ import SubmitButton from "../../components/SubmitButton";
 import { useLoading } from "../../contexts/LoadingContext";
 import { useAlert } from "../../contexts/AlertContext";
 import ProblemHeader from "../../components/ProblemHeader";
+import useWindowDimensions from "../../hooks/useWindowSize";
+import { updateLikes } from "../../components/Likes/Likes";
+import { useUser } from "../../contexts/AuthUserContext";
 
 const MultipleChoiceProblem: FC = () => {
   const [problemSolved, setProblemSolved] = useState(false);
@@ -16,11 +19,38 @@ const MultipleChoiceProblem: FC = () => {
   const [choices, setChoices] = useState<{ text: string; used: boolean }[]>();
   const [selected, setSelected] = useState("");
   const [showConfetti, setShowConfetti] = useState(false);
+  const [displayLikes, setDisplayLikes] = useState(0);
+  const user = useUser();
   const { problemId } = useParams<{ problemId: string }>();
   const setAlert = useAlert();
   const setLoading = useLoading();
+  const { height, width } = useWindowDimensions();
 
-  const handleSubmit = () => {
+  const likeProblem = async () => {
+    if (problem) {
+      const newLikes = await updateLikes(
+        problem.problemType,
+        problem?.problemId,
+        user.username,
+        1
+      );
+      setDisplayLikes(newLikes);
+    }
+  };
+
+  const dislikeProblem = async () => {
+    if (problem) {
+      const newLikes = await updateLikes(
+        problem.problemType,
+        problem?.problemId,
+        user.username,
+        -1
+      );
+      setDisplayLikes(newLikes);
+    }
+  };
+
+  const handleSubmit = async () => {
     if (!problem || !choices) {
       setAlert({
         text: "Something strange happened, refresh the page",
@@ -60,6 +90,15 @@ const MultipleChoiceProblem: FC = () => {
     });
     setShowConfetti(true);
     setProblemSolved(true);
+
+    await fetch(`http://localhost:4000/user/${user.username}/problemsSolved`, {
+      body: JSON.stringify({
+        problemType: problem.problemType,
+        problemId: problem.problemId,
+      }),
+      headers: { "Content-Type": "application/json" },
+      method: "PATCH",
+    });
   };
 
   useEffect(() => {
@@ -75,18 +114,21 @@ const MultipleChoiceProblem: FC = () => {
         used: false,
       }));
       setChoices(formattedChoices);
+      setDisplayLikes(response.likes);
     })();
-  }, [problemId, setLoading]);
+  }, [problemId, setLoading, setDisplayLikes]);
 
   return problem && choices ? (
     <>
-      {showConfetti && <Confetti />}
+      {showConfetti && <Confetti width={width - 25} height={height - 25} />}
       <TightWrapper spacing={8}>
         <ProblemHeader
+          likeProblem={likeProblem}
+          dislikeProblem={dislikeProblem}
           problemId={problem.problemId}
           problemType={problem.problemType}
           creatorName={problem.creatorName}
-          likes={problem.likes}
+          likes={displayLikes}
           problemDescription={problem.problemDescription}
           problemTitle={problem.title}
         />

@@ -8,12 +8,40 @@ import Editor from "../../components/Editor";
 import colors from "../../colors";
 import Button from "../../components/Button";
 import SubmitButton from "../../components/SubmitButton";
+import { updateLikes } from "../../components/Likes/Likes";
+import { useUser } from "../../contexts/AuthUserContext";
 
 const AlgorithmicProblem: FC = () => {
   const [problem, setProblem] = useState<AlgorithmicProblemType>();
   const [userCode, setUserCode] = useState("");
+  const [displayLikes, setDisplayLikes] = useState(0);
   const { problemId } = useParams<{ problemId: string }>();
+  const user = useUser();
   const setLoading = useLoading();
+
+  const likeProblem = async () => {
+    if (problem) {
+      const newLikes = await updateLikes(
+        problem.problemType,
+        problem?.problemId,
+        user.username,
+        1
+      );
+      setDisplayLikes(newLikes);
+    }
+  };
+
+  const dislikeProblem = async () => {
+    if (problem) {
+      const newLikes = await updateLikes(
+        problem.problemType,
+        problem?.problemId,
+        user.username,
+        -1
+      );
+      setDisplayLikes(newLikes);
+    }
+  };
 
   useEffect(() => {
     (async () => {
@@ -25,8 +53,9 @@ const AlgorithmicProblem: FC = () => {
       const response: AlgorithmicProblemType = await data.json();
       setProblem(response);
       setUserCode(response.startingCode);
+      setDisplayLikes(response.likes);
     })();
-  }, [problemId, setLoading]);
+  }, [problemId, setLoading, setDisplayLikes]);
 
   return problem ? (
     <Grid
@@ -42,13 +71,22 @@ const AlgorithmicProblem: FC = () => {
           problemType={problem.problemType}
           showDescription={false}
           creatorName={problem.creatorName}
-          likes={problem.likes}
+          likes={displayLikes}
           problemDescription={problem.problemDescription}
           problemTitle={problem.title}
+          dislikeProblem={dislikeProblem}
+          likeProblem={likeProblem}
         />
       </Grid>
 
-      <Grid container item display="flex" width="100%" spacing={3}>
+      <Grid
+        container
+        item
+        display="flex"
+        width="100%"
+        spacing={3}
+        marginTop="0"
+      >
         <Grid item sm={8}>
           <Editor
             height="60vh"
@@ -79,7 +117,7 @@ const AlgorithmicProblem: FC = () => {
                 <Grid sm={4} item>
                   <Button>Input Test</Button>
                 </Grid>
-                <Grid sm={4} item>
+                {/* <Grid sm={4} item>
                   <Button
                     sx={{
                       backgroundColor: colors.green,
@@ -91,7 +129,7 @@ const AlgorithmicProblem: FC = () => {
                   >
                     Run Code
                   </Button>
-                </Grid>
+                </Grid> */}
                 <Grid sm={4} item>
                   <SubmitButton
                     onClick={async () => {

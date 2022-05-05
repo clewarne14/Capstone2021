@@ -6,6 +6,7 @@ import Likes from "../Likes";
 import Tag from "../Tag";
 import SubmitButton from "../SubmitButton";
 import { useNavigate } from "react-router-dom";
+import ProfilePicture from "../ProfilePicture/ProfilePicture";
 
 const SmallProblemCard: FC<ProblemCardProps> = ({
   likes,
@@ -82,7 +83,7 @@ const SmallProblemCard: FC<ProblemCardProps> = ({
             alignItems="center"
             xs={4}
           >
-            <img width="70%" src={userPicture} alt={username} />
+            <ProfilePicture alt={username} src={userPicture} />
             <Typography>{username}</Typography>
           </Grid>
         </Grid>

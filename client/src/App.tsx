@@ -10,6 +10,7 @@ import PhoneNavigation from "./components/PhoneNavigation";
 import theme from "./theme";
 import Routes from "./Routes";
 import "./App.css";
+import isIFrame from "./hooks/iseIFrame";
 
 const auth: Auth0ProviderOptions = {
   clientId: process.env.REACT_APP_AUTH0_CLIENT_ID ?? "",
@@ -27,7 +28,7 @@ const App = () => (
           <AlertContextProvider>
             <LoadingContextProvider>
               <SmallScreenProvider>
-                <Navbar />
+                {isIFrame() && <Navbar />}
                 <Routes />
                 <PhoneNavigation />;
               </SmallScreenProvider>
