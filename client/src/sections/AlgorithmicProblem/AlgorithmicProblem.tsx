@@ -107,7 +107,7 @@ const AlgorithmicProblem: FC = () => {
                         }
                       );
 
-                      const data = await response.json();
+                      const data = await response.text();
                       console.log(data);
                     }}
                   >

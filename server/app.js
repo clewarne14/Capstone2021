@@ -564,7 +564,6 @@ app.post('/testCode/:problemId', async (req, res) => {
       testSubmit += Test.charAt(i);
     }
   }
-
   let jsonInp =
     `{ "TESTS": "` + testSubmit + `" , "UserCode": "` + codeSubmit + `\"}`;
   //let jsonInpTemp = `{"TESTS": "if __name__ == \\\"__main__\\\":\\n\\t\\n\\toutput = execFile.fib(3)\\n\\tif output != \\\"0 1 1\\\":\\n\\t\\tprint('{ \\\"TestName\\\":\\\"Fibonacci 1\\\", \\\"MethodCall\\": \\\"fib(3)\\\", \\\"ExpectedOutput\\\": \\\"0 1 1\\\", \\\"ActualOutput\\\": \\\"' + output + '\\\"')\\n\\t\\tsys.exit()\\n\\toutput = execFile.fib(4)\\n\\tif output != \\\"0 1 1 2\\\":\\n\\t\\tprint('{ \\\"TestName\\\":  + \\\"Fibonacci 1\\\", \\\"MethodCall\\\": \\\"fib(3)\\\", \\\"ExpectedOutput\\\": \\\"0 1 1 2\\\", \\\"ActualOutput\\\": \\\"' + output + '\\\"}')\\n\\t\\tsys.exit()", "UserCode":"def fib(inp):\\n\\tif inp==3:\\n\\t\\treturn \\\"0 1 2\\\"\\n\\tif inp==4:\\n\\t\\treturn \\\"0 1 1 2\\\""}`;
@@ -576,7 +575,6 @@ app.post('/testCode/:problemId', async (req, res) => {
     return output;
   };
   let ret = await callDocker();
-  // console.log(ret);
   let output = null;
   if (ret.trim().length != 0) {
     try {
@@ -616,6 +614,8 @@ app.post('/testCode/:problemId', async (req, res) => {
   if (failedTests == '') {
     failedTests = 'Congratulations! Your code passed all of the tests!';
   }
+  console.log(failedTests);
+  console.log('fewajfhewlfjwealjewl');
   res.send(failedTests);
 });
 
