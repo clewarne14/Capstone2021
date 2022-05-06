@@ -729,43 +729,50 @@ app.post('/testCode/:problemId', async (req, res) => {
     try {
       output = JSON.parse(ret);
     } catch (e) {
-      res.send(
-        'The return value was not in a correct JSON format.\nThis is not a problem with your code but with the tests provided.\nPlease contact the creator of the problem.'
-      );
+      // res.send(
+      //   output =
+      //   'The return value was not in a correct JSON format.\nThis is not a problem with your code but with the tests provided.\nPlease contact the creator of the problem.'
+      // );
+      res.send({
+        error:
+          'The return value was not in a correct JSON format.\nThis is not a problem with your code but with the tests provided.\\nPlease contact the creator of the problem.',
+      });
     }
   } else {
-    output = '';
+    output = { solved: 'True' };
   }
-  let failedTests = '';
+  res.send(output);
 
   //Creating the failedTests message to be output to the user
-  if (ret.trim().length != 0) {
-    try {
-      failedTests +=
-        'Your code did not pass the tests!\nTest name: ' +
-        output['TestName'] +
-        '\nMethod call: ' +
-        output['MethodCall'] +
-        '\nExpected: ' +
-        output['ExpectedOutput'] +
-        '\nActual: ' +
-        output['ActualOutput'];
-      if ('error' in output) {
-        failedTests +=
-          '\nThere was an error running your code.\nError: ' + output['error'];
-      }
-    } catch (e) {
-      res.send(
-        'The tests submitted by the problem creator were submitted in the wrong format.\nContact the test creator.'
-      );
-    }
-  }
-  if (failedTests == '') {
-    failedTests = 'Congratulations! Your code passed all of the tests!';
-  }
-  console.log(failedTests);
-  console.log('fewajfhewlfjwealjewl');
-  res.send(failedTests);
+
+  // if (ret.trim().length != 0) {
+  //   try {
+  //     if ('error' in output) {
+  //       res.send('There was an error in your code:' + output['error']);
+  //     }
+  //     failedTests +=
+  //       'Your code did not pass the tests!\nTest name: ' +
+  //       output['TestName'] +
+  //       '\nMethod call: ' +
+  //       output['MethodCall'] +
+  //       '\nExpected: ' +
+  //       output['ExpectedOutput'] +
+  //       '\nActual: ' +
+  //       output['ActualOutput'];
+  //     if ('error' in output) {
+  //       failedTests +=
+  //         '\nThere was an error running your code.\nError: ' + output['error'];
+  //     }
+  //   } catch (e) {
+  //     res.send(
+  //       'The tests submitted by the problem creator were submitted in the wrong format.\nContact the test creator.'
+  //     );
+  //   }
+  // }
+  // if (failedTests == '') {
+  //   failedTests = 'Congratulations! Your code passed all of the tests!';
+  // }
+  // console.log(failedTests);
 });
 
 app.listen(SERVER_PORT, async () => {

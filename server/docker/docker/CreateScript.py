@@ -41,7 +41,8 @@ except subprocess.CalledProcessError as e:
     # if e.output.startswith(b'error: {'):
     #     error = json.loads(e.output[7:])
     #     print(error['message'])
-    print('{ "TestName":"Fibonacci 1", "MethodCall": "fib(3)", "ExpectedOutput": "0 1 1", "ActualOutput": "N/A", "error": "' + str(e) + '"}')
+    print('{"error": ' + e.output)
+    #print('{ "TestName":"Fibonacci 1", "MethodCall": "fib(3)", "ExpectedOutput": "0 1 1", "ActualOutput": "N/A", "error": "' + str(e) + '"}')
 
 #output=subprocess.check_output(["python", "testScript.py"])
 # stdout, stderr = output.communicate()
