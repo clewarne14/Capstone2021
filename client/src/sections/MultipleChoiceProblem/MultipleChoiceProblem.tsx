@@ -12,6 +12,7 @@ import ProblemHeader from "../../components/ProblemHeader";
 import useWindowDimensions from "../../hooks/useWindowSize";
 import { updateLikes } from "../../components/Likes/Likes";
 import { useUser } from "../../contexts/AuthUserContext";
+import isIFrame from "../../hooks/iseIFrame";
 
 const MultipleChoiceProblem: FC = () => {
   const [problemSolved, setProblemSolved] = useState(false);
@@ -25,6 +26,7 @@ const MultipleChoiceProblem: FC = () => {
   const setAlert = useAlert();
   const setLoading = useLoading();
   const { height, width } = useWindowDimensions();
+  const isntIFrame = isIFrame();
 
   const likeProblem = async () => {
     if (problem) {
@@ -103,7 +105,7 @@ const MultipleChoiceProblem: FC = () => {
 
   useEffect(() => {
     (async () => {
-      setLoading({ active: true, delay: 1000 });
+      if (isntIFrame) setLoading({ active: true, delay: 1000 });
       const data = await fetch(
         `http://localhost:4000/multiple-choice/${problemId}`
       );

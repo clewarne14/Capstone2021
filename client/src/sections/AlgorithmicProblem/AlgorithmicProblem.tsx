@@ -113,23 +113,14 @@ const AlgorithmicProblem: FC = () => {
               <Typography marginTop="2rem" variant="h6">
                 {problem.problemDescription}
               </Typography>
-              <Grid container item spacing={3} padding="1rem" marginTop="auto">
-                <Grid sm={4} item>
-                  <Button>Input Test</Button>
-                </Grid>
-                {/* <Grid sm={4} item>
-                  <Button
-                    sx={{
-                      backgroundColor: colors.green,
-                      "&:hover": {
-                        backgroundColor: colors.darkGreen,
-                        color: colors.white,
-                      },
-                    }}
-                  >
-                    Run Code
-                  </Button>
-                </Grid> */}
+              <Grid
+                justifyContent="center"
+                container
+                item
+                spacing={3}
+                padding="1rem"
+                marginTop="auto"
+              >
                 <Grid sm={4} item>
                   <SubmitButton
                     onClick={async () => {
@@ -145,7 +136,7 @@ const AlgorithmicProblem: FC = () => {
                         }
                       );
 
-                      const data = await response.json();
+                      const data = await response.text();
                       console.log(data);
                     }}
                   >

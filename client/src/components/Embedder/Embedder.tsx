@@ -24,7 +24,7 @@ const Embedder: FC<Props> = ({ hoverText = "Embed", sx }: Props) => {
             variantOverride: "",
           });
           navigator.clipboard.writeText(
-            `<iframe width="100%" height="1000rem" src='${window.location.href}' title="codecreate" />`
+            `<iframe width="65%" height="650rem" scrolling="no" frameBorder="0" src='${window.location.href}' title="codecreate" />`
           );
         }}
       />

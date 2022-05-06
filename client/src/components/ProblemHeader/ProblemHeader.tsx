@@ -5,7 +5,7 @@ import Embedder from "../Embedder";
 import Likes from "../Likes";
 import AddToListButtonAndPopup from "../AddToListButtonAndPopup";
 import { ProblemType } from "../../Routes";
-import isIFrame from "../../hooks/iseIFrame";
+import IsntAnIFrame from "../../hooks/iseIFrame";
 
 type Props = {
   likes: number;
@@ -48,7 +48,7 @@ const ProblemHeader: FC<Props> = ({
           alignItems="center"
           justifyContent="space-around"
         >
-          {isIFrame() && (
+          {IsntAnIFrame() && (
             <Grid
               item
               container
@@ -81,7 +81,7 @@ const ProblemHeader: FC<Props> = ({
               {problemTitle}
             </Typography>
           </Grid>
-          {isIFrame() && (
+          {IsntAnIFrame() && (
             <Grid item xs={2} sm={1}>
               <Likes
                 updateable={true}
@@ -93,13 +93,15 @@ const ProblemHeader: FC<Props> = ({
             </Grid>
           )}
         </Grid>
-        <Typography
-          variant="h5"
-          sx={{ cursor: "pointer" }}
-          onClick={() => navigation(`/profile/${creatorName}`)}
-        >
-          By {creatorName}
-        </Typography>
+        {IsntAnIFrame() && (
+          <Typography
+            variant="h5"
+            sx={{ cursor: "pointer" }}
+            onClick={() => navigation(`/profile/${creatorName}`)}
+          >
+            By {creatorName}
+          </Typography>
+        )}
       </Grid>
       {showDescription && (
         <Grid textAlign="center" item>

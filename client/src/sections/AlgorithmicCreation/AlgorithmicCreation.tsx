@@ -18,9 +18,7 @@ const AlgorithmicCreation = () => {
   const [tags, setTags] = useState<Array<string>>([]);
   const [language, setLanguage] = useState("python");
   const [startCode, setStartCode] = useState("");
-  const [startCodeFile, setStartCodeFile] = useState<File>();
   const [testSuiteCode, setTestSuiteCode] = useState("");
-  const [testSuiteCodeFile, setTestSuiteCodeFile] = useState<File>();
   const { isAuthenticated, user } = useAuth0();
   const setAlert = useAlert();
   const navigation = useNavigate();
@@ -45,7 +43,7 @@ const AlgorithmicCreation = () => {
       return false;
     }
 
-    if (!testSuiteCodeFile && testSuiteCode.trim().length === 0) {
+    if (testSuiteCode.trim().length === 0) {
       setAlert({
         text: "Test suite code must not be empty",
         variant: "warning",
@@ -109,8 +107,6 @@ const AlgorithmicCreation = () => {
         language={language}
         newFile={startCode}
         setNewFile={setStartCode}
-        uploadedFile={startCodeFile}
-        setUploadedFile={setStartCodeFile}
         helpButton={{
           description:
             "Algorithmic problems (especially debugging problems) will sometimes come with code that the user starts with. Examples of starting code could be function headers without the actual implementation, or with the implementation if you are doing something like a debugging problem.",
@@ -123,8 +119,6 @@ const AlgorithmicCreation = () => {
         language={language}
         newFile={testSuiteCode}
         setNewFile={setTestSuiteCode}
-        uploadedFile={testSuiteCodeFile}
-        setUploadedFile={setTestSuiteCodeFile}
         helpButton={{
           description:
             "The test code suite contains the tests that will run against users code.",

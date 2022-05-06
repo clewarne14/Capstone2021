@@ -195,7 +195,7 @@ app.post('/multiple-choice', async (req, res) => {
     const problemId = queriedProblemId[0].problemId;
 
     await db.query(
-      `insert into multipleChoice (choices, problemDescription, title, tags, dateCreated, answer, creatorName, likes, problemType) values ('${parsedChoices}', '${description}', '${title}', '${parsedTags}', '${formattedDate}', '${answer.text}', '${foundUserByEmail}', 0, 'multiple-choice')`
+      `insert into multipleChoice (choices, problemDescription, title, tags, dateCreated, answer, creatorName, likes, problemType) values ('${parsedChoices}', '${parseString(description)}', '${parseString(title)}', '${parsedTags}', '${formattedDate}', '${parseString(answer.text)}', '${foundUserByEmail}', 0, 'multiple-choice')`
     );
 
     updateProblemsCreated('multipleChoice', foundUserByEmail, problemId);
@@ -274,7 +274,9 @@ app.patch('/user/:name/profile', async (req, res) => {
 
   try {
     const response = await db.query(
-      `update user set profilePicture='${profilePicture}', bio='${bio}' where username='${name}'`
+      `update user set profilePicture='${parseString(
+        profilePicture
+      )}', bio='${parseString(bio)}' where username='${name}'`
     );
     res.send({ message: `Successfully updated user ${name}`, success: true });
   } catch (e) {
