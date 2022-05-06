@@ -715,7 +715,6 @@ app.post('/testCode/:problemId', async (req, res) => {
       testSubmit += Test.charAt(i);
     }
   }
-
   let jsonInp =
     `{ "TESTS": "` + testSubmit + `" , "UserCode": "` + codeSubmit + `\"}`;
   //let jsonInpTemp = `{"TESTS": "if __name__ == \\\"__main__\\\":\\n\\t\\n\\toutput = execFile.fib(3)\\n\\tif output != \\\"0 1 1\\\":\\n\\t\\tprint('{ \\\"TestName\\\":\\\"Fibonacci 1\\\", \\\"MethodCall\\": \\\"fib(3)\\\", \\\"ExpectedOutput\\\": \\\"0 1 1\\\", \\\"ActualOutput\\\": \\\"' + output + '\\\"')\\n\\t\\tsys.exit()\\n\\toutput = execFile.fib(4)\\n\\tif output != \\\"0 1 1 2\\\":\\n\\t\\tprint('{ \\\"TestName\\\":  + \\\"Fibonacci 1\\\", \\\"MethodCall\\\": \\\"fib(3)\\\", \\\"ExpectedOutput\\\": \\\"0 1 1 2\\\", \\\"ActualOutput\\\": \\\"' + output + '\\\"}')\\n\\t\\tsys.exit()", "UserCode":"def fib(inp):\\n\\tif inp==3:\\n\\t\\treturn \\\"0 1 2\\\"\\n\\tif inp==4:\\n\\t\\treturn \\\"0 1 1 2\\\""}`;
@@ -727,47 +726,55 @@ app.post('/testCode/:problemId', async (req, res) => {
     return output;
   };
   let ret = await callDocker();
-  // console.log(ret);
   let output = null;
   if (ret.trim().length != 0) {
     try {
       output = JSON.parse(ret);
     } catch (e) {
-      res.send(
-        'The return value was not in a correct JSON format.\nThis is not a problem with your code but with the tests provided.\nPlease contact the creator of the problem.'
-      );
+      // res.send(
+      //   output =
+      //   'The return value was not in a correct JSON format.\nThis is not a problem with your code but with the tests provided.\nPlease contact the creator of the problem.'
+      // );
+      res.send({
+        error:
+          'The return value was not in a correct JSON format.\nThis is not a problem with your code but with the tests provided.\\nPlease contact the creator of the problem.',
+      });
     }
   } else {
-    output = '';
+    output = { solved: 'True' };
   }
-  let failedTests = '';
+  res.send(output);
 
   //Creating the failedTests message to be output to the user
-  if (ret.trim().length != 0) {
-    try {
-      failedTests +=
-        'Your code did not pass the tests!\nTest name: ' +
-        output['TestName'] +
-        '\nMethod call: ' +
-        output['MethodCall'] +
-        '\nExpected: ' +
-        output['ExpectedOutput'] +
-        '\nActual: ' +
-        output['ActualOutput'];
-      if ('error' in output) {
-        failedTests +=
-          '\nThere was an error running your code.\nError: ' + output['error'];
-      }
-    } catch (e) {
-      res.send(
-        'The tests submitted by the problem creator were submitted in the wrong format.\nContact the test creator.'
-      );
-    }
-  }
-  if (failedTests == '') {
-    failedTests = 'Congratulations! Your code passed all of the tests!';
-  }
-  res.send(failedTests);
+
+  // if (ret.trim().length != 0) {
+  //   try {
+  //     if ('error' in output) {
+  //       res.send('There was an error in your code:' + output['error']);
+  //     }
+  //     failedTests +=
+  //       'Your code did not pass the tests!\nTest name: ' +
+  //       output['TestName'] +
+  //       '\nMethod call: ' +
+  //       output['MethodCall'] +
+  //       '\nExpected: ' +
+  //       output['ExpectedOutput'] +
+  //       '\nActual: ' +
+  //       output['ActualOutput'];
+  //     if ('error' in output) {
+  //       failedTests +=
+  //         '\nThere was an error running your code.\nError: ' + output['error'];
+  //     }
+  //   } catch (e) {
+  //     res.send(
+  //       'The tests submitted by the problem creator were submitted in the wrong format.\nContact the test creator.'
+  //     );
+  //   }
+  // }
+  // if (failedTests == '') {
+  //   failedTests = 'Congratulations! Your code passed all of the tests!';
+  // }
+  // console.log(failedTests);
 });
 
 app.listen(SERVER_PORT, async () => {
